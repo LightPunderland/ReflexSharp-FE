@@ -1,3 +1,5 @@
+import { MovementDirection } from "./movementDirection.js";
+
 // Create a new application
 const app = new PIXI.Application();
 
@@ -21,6 +23,7 @@ document.body.addEventListener("keyup", onKeyUp);
 
 // Add a ticker callback
 app.ticker.add((ticker) => {
+    setCharacterMovementDirection();
     moveCharacter(ticker.deltaTime)
     characterDirectionChange = false;
 });
@@ -40,7 +43,41 @@ const timeAfterMovementReset = 8;
 //bus true, kai characteris keite savo judejimo trajaktorija
 let characterDirectionChange = false;
 
-//TODO: characterDirectionChange ivyksta ir kai pvz laikai mygtuka D ir tada nuspaudi A, tai implementuoti tai
+//klase kurioje saugoma i kuria puse juda characteris
+let movementDirection = new MovementDirection();
+
+//pagal klaviaturos inputa nustato characterio judejimo direction
+function setCharacterMovementDirection(){
+    if(numberOfKeysPressed() == 2){
+        if(keyboardState["a"] && keyboardState["w"]){
+            movementDirection.upleft = true;
+        }
+        else if(keyboardState["w"] && keyboardState["d"]){
+            movementDirection.upright = true;
+        }
+        else if(keyboardState["d"] && keyboardState["s"]){
+            movementDirection.downright = true;
+        }
+        else if(keyboardState["s"] && keyboardState["a"]){
+            movementDirection.downleft = true;
+        }
+
+        return;
+    }
+
+    if(keyboardState["a"]){
+        movementDirection.left = true;
+    }
+    if(keyboardState["d"]){
+        movementDirection.right = true;
+    }
+    if(keyboardState["w"]){
+        movementDirection.up = true;
+    }
+    if(keyboardState["s"]){
+        movementDirection.down = true;
+    }
+}
 
 function moveCharacter(tickerDeltaTime){
 
@@ -62,39 +99,33 @@ function moveCharacter(tickerDeltaTime){
         //konstanta reikalinga sumazinti characterio greiti judant istrizai
         const reduceDiagonalSpeed = 0.707
 
-        if(numberOfKeysPressed() == 2){
-            if(keyboardState["a"] && keyboardState["w"]){
-                sprite.x -= maxSpeed*(Math.sqrt(timeAfterMovement/timeMaxSpeedReach)*reduceDiagonalSpeed);
-                sprite.y -= maxSpeed*(Math.sqrt(timeAfterMovement/timeMaxSpeedReach)*reduceDiagonalSpeed);
-            }
-            else if(keyboardState["w"] && keyboardState["d"]){
-                sprite.y -= maxSpeed*(Math.sqrt(timeAfterMovement/timeMaxSpeedReach)*reduceDiagonalSpeed);
-                sprite.x += maxSpeed*(Math.sqrt(timeAfterMovement/timeMaxSpeedReach)*reduceDiagonalSpeed);
-            }
-            else if(keyboardState["d"] && keyboardState["s"]){
-                sprite.x += maxSpeed*(Math.sqrt(timeAfterMovement/timeMaxSpeedReach)*reduceDiagonalSpeed);
-                sprite.y += maxSpeed*(Math.sqrt(timeAfterMovement/timeMaxSpeedReach)*reduceDiagonalSpeed);
-            }
-            else if(keyboardState["s"] && keyboardState["a"]){
-                sprite.y += maxSpeed*(Math.sqrt(timeAfterMovement/timeMaxSpeedReach)*reduceDiagonalSpeed);
-                sprite.x -= maxSpeed*(Math.sqrt(timeAfterMovement/timeMaxSpeedReach)*reduceDiagonalSpeed);
-            }
-
-            //jeigu characteris juda istrizai, tai jau buvo pakeista characterio pozicija, galim returninti
-            return;
-        }
-
-        if(keyboardState["a"]){
-            sprite.x -= maxSpeed*(Math.sqrt(timeAfterMovement/timeMaxSpeedReach));
-        }
-        if(keyboardState["d"]){
-            sprite.x += maxSpeed*(Math.sqrt(timeAfterMovement/timeMaxSpeedReach));
-        }
-        if(keyboardState["w"]){
+        if(movementDirection.up){
             sprite.y -= maxSpeed*(Math.sqrt(timeAfterMovement/timeMaxSpeedReach));
         }
-        if(keyboardState["s"]){
+        else if(movementDirection.right){
+            sprite.x += maxSpeed*(Math.sqrt(timeAfterMovement/timeMaxSpeedReach));
+        }
+        else if(movementDirection.down){
             sprite.y += maxSpeed*(Math.sqrt(timeAfterMovement/timeMaxSpeedReach));
+        }
+        else if(movementDirection.left){
+            sprite.x -= maxSpeed*(Math.sqrt(timeAfterMovement/timeMaxSpeedReach));
+        }
+        else if(movementDirection.upright){
+            sprite.y -= maxSpeed*(Math.sqrt(timeAfterMovement/timeMaxSpeedReach)*reduceDiagonalSpeed);
+            sprite.x += maxSpeed*(Math.sqrt(timeAfterMovement/timeMaxSpeedReach)*reduceDiagonalSpeed);
+        }
+        else if(movementDirection.downright){
+            sprite.x += maxSpeed*(Math.sqrt(timeAfterMovement/timeMaxSpeedReach)*reduceDiagonalSpeed);
+            sprite.y += maxSpeed*(Math.sqrt(timeAfterMovement/timeMaxSpeedReach)*reduceDiagonalSpeed);
+        }
+        else if(movementDirection.downleft){
+            sprite.y += maxSpeed*(Math.sqrt(timeAfterMovement/timeMaxSpeedReach)*reduceDiagonalSpeed);
+            sprite.x -= maxSpeed*(Math.sqrt(timeAfterMovement/timeMaxSpeedReach)*reduceDiagonalSpeed);
+        }
+        else if(movementDirection.upleft){
+            sprite.x -= maxSpeed*(Math.sqrt(timeAfterMovement/timeMaxSpeedReach)*reduceDiagonalSpeed);
+            sprite.y -= maxSpeed*(Math.sqrt(timeAfterMovement/timeMaxSpeedReach)*reduceDiagonalSpeed);
         }
     }
     else{
@@ -165,3 +196,4 @@ function anyKeyPressed(){
 
     return false;
 }
+
