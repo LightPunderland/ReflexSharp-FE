@@ -2,6 +2,8 @@ import { MovementDirection } from "./movementDirection.js";
 
 import { MovementPhysics } from "./movementPhysics.js";
 
+import { MovementMomentum } from "./movementMomentum.js";
+
 // Create a new application
 const app = new PIXI.Application();
 
@@ -26,9 +28,20 @@ document.body.addEventListener("keyup", onKeyUp);
 // Add a ticker callback
 app.ticker.add((ticker) => {
     setCharacterMovementDirection();
-    updateCharacter(ticker.deltaTime)
+    //updateCharacter(ticker.deltaTime)
+
+    updateCharacterMomentum(ticker.deltaTime);
+    momentumDebugLog();
+    moveCharacter();
     characterDirectionChange = false;
 });
+
+function momentumDebugLog(){
+    console.log("upMomentum" + movementMomentum.upMomentum);
+    console.log("rightMomentum" + movementMomentum.rightMomentum);
+    console.log("downMomentum" + movementMomentum.downMomentum);
+    console.log("leftMomentum" +movementMomentum.leftMomentum);
+}
 
 //greitis kuri characteris gali pasiekti max (pixeliais per tick)
 const maxSpeed = 10;
@@ -54,6 +67,48 @@ let characterDirectionChange = false;
 
 //klase kurioje saugoma i kuria puse juda characteris
 let movementDirection = new MovementDirection();
+
+let movementMomentum = new MovementMomentum();
+
+function updateCharacterMomentum(tickerDeltaTime){
+    if(numberOfKeysPressed() == 2){
+        if(keyboardState["a"] && keyboardState["w"]){
+            movementMomentum.gainLeftMomentum(tickerDeltaTime);
+            movementMomentum.gainUpMomentum(tickerDeltaTime);
+        }
+        else if(keyboardState["w"] && keyboardState["d"]){
+            movementMomentum.gainUpMomentum(tickerDeltaTime);
+            movementMomentum.gainRightMomentum(tickerDeltaTime);
+        }
+        else if(keyboardState["d"] && keyboardState["s"]){
+            movementMomentum.gainRightMomentum(tickerDeltaTime);
+            movementMomentum.gainDownMomentum(tickerDeltaTime);
+        }
+        else if(keyboardState["s"] && keyboardState["a"]){
+            movementMomentum.gainDownMomentum(tickerDeltaTime);
+            movementMomentum.gainLeftMomentum(tickerDeltaTime);
+        }
+
+        return;
+    }
+
+    if(keyboardState["a"]){
+        movementMomentum.gainLeftMomentum(tickerDeltaTime);
+    }
+    if(keyboardState["d"]){
+        movementMomentum.gainRightMomentum(tickerDeltaTime);
+    }
+    if(keyboardState["w"]){
+        movementMomentum.gainUpMomentum(tickerDeltaTime);
+    }
+    if(keyboardState["s"]){
+        movementMomentum.gainDownMomentum(tickerDeltaTime);
+    }
+
+    // if(!anyKeyPressed()){
+    //     movementMomentum.loseMomentum();
+    // }
+}
 
 //pagal klaviaturos inputa nustato characterio judejimo direction
 function setCharacterMovementDirection(){
@@ -125,32 +180,32 @@ function updateCharacter(tickerDeltaTime){
 //funkcija pajudins characteri
 function moveCharacter(){
     if(movementDirection.up){
-        sprite.y -= MovementPhysics.calculateSpeed(maxSpeed, timeAfterMovement, timeMaxSpeedReach, 1);
+        sprite.y -= MovementPhysics.calculateSpeed(maxSpeed, movementMomentum.upMomentum, 1);
     }
     else if(movementDirection.right){
-        sprite.x += MovementPhysics.calculateSpeed(maxSpeed, timeAfterMovement, timeMaxSpeedReach, 1);
+        sprite.x += MovementPhysics.calculateSpeed(maxSpeed, movementMomentum.rightMomentum, 1);
     }
     else if(movementDirection.down){
-        sprite.y += MovementPhysics.calculateSpeed(maxSpeed, timeAfterMovement, timeMaxSpeedReach, 1);
+        sprite.y += MovementPhysics.calculateSpeed(maxSpeed, movementMomentum.downMomentum, 1);
     }
     else if(movementDirection.left){
-        sprite.x -= MovementPhysics.calculateSpeed(maxSpeed, timeAfterMovement, timeMaxSpeedReach, 1);
+        sprite.x -= MovementPhysics.calculateSpeed(maxSpeed, movementMomentum.leftMomentum, 1);
     }
     else if(movementDirection.upright){
-        sprite.y -= MovementPhysics.calculateSpeed(maxSpeed, timeAfterMovement, timeMaxSpeedReach, reduceDiagonalSpeed);
-        sprite.x += MovementPhysics.calculateSpeed(maxSpeed, timeAfterMovement, timeMaxSpeedReach, reduceDiagonalSpeed);
+        sprite.y -= MovementPhysics.calculateSpeed(maxSpeed, movementMomentum.upMomentum, reduceDiagonalSpeed);
+        sprite.x += MovementPhysics.calculateSpeed(maxSpeed, movementMomentum.rightMomentum, reduceDiagonalSpeed);
     }
     else if(movementDirection.downright){
-        sprite.x += MovementPhysics.calculateSpeed(maxSpeed, timeAfterMovement, timeMaxSpeedReach, reduceDiagonalSpeed);
-        sprite.y += MovementPhysics.calculateSpeed(maxSpeed, timeAfterMovement, timeMaxSpeedReach, reduceDiagonalSpeed);
+        sprite.x += MovementPhysics.calculateSpeed(maxSpeed, movementMomentum.rightMomentum, reduceDiagonalSpeed);
+        sprite.y += MovementPhysics.calculateSpeed(maxSpeed, movementMomentum.downMomentum, reduceDiagonalSpeed);
     }
     else if(movementDirection.downleft){
-        sprite.y += MovementPhysics.calculateSpeed(maxSpeed, timeAfterMovement, timeMaxSpeedReach, reduceDiagonalSpeed);
-        sprite.x -= MovementPhysics.calculateSpeed(maxSpeed, timeAfterMovement, timeMaxSpeedReach, reduceDiagonalSpeed);
+        sprite.y += MovementPhysics.calculateSpeed(maxSpeed, movementMomentum.downMomentum, reduceDiagonalSpeed);
+        sprite.x -= MovementPhysics.calculateSpeed(maxSpeed, movementMomentum.leftMomentum, reduceDiagonalSpeed);
     }
     else if(movementDirection.upleft){
-        sprite.x -= MovementPhysics.calculateSpeed(maxSpeed, timeAfterMovement, timeMaxSpeedReach, reduceDiagonalSpeed);
-        sprite.y -= MovementPhysics.calculateSpeed(maxSpeed, timeAfterMovement, timeMaxSpeedReach, reduceDiagonalSpeed);
+        sprite.x -= MovementPhysics.calculateSpeed(maxSpeed, movementMomentum.leftMomentum, reduceDiagonalSpeed);
+        sprite.y -= MovementPhysics.calculateSpeed(maxSpeed, movementMomentum.upMomentum, reduceDiagonalSpeed);
     }
 }
 

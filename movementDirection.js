@@ -19,71 +19,71 @@ export class MovementDirection{
         return this._up;
     }
 
-    set up(_){
+    set up(bool){
         this._resetDirection();
-        this._up = true;
+        this._up = bool;
     }
 
     get down(){
         return this._down;
     }
 
-    set down(_){
+    set down(bool){
         this._resetDirection();
-        this._down = true;
+        this._down = bool;
     }
 
     get right(){
         return this._right;
     }
 
-    set right(_){
+    set right(bool){
         this._resetDirection();
-        this._right = true;
+        this._right = bool;
     }
 
     get left(){
         return this._left;
     }
 
-    set left(_){
+    set left(bool){
         this._resetDirection();
-        this._left = true;
+        this._left = bool;
     }
 
     get upleft(){
         return this._upleft;
     }
 
-    set upleft(_){
+    set upleft(bool){
         this._resetDirection();
-        this._upleft = true;
+        this._upleft = bool;
     }
 
     get upright(){
         return this._upright;
     }
 
-    set upright(_){
+    set upright(bool){
         this._resetDirection();
-        this._upright = true;
+        this._upright = bool;
     }
 
     get downleft(){
         return this._downleft;
     }
 
-    set downleft(_){
+    set downleft(bool){
         this._resetDirection();
-        this._downleft = true;
+        this._downleft = bool;
     }
 
     get downright(){
         return this._downright;
     }
 
-    set downright(_){
+    set downright(bool){
         this._resetDirection();
-        this._downright = true;
+        this._downright = bool;
     }
 }

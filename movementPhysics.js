@@ -1,5 +1,5 @@
 export class MovementPhysics{
-    static calculateSpeed(maxSpeed, timeAfterMovement, timeMaxSpeedReach, reduceDiagonalSpeed){
-        return maxSpeed * (Math.sqrt(timeAfterMovement/timeMaxSpeedReach) * reduceDiagonalSpeed);
+    static calculateSpeed(maxSpeed, movementMomentum, reduceDiagonalSpeed){
+        return maxSpeed * (movementMomentum * reduceDiagonalSpeed);
     }
 }
