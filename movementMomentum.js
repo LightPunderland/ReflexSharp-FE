@@ -5,7 +5,7 @@ export class MovementMomentum{
 
     static initialMomentumTime = 8;
 
-    static momentumLoseRate = 0.8;
+    static momentumLoseRate = 4;
 
     constructor(){
         //visos sitos values turi buti range [0:1], tai 1 bus kai max inercija pasieke
@@ -22,25 +22,28 @@ export class MovementMomentum{
     }
 
     loseMomentum(){
-        
+        this.loseDownMomentum();
+        this.loseUpMomentum();
+        this.loseLeftMomentum();
+        this.loseRightMomentum();
     }
 
-    _resetUpMomentum(){
+    resetUpMomentum(){
         this._upMomentumTime = MovementMomentum.initialMomentumTime;
         this.upMomentum = 0;
     }
 
-    _resetDownMomentum(){
+    resetDownMomentum(){
         this._downMomentumTime = MovementMomentum.initialMomentumTime;
         this.downMomentum = 0;
     }
 
-    _resetRightMomentum(){
+    resetRightMomentum(){
         this._rightMomentumTime = MovementMomentum.initialMomentumTime;
         this.rightMomentum = 0;
     }
 
-    _resetLeftMomentum(){
+    resetLeftMomentum(){
         this._leftMomentumTime = MovementMomentum.initialMomentumTime;
         this.leftMomentum = 0;
     }
@@ -56,7 +59,7 @@ export class MovementMomentum{
         this.upMomentum = Math.sqrt(this._upMomentumTime / MovementMomentum.momentumMaxTime);
 
         //jeigu igauna inercijos i virsu, praranda visa inercija i apacia
-        this._resetDownMomentum();
+        this.resetDownMomentum();
     }
 
     gainDownMomentum(momentumTime){
@@ -69,7 +72,7 @@ export class MovementMomentum{
         this.downMomentum = Math.sqrt(this._downMomentumTime / MovementMomentum.momentumMaxTime);
 
         //jeigu igauna inercijos i virsu, praranda visa inercija i virsu
-        this._resetUpMomentum();
+        this.resetUpMomentum();
     }
 
     gainRightMomentum(momentumTime){
@@ -82,7 +85,7 @@ export class MovementMomentum{
         this.rightMomentum = Math.sqrt(this._rightMomentumTime / MovementMomentum.momentumMaxTime);
 
         //jeigu igauna inercijos i virsu, praranda visa inercija i kaire
-        this._resetLeftMomentum();
+        this.resetLeftMomentum();
     }
 
     gainLeftMomentum(momentumTime){
@@ -95,6 +98,50 @@ export class MovementMomentum{
         this.leftMomentum = Math.sqrt(this._leftMomentumTime / MovementMomentum.momentumMaxTime);
 
         //jeigu igauna inercijos i virsu, praranda visa inercija i desine
-        this._resetRightMomentum();
+        this.resetRightMomentum();
+    }
+
+    loseLeftMomentum(){
+        if(this._leftMomentumTime - MovementMomentum.momentumLoseRate > MovementMomentum.initialMomentumTime){
+            this._leftMomentumTime -= MovementMomentum.momentumLoseRate;
+            this.leftMomentum = Math.sqrt(this._leftMomentumTime / MovementMomentum.momentumMaxTime);
+        }
+        else{
+            this._leftMomentumTime = MovementMomentum.initialMomentumTime;
+            this.leftMomentum = 0;
+        }
+    }
+
+    loseRightMomentum(){
+        if(this._rightMomentumTime - MovementMomentum.momentumLoseRate > MovementMomentum.initialMomentumTime){
+            this._rightMomentumTime -= MovementMomentum.momentumLoseRate;
+            this.rightMomentum = Math.sqrt(this._rightMomentumTime / MovementMomentum.momentumMaxTime);
+        }
+        else{
+            this._rightMomentumTime = MovementMomentum.initialMomentumTime;
+            this.rightMomentum = 0;
+        }
+    }
+
+    loseUpMomentum(){
+        if(this._upMomentumTime - MovementMomentum.momentumLoseRate > MovementMomentum.initialMomentumTime){
+            this._upMomentumTime -= MovementMomentum.momentumLoseRate;
+            this.upMomentum = Math.sqrt(this._upMomentumTime / MovementMomentum.momentumMaxTime);
+        }
+        else{
+            this.upMomentumTime = MovementMomentum.initialMomentumTime;
+            this.upMomentum = 0;
+        }
+    }
+
+    loseDownMomentum(){
+        if(this._downMomentumTime - MovementMomentum.momentumLoseRate > MovementMomentum.initialMomentumTime){
+            this._downMomentumTime -= MovementMomentum.momentumLoseRate;
+            this.downMomentum = Math.sqrt(this._downMomentumTime / MovementMomentum.momentumMaxTime);
+        }
+        else{
+            this._downMomentumTime = MovementMomentum.initialMomentumTime;
+            this.downMomentum = 0;
+        }
     }
 }

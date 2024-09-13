@@ -1,5 +1,8 @@
 export class MovementPhysics{
-    static calculateSpeed(maxSpeed, movementMomentum, reduceDiagonalSpeed){
-        return maxSpeed * (movementMomentum * reduceDiagonalSpeed);
+    //greitis kuri characteris gali pasiekti max (pixeliais per tick)
+    static maxSpeed = 10;
+
+    static calculateSpeed(movementMomentum, reduceDiagonalSpeed){
+        return MovementPhysics.maxSpeed * (movementMomentum * reduceDiagonalSpeed);
     }
 }
