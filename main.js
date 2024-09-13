@@ -1,5 +1,7 @@
 import { MovementDirection } from "./movementDirection.js";
 
+import { MovementPhysics } from "./movementPhysics.js";
+
 // Create a new application
 const app = new PIXI.Application();
 
@@ -24,12 +26,12 @@ document.body.addEventListener("keyup", onKeyUp);
 // Add a ticker callback
 app.ticker.add((ticker) => {
     setCharacterMovementDirection();
-    moveCharacter(ticker.deltaTime)
+    updateCharacter(ticker.deltaTime)
     characterDirectionChange = false;
 });
 
 //greitis kuri characteris gali pasiekti max (pixeliais per tick)
-const maxSpeed = 6;
+const maxSpeed = 10;
 
 //laikas per kuri characteris pasiekia maksimalu savo greiti
 const timeMaxSpeedReach = 20;
@@ -39,6 +41,13 @@ let timeAfterMovement = 0;
 
 //laikas nuo kurio pradeti kai characteris prarado savo inercija ir jis ja is naujo buildinasi
 const timeAfterMovementReset = 8;
+
+//konstanta reikalinga sumazinti characterio greiti judant istrizai
+const reduceDiagonalSpeed = 0.707
+
+//inercija is karto neisnyksta tad sita value sukuria kaip ir slydimo efekta 
+//(jeigu sita value nustatai i labai maza characteris is tiesu slidineja -> feature?)
+const timeReduceRate = 0.8
 
 //bus true, kai characteris keite savo judejimo trajaktorija
 let characterDirectionChange = false;
@@ -79,7 +88,8 @@ function setCharacterMovementDirection(){
     }
 }
 
-function moveCharacter(tickerDeltaTime){
+//funkcija kuri nusprendzia ar judinti characteri
+function updateCharacter(tickerDeltaTime){
 
     //kai pakeicia characteris direction, jis praranda inercijos
     if(characterDirectionChange){
@@ -96,41 +106,51 @@ function moveCharacter(tickerDeltaTime){
             timeAfterMovement += tickerDeltaTime
         }
 
-        //konstanta reikalinga sumazinti characterio greiti judant istrizai
-        const reduceDiagonalSpeed = 0.707
-
-        if(movementDirection.up){
-            sprite.y -= maxSpeed*(Math.sqrt(timeAfterMovement/timeMaxSpeedReach));
-        }
-        else if(movementDirection.right){
-            sprite.x += maxSpeed*(Math.sqrt(timeAfterMovement/timeMaxSpeedReach));
-        }
-        else if(movementDirection.down){
-            sprite.y += maxSpeed*(Math.sqrt(timeAfterMovement/timeMaxSpeedReach));
-        }
-        else if(movementDirection.left){
-            sprite.x -= maxSpeed*(Math.sqrt(timeAfterMovement/timeMaxSpeedReach));
-        }
-        else if(movementDirection.upright){
-            sprite.y -= maxSpeed*(Math.sqrt(timeAfterMovement/timeMaxSpeedReach)*reduceDiagonalSpeed);
-            sprite.x += maxSpeed*(Math.sqrt(timeAfterMovement/timeMaxSpeedReach)*reduceDiagonalSpeed);
-        }
-        else if(movementDirection.downright){
-            sprite.x += maxSpeed*(Math.sqrt(timeAfterMovement/timeMaxSpeedReach)*reduceDiagonalSpeed);
-            sprite.y += maxSpeed*(Math.sqrt(timeAfterMovement/timeMaxSpeedReach)*reduceDiagonalSpeed);
-        }
-        else if(movementDirection.downleft){
-            sprite.y += maxSpeed*(Math.sqrt(timeAfterMovement/timeMaxSpeedReach)*reduceDiagonalSpeed);
-            sprite.x -= maxSpeed*(Math.sqrt(timeAfterMovement/timeMaxSpeedReach)*reduceDiagonalSpeed);
-        }
-        else if(movementDirection.upleft){
-            sprite.x -= maxSpeed*(Math.sqrt(timeAfterMovement/timeMaxSpeedReach)*reduceDiagonalSpeed);
-            sprite.y -= maxSpeed*(Math.sqrt(timeAfterMovement/timeMaxSpeedReach)*reduceDiagonalSpeed);
-        }
+        moveCharacter();
     }
     else{
-        //jeigu joks klaviaturos mygtukas nenuspaustas, resetina inercija
-        timeAfterMovement = 0;
+        //jeigu joks klaviaturos mygtukas nenuspaustas inercija is karto nepranyksta characteris dar biski juda pats is inercijos
+        
+        if(timeAfterMovement - timeReduceRate > 0){
+            timeAfterMovement -= timeReduceRate;
+
+            moveCharacter();
+        }
+        else{
+            timeAfterMovement = 0;
+        }
+    }
+}
+
+//funkcija pajudins characteri
+function moveCharacter(){
+    if(movementDirection.up){
+        sprite.y -= MovementPhysics.calculateSpeed(maxSpeed, timeAfterMovement, timeMaxSpeedReach, 1);
+    }
+    else if(movementDirection.right){
+        sprite.x += MovementPhysics.calculateSpeed(maxSpeed, timeAfterMovement, timeMaxSpeedReach, 1);
+    }
+    else if(movementDirection.down){
+        sprite.y += MovementPhysics.calculateSpeed(maxSpeed, timeAfterMovement, timeMaxSpeedReach, 1);
+    }
+    else if(movementDirection.left){
+        sprite.x -= MovementPhysics.calculateSpeed(maxSpeed, timeAfterMovement, timeMaxSpeedReach, 1);
+    }
+    else if(movementDirection.upright){
+        sprite.y -= MovementPhysics.calculateSpeed(maxSpeed, timeAfterMovement, timeMaxSpeedReach, reduceDiagonalSpeed);
+        sprite.x += MovementPhysics.calculateSpeed(maxSpeed, timeAfterMovement, timeMaxSpeedReach, reduceDiagonalSpeed);
+    }
+    else if(movementDirection.downright){
+        sprite.x += MovementPhysics.calculateSpeed(maxSpeed, timeAfterMovement, timeMaxSpeedReach, reduceDiagonalSpeed);
+        sprite.y += MovementPhysics.calculateSpeed(maxSpeed, timeAfterMovement, timeMaxSpeedReach, reduceDiagonalSpeed);
+    }
+    else if(movementDirection.downleft){
+        sprite.y += MovementPhysics.calculateSpeed(maxSpeed, timeAfterMovement, timeMaxSpeedReach, reduceDiagonalSpeed);
+        sprite.x -= MovementPhysics.calculateSpeed(maxSpeed, timeAfterMovement, timeMaxSpeedReach, reduceDiagonalSpeed);
+    }
+    else if(movementDirection.upleft){
+        sprite.x -= MovementPhysics.calculateSpeed(maxSpeed, timeAfterMovement, timeMaxSpeedReach, reduceDiagonalSpeed);
+        sprite.y -= MovementPhysics.calculateSpeed(maxSpeed, timeAfterMovement, timeMaxSpeedReach, reduceDiagonalSpeed);
     }
 }
 
