@@ -1,8 +1,8 @@
-import { MovementDirection } from "./movementDirection.js";
+import { MovementDirection } from "./utility/characterMovement/movementDirection.js";
 
-import { MovementPhysics } from "./movementPhysics.js";
+import { MovementPhysics } from "./utility/characterMovement/movementPhysics.js";
 
-import { MovementMomentum } from "./movementMomentum.js";
+import { MovementMomentum } from "./utility/characterMovement/movementMomentum.js";
 
 // Create a new application
 const app = new PIXI.Application();
@@ -14,11 +14,12 @@ await app.init({ antialias: true, background: '#1099bb', resizeTo:window });
 document.body.appendChild(app.canvas);
 
 // Create the sprite and add it to the stage
-await PIXI.Assets.load('sample4.png');
-let sprite = PIXI.Sprite.from('sample4.png');
+await PIXI.Assets.load('./assets/sample4.png');
+let sprite = PIXI.Sprite.from('./assets/sample4.png');
 app.stage.addChild(sprite);
 
 // Dictionary is kurio skaityti informacija, norint suzinoti ar mygtukas nuspaustas
+// JEIGU REIKIA SUZINOTI CHARACTERIO JUDEJIMO KRYPTI NAUDOTI `MovementDirection` NE SITA
 let keyboardState = {"a":false, "d":false, "s":false, "w":false};
 
 // Pridedi keyboard listeneri, kad dictionary updatintu
@@ -124,7 +125,7 @@ function setCharacterMovementDirection(){
     }
 }
 
-//funkcija pajudins characteri
+//funkcija kvieciama every tick, judina characteri pagal ji veikiancias inercijos jegas
 function moveCharacter(){
     if(movementDirection.up){
         sprite.y -= MovementPhysics.calculateSpeed(movementMomentum.upMomentum, 1);
