@@ -18,6 +18,9 @@ await PIXI.Assets.load('./assets/ninja.png');
 let sprite = PIXI.Sprite.from('./assets/ninja.png');
 app.stage.addChild(sprite);
 
+//Truputi padidina sprite'a nes naujas sprite'as truputi mazesnis uz praeita.
+sprite.scale.set(1.15);
+
 // Dictionary is kurio skaityti informacija, norint suzinoti ar mygtukas nuspaustas
 // JEIGU REIKIA SUZINOTI CHARACTERIO JUDEJIMO KRYPTI NAUDOTI `MovementDirection` NE SITA
 let keyboardState = {"a":false, "d":false, "s":false, "w":false};
