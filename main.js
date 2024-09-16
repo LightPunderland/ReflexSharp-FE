@@ -4,6 +4,10 @@ import { MovementPhysics } from "./utility/characterMovement/movementPhysics.js"
 
 import { MovementMomentum } from "./utility/characterMovement/movementMomentum.js";
 
+import { Projectile } from "./utility/projectiles/projectileBase.js";
+
+import { Watermelon } from "./utility/projectiles/projectileWatermelon.js";
+
 // Create a new application
 const app = new PIXI.Application();
 
@@ -13,10 +17,14 @@ await app.init({ antialias: true, background: '#1099bb', resizeTo:window });
 // Append the application canvas to the document body
 document.body.appendChild(app.canvas);
 
+
+
 // Create the sprite and add it to the stage
 await PIXI.Assets.load('./assets/ninja.png');
 let sprite = PIXI.Sprite.from('./assets/ninja.png');
 app.stage.addChild(sprite);
+
+await PIXI.Assets.load('./assets/watermelon.png');
 
 //Truputi padidina sprite'a nes naujas sprite'as truputi mazesnis uz praeita.
 sprite.scale.set(1.15);
@@ -29,12 +37,38 @@ let keyboardState = {"a":false, "d":false, "s":false, "w":false};
 document.body.addEventListener("keydown", onKeyDown);
 document.body.addEventListener("keyup", onKeyUp);
 
+//Sviediniu masyvas
+let projectiles = [];
+//Sviediniu greitis
+const projectileSpeed = 5; 
+// Intervalas, kas kiek sviedinys atsiras
+let spawnInterval = 2000; 
+
+function spawnProjectile() {
+    //Atspawninam nauja sviedini ir pridedam i masyva
+    let newProjectile = new Watermelon(app, sprite, projectileSpeed);
+    projectiles.push(newProjectile);
+}
+
+// Call'ina spawnProjectile kas spawnInterval
+setInterval(spawnProjectile, spawnInterval);
+
+
+
 // Add a ticker callback
 app.ticker.add((ticker) => {
+    
     setCharacterMovementDirection();
     updateCharacterMomentum(ticker.deltaTime);
     momentumDebugLog();
     moveCharacter();
+
+    //update'ina visus sviedinius
+    projectiles.forEach((projectile) => {
+        projectile.updatePos();
+        
+    });
+    
 });
 
 //konstanta reikalinga sumazinti characterio greiti judant istrizai
