@@ -14,8 +14,8 @@ await app.init({ antialias: true, background: '#1099bb', resizeTo:window });
 document.body.appendChild(app.canvas);
 
 // Create the sprite and add it to the stage
-await PIXI.Assets.load('./assets/sample4.png');
-let sprite = PIXI.Sprite.from('./assets/sample4.png');
+await PIXI.Assets.load('./assets/ninja.png');
+let sprite = PIXI.Sprite.from('./assets/ninja.png');
 app.stage.addChild(sprite);
 
 // Dictionary is kurio skaityti informacija, norint suzinoti ar mygtukas nuspaustas
