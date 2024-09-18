@@ -14,9 +14,12 @@ await app.init({ antialias: true, background: '#1099bb', resizeTo:window });
 document.body.appendChild(app.canvas);
 
 // Create the sprite and add it to the stage
-await PIXI.Assets.load('./assets/sample4.png');
-let sprite = PIXI.Sprite.from('./assets/sample4.png');
+await PIXI.Assets.load('./assets/ninja.png');
+let sprite = PIXI.Sprite.from('./assets/ninja.png');
 app.stage.addChild(sprite);
+
+//Truputi padidina sprite'a nes naujas sprite'as truputi mazesnis uz praeita.
+sprite.scale.set(1.15);
 
 // Dictionary is kurio skaityti informacija, norint suzinoti ar mygtukas nuspaustas
 // JEIGU REIKIA SUZINOTI CHARACTERIO JUDEJIMO KRYPTI NAUDOTI `MovementDirection` NE SITA

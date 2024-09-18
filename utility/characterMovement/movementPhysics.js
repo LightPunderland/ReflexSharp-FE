@@ -5,4 +5,5 @@ export class MovementPhysics{
     static calculateSpeed(movementMomentum, reduceDiagonalSpeed){
         return MovementPhysics.maxSpeed * (movementMomentum * reduceDiagonalSpeed);
     }
+
 }

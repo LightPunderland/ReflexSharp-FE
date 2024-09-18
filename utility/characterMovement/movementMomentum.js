@@ -129,7 +129,7 @@ export class MovementMomentum{
             this.upMomentum = Math.sqrt(this._upMomentumTime / MovementMomentum.momentumMaxTime);
         }
         else{
-            this.upMomentumTime = MovementMomentum.initialMomentumTime;
+            this._upMomentumTime = MovementMomentum.initialMomentumTime;
             this.upMomentum = 0;
         }
     }
