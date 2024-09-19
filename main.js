@@ -4,8 +4,6 @@ import { MovementPhysics } from "./utility/characterMovement/movementPhysics.js"
 
 import { MovementMomentum } from "./utility/characterMovement/movementMomentum.js";
 
-import { Projectile } from "./utility/projectiles/projectileBase.js";
-
 import { Watermelon } from "./utility/projectiles/projectileWatermelon.js";
 
 // Create a new application
@@ -16,8 +14,6 @@ await app.init({ antialias: true, background: '#1099bb', resizeTo:window });
 
 // Append the application canvas to the document body
 document.body.appendChild(app.canvas);
-
-
 
 // Create the sprite and add it to the stage
 await PIXI.Assets.load('./assets/ninja.png');
@@ -53,22 +49,17 @@ function spawnProjectile() {
 // Call'ina spawnProjectile kas spawnInterval
 setInterval(spawnProjectile, spawnInterval);
 
-
-
 // Add a ticker callback
 app.ticker.add((ticker) => {
-    
     setCharacterMovementDirection();
     updateCharacterMomentum(ticker.deltaTime);
-    momentumDebugLog();
+    //momentumDebugLog();
     moveCharacter();
 
     //update'ina visus sviedinius
     projectiles.forEach((projectile) => {
-        projectile.updatePos();
-        
+        projectile.update();
     });
-    
 });
 
 //konstanta reikalinga sumazinti characterio greiti judant istrizai
