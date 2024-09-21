@@ -38,6 +38,11 @@ export class Projectile {
 
     // Atspawn'ina sviedini atsitiktineje ekrano puseje
     spawn(screenWidth, screenHeight) {
+        
+        if(this.sprite.parent == null){
+            throw new Error("Sprite not added to the stage");
+        }
+        
         let side = Math.floor(Math.random() * 4); // 0: top, 1: bottom, 2: left, 3: right
 
         switch (side) {
