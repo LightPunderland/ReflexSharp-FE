@@ -15,10 +15,7 @@ export class Projectile {
 
         if (!this.sprite) {
             throw new Error("ProjectileBase sprite not loaded");
-        }
-
-        console.log("player.x: " + this.player.x + " player.y: " + this.player.y);
-        this.direction = this.calculateDirection(this.sprite.x, this.sprite.y, this.player.x, this.player.y);
+        }        
     }
 
     getSprite(){
@@ -61,6 +58,9 @@ export class Projectile {
                 this.sprite.y = Math.random() * screenHeight;
                 break;
         }
+
+        //calculateDirection() kad teisingai veiktu privalo buti iskvieciama tiktais po to kai spawn() funkcija baige apskaiciavimus
+        this.direction = this.calculateDirection(this.sprite.x, this.sprite.y, this.player.x, this.player.y);
     }
 
     // Update'ina sviedinio pozicija, funkcija kvieciama every tick
@@ -69,5 +69,12 @@ export class Projectile {
 
         this.sprite.x += this.direction.x * this.speed;
         this.sprite.y += this.direction.y * this.speed;
+
+        // console.log("projectile direction x: " + this.direction.x);
+        // console.log("projectile direction y: " + this.direction.y);
+
+        // console.log("projectile speed: " + this.speed);
+        // console.log("projectile x: " + this.sprite.x);
+        // console.log("projectile y: " + this.sprite.y);
     }
 }

@@ -32,11 +32,16 @@ let spawnInterval = 2000;
 await PIXI.Assets.load('./assets/watermelon.png');
 
 function spawnProjectile() {
-    console.log("spawnProjectile()")
     //Atspawninam nauja sviedini ir pridedam i masyva
     let newProjectile = new Watermelon(character.getSprite(), projectileSpeed);
-    newProjectile.spawn(app.view.width, app.view.height);
+
+    //Prie stage pridedame sprita
     app.stage.addChild(newProjectile.getSprite());
+
+    //Tada jam priskiria koordinates ir atspawnina
+    newProjectile.spawn(app.view.width, app.view.height);
+
+    //Prideda projectile prie projectile masyvo
     projectiles.push(newProjectile);
 }
 
