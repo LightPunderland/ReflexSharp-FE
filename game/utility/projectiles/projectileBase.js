@@ -79,11 +79,14 @@ export class Projectile {
         if (this.sprite.x < -Projectile._spawnOffset || 
             this.sprite.x > window.innerWidth + Projectile._spawnOffset || 
             this.sprite.y < -Projectile._spawnOffset || 
-            this.sprite.y > window.innerHeight + Projectile._spawnOffset) 
-            // Istrina projectile nuo ekrano
-            if (this.sprite.parent) {
-                this.sprite.parent.removeChild(this.sprite);
-            }
+            this.sprite.y > window.innerHeight + Projectile._spawnOffset){
+                
+                // Istrina projectile nuo ekrano
+                if (this.sprite.parent) {
+                    this.sprite.parent.removeChild(this.sprite);
+                }
+            } 
+            
 
         // console.log("projectile direction x: " + this.direction.x);
         // console.log("projectile direction y: " + this.direction.y);

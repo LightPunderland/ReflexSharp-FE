@@ -71,14 +71,16 @@ setInterval(spawnProjectile, spawnInterval);
 app.ticker.add((ticker) => {
     // Tikrina ar app'as aktyvus
     if (isGameActive){
-    character.update(ticker.deltaTime);
+        character.update(ticker.deltaTime);
 
-    //update'ina visus sviedinius
-    projectiles.forEach((projectile) => {
-        projectile.update();
-        
-    });
-    projectiles = projectiles.filter(projectile => projectile.sprite.parent !== null);
+        //update'ina visus sviedinius
+        projectiles.forEach((projectile) => {
+            projectile.update();
+            
+        });
+
+        //Panaikina is masyvo projectiles, kurie buvo istrinti
+        projectiles = projectiles.filter(projectile => projectile.sprite.parent !== null);
 
         //console.log("Number of projectiles on screen:", projectiles.length);
     }
