@@ -25,6 +25,17 @@ export class Character{
         this.movementMomentum = new MovementMomentum();
     }
 
+    spawnCharacter(canvasWidth, canvasHeight){
+        console.log("canvasWidth: " + canvasWidth);
+        console.log("canvasHeight: " + canvasHeight);
+        if(this.sprite.parent == null){
+            throw new Error("[Character] Sprite not added to the stage");
+        }
+        
+        this.sprite.x = canvasWidth/2 - this.sprite.width/2;
+        this.sprite.y = canvasHeight/2 - this.sprite.height/2;
+    }
+
     update(tickerDeltaTime){
         this.setCharacterMovementDirection();
         this.updateCharacterMomentum(tickerDeltaTime);
