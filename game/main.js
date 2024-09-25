@@ -8,7 +8,7 @@ import { Character } from "./utility/character.js";
 const app = new PIXI.Application();
 
 // Initialize the application
-await app.init({ antialias: true, background: '#1099bb', resizeTo:window });
+await app.init({ antialias: true, background: '#1099bb', resizeTo: window });
 
 // Append the application canvas to the document body
 document.body.appendChild(app.canvas);
@@ -17,6 +17,9 @@ const character = new Character();
 await character.loadSprite();
 
 app.stage.addChild(character.getSprite());
+
+//atspawnina characteri viduri ekrano
+character.spawnCharacter(app.view.width, app.view.height);
 
 // Pridedi keyboard listeneri, kad dictionary updatintu
 document.body.addEventListener("keydown", KeyboardKeys.onKeyDown);
