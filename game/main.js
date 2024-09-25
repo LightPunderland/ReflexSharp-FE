@@ -31,28 +31,46 @@ let projectiles = [];
 const projectileSpeed = 5; 
 // Intervalas, kas kiek sviedinys atsiras
 let spawnInterval = 2000; 
+// Tikrina ar zaidimas aktyvus
+let isGameActive = true;
 
 await PIXI.Assets.load('./assets/watermelon.png');
 
 function spawnProjectile() {
-    //Atspawninam nauja sviedini ir pridedam i masyva
-    let newProjectile = new Watermelon(character.getSprite(), projectileSpeed);
+    // Tikrina ar zaidimas aktyvus
+    if (isGameActive) {
+        //Atspawninam nauja sviedini ir pridedam i masyva
+        let newProjectile = new Watermelon(character.getSprite(), projectileSpeed);
 
-    //Prie stage pridedame sprita
-    app.stage.addChild(newProjectile.getSprite());
+        //Prie stage pridedame sprita
+        app.stage.addChild(newProjectile.getSprite());
 
-    //Tada jam priskiria koordinates ir atspawnina
-    newProjectile.spawn(app.view.width, app.view.height);
+        //Tada jam priskiria koordinates ir atspawnina
+        newProjectile.spawn(app.view.width, app.view.height);
 
-    //Prideda projectile prie projectile masyvo
-    projectiles.push(newProjectile);
+        //Prideda projectile prie projectile masyvo
+        projectiles.push(newProjectile);
+    }
 }
+
+// Keicia isGameActive state'a priklausant nuo to ar zaidimas aktyvus
+function visibilityChange() {
+    if (document.visibilityState === 'hidden') {
+        isGameActive = false; 
+    } else if (document.visibilityState === 'visible') {
+        isGameActive = true; 
+    }
+}
+
+document.addEventListener('visibilitychange', visibilityChange);
 
 // Call'ina spawnProjectile kas spawnInterval
 setInterval(spawnProjectile, spawnInterval);
 
 // Add a ticker callback
 app.ticker.add((ticker) => {
+    // Tikrina ar app'as aktyvus
+    if (isGameActive){
     character.update(ticker.deltaTime);
 
     //update'ina visus sviedinius
@@ -65,6 +83,7 @@ app.ticker.add((ticker) => {
         return true;
         
     });
+}
 });
 
 
