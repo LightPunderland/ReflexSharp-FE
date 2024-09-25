@@ -1,48 +1,48 @@
 export class KeyboardKeys{
 
     // Dictionary is kurio skaityti informacija, norint suzinoti ar mygtukas nuspaustas
-    static keyboardState = {"a":false, "d":false, "s":false, "w":false};   
+    static keyboardState = {"KeyA":false, "KeyD":false, "KeyS":false, "KeyW":false};   
 
     static onKeyDown(ev) {
-
-        if(ev.key == "a"){
-            KeyboardKeys.keyboardState[ev.key] = true;
-        }
-        if(ev.key == "s"){
-            KeyboardKeys.keyboardState[ev.key] = true;
-        }
-        if(ev.key == "w"){
-            KeyboardKeys.keyboardState[ev.key] = true;
-        }
-        if(ev.key == "d"){
-            KeyboardKeys.keyboardState[ev.key] = true;
+        switch(ev.code){
+            case "KeyA":
+                KeyboardKeys.keyboardState[ev.code] = true;
+                break;
+            case "KeyS":
+                KeyboardKeys.keyboardState[ev.code] = true;
+                break;
+            case "KeyW":
+                KeyboardKeys.keyboardState[ev.code] = true;
+                break;
+            case "KeyD":
+                KeyboardKeys.keyboardState[ev.code] = true;
+                break;
         }
     }
 
     static onKeyUp(ev) {
-
-        if(ev.key == "a"){
-            KeyboardKeys.keyboardState[ev.key] = false;
-        }
-        if(ev.key == "s"){
-            KeyboardKeys.keyboardState[ev.key] = false;
-        }
-        if(ev.key == "w"){
-            KeyboardKeys.keyboardState[ev.key] = false;
-        }
-        if(ev.key == "d"){
-            KeyboardKeys.keyboardState[ev.key] = false;
+        switch(ev.code){
+            case "KeyA":
+                KeyboardKeys.keyboardState[ev.code] = false;
+                break;
+            case "KeyS":
+                KeyboardKeys.keyboardState[ev.code] = false;
+                break;
+            case "KeyW":
+                KeyboardKeys.keyboardState[ev.code] = false;
+                break;
+            case "KeyD":
+                KeyboardKeys.keyboardState[ev.code] = false;
+                break;
         }
     }
 
     //grazina kiek nuspausta mygtuku
     static numberOfKeysPressed(){
-        //FIXME: EINA LOOPINTI IR BE SITO FIXED KEYS ARRAY
-        let keys = ["a","s","d","w"];
         let pressedKeys = 0;
 
-        for(let i = 0;i<keys.length;i++){
-            if(KeyboardKeys.keyboardState[keys[i]]){
+        for(const [key, isPressed] of Object.entries(KeyboardKeys.keyboardState)){
+            if(isPressed){
                 pressedKeys += 1;
             }
         }
@@ -52,11 +52,8 @@ export class KeyboardKeys{
 
     //grazina true, jei bent vienas mygtukas nuspaustas
     static anyKeyPressed(){
-        //FIXME: EINA LOOPINTI IR BE SITO FIXED KEYS ARRAY
-        let keys = ["a","s","d","w"];
-
-        for(let i = 0;i<keys.length;i++){
-            if(KeyboardKeys.keyboardState[keys[i]]){
+        for(const [key, isPressed] of Object.entries(KeyboardKeys.keyboardState)){
+            if(isPressed){
                 return true;
             }
         }
