@@ -75,6 +75,19 @@ export class Projectile {
         this.sprite.x += this.direction.x * this.speed;
         this.sprite.y += this.direction.y * this.speed;
 
+        // Tikrina ar projectile yra ekrano ribose
+        if (this.sprite.x < -Projectile._spawnOffset || 
+            this.sprite.x > window.innerWidth + Projectile._spawnOffset || 
+            this.sprite.y < -Projectile._spawnOffset || 
+            this.sprite.y > window.innerHeight + Projectile._spawnOffset){
+                
+                // Istrina projectile nuo ekrano
+                if (this.sprite.parent) {
+                    this.sprite.parent.removeChild(this.sprite);
+                }
+            } 
+            
+
         // console.log("projectile direction x: " + this.direction.x);
         // console.log("projectile direction y: " + this.direction.y);
 
