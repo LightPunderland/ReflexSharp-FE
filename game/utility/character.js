@@ -98,32 +98,32 @@ export class Character{
     //pagal klaviaturos inputa nustato characterio judejimo direction
     setCharacterMovementDirection(){
         if(KeyboardKeys.numberOfKeysPressed() == 2){
-            if(KeyboardKeys.keyboardState["a"] && KeyboardKeys.keyboardState["w"]){
+            if(KeyboardKeys.keyboardState["KeyA"] && KeyboardKeys.keyboardState["KeyW"]){
                 this.movementDirection.upleft = true;
             }
-            else if(KeyboardKeys.keyboardState["w"] && KeyboardKeys.keyboardState["d"]){
+            else if(KeyboardKeys.keyboardState["KeyW"] && KeyboardKeys.keyboardState["KeyD"]){
                 this.movementDirection.upright = true;
             }
-            else if(KeyboardKeys.keyboardState["d"] && KeyboardKeys.keyboardState["s"]){
+            else if(KeyboardKeys.keyboardState["KeyD"] && KeyboardKeys.keyboardState["KeyS"]){
                 this.movementDirection.downright = true;
             }
-            else if(KeyboardKeys.keyboardState["s"] && KeyboardKeys.keyboardState["a"]){
+            else if(KeyboardKeys.keyboardState["KeyS"] && KeyboardKeys.keyboardState["KeyA"]){
                 this.movementDirection.downleft = true;
             }
     
             return;
         }
     
-        if(KeyboardKeys.keyboardState["a"]){
+        if(KeyboardKeys.keyboardState["KeyA"]){
             this.movementDirection.left = true;
         }
-        if(KeyboardKeys.keyboardState["d"]){
+        if(KeyboardKeys.keyboardState["KeyD"]){
             this.movementDirection.right = true;
         }
-        if(KeyboardKeys.keyboardState["w"]){
+        if(KeyboardKeys.keyboardState["KeyW"]){
             this.movementDirection.up = true;
         }
-        if(KeyboardKeys.keyboardState["s"]){
+        if(KeyboardKeys.keyboardState["KeyS"]){
             this.movementDirection.down = true;
         }
     }
