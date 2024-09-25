@@ -74,16 +74,14 @@ app.ticker.add((ticker) => {
     character.update(ticker.deltaTime);
 
     //update'ina visus sviedinius
-    projectiles = projectiles.filter((projectile) => {
-
-        // Tikrina ar projectile akttyvus
-        if (projectile.update()) {
-            return false; 
-        }
-        return true;
+    projectiles.forEach((projectile) => {
+        projectile.update();
         
     });
-}
+    projectiles = projectiles.filter(projectile => projectile.sprite.parent !== null);
+
+        //console.log("Number of projectiles on screen:", projectiles.length);
+    }
 });
 
 
