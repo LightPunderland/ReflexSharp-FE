@@ -77,3 +77,11 @@ footer{
     text-align: left;
     opacity: 0.85;
 }
+
+header{
+    display: flexbox;
+    vertical-align: top;
+    text-align: center;
+    background-color:#c5c4c7;
+    text-align: center;
+}
