@@ -23,11 +23,11 @@ export class Character{
 
         //klase kurioje saugoma 4 krypciu inercijos jegos veikiancio characteri
         this.movementMomentum = new MovementMomentum();
+
+        this.collided = false;
     }
 
     spawnCharacter(canvasWidth, canvasHeight){
-        console.log("canvasWidth: " + canvasWidth);
-        console.log("canvasHeight: " + canvasHeight);
         if(this.sprite.parent == null){
             throw new Error("[Character] Sprite not added to the stage");
         }
@@ -36,11 +36,44 @@ export class Character{
         this.sprite.y = canvasHeight/2 - this.sprite.height/2;
     }
 
-    update(tickerDeltaTime){
+    update(tickerDeltaTime, projectileArray){
+        this.checkForCollision(projectileArray);
         this.setCharacterMovementDirection();
         this.updateCharacterMomentum(tickerDeltaTime);
         this.moveCharacter();
-        //this.momentumDebugLog();
+    }
+
+    checkForCollision(projectileArray){
+        for(let i = 0;i<projectileArray.length;i++){
+            let projectile = projectileArray[i].getSprite();
+
+            if(this._pointCollision(this.sprite.x, this.sprite.y, projectile)){
+                this.collided = true;
+            }
+            else if(this._pointCollision(this.sprite.x+this.sprite.width, this.sprite.y, projectile)){
+                this.collided = true;
+            }
+            else if(this._pointCollision(this.sprite.x, this.sprite.y+this.sprite.height, projectile)){
+                this.collided = true;
+            }
+            else if(this._pointCollision(this.sprite.x+this.sprite.width, this.sprite.y+this.sprite.height, projectile)){
+                this.collided = true;
+            }
+            else{
+                this.collided = false;
+            }
+        }
+    }
+
+    //Grazina true jeigu duotas characterio taskas collidina su projectile
+    _pointCollision(x, y, projectile){
+        if(projectile.x < x && x < projectile.x + projectile.width){
+            if(projectile.y < y && y < projectile.y + projectile.height){
+                return true;
+            }
+        }
+
+        return false;
     }
 
     async loadSprite(){

@@ -71,7 +71,11 @@ setInterval(spawnProjectile, spawnInterval);
 app.ticker.add((ticker) => {
     // Tikrina ar app'as aktyvus
     if (isGameActive){
-        character.update(ticker.deltaTime);
+        character.update(ticker.deltaTime, projectiles);
+
+        if(character.collided){
+            app.renderer.background.color = '#ff0000';
+        }
 
         //update'ina visus sviedinius
         projectiles.forEach((projectile) => {
