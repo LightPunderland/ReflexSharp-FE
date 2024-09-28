@@ -1,12 +1,10 @@
 import { GoogleOAuthProvider } from "@react-oauth/google"
 
-
 function Login(){
 
     return(
-        <div>"Hi"</div>
+       <> <p>Login</p></>
     );
 }
-
 
 export default Login;

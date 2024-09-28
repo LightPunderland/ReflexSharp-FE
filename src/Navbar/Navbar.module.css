@@ -48,6 +48,8 @@ a {
 }
 
 a:hover {
-    color: blue;
+    color: rgb(228, 195, 72);
     transform: scale(0.82);
+    text-decoration: underline;
+
 }
