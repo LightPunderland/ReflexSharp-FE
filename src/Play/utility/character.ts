@@ -3,10 +3,11 @@ import { MovementDirection } from "./characterMovement/movementDirection";
 import { MovementMomentum } from "./characterMovement/movementMomentum";
 import { MovementPhysics } from "./characterMovement/movementPhysics";
 import * as PIXI from 'pixi.js';
+import NinjaPNG from "./assets/ninja.png"
 
 export class Character {
     static reduceDiagonalSpeed = 0.707;
-    static spriteImagePath = 'https://i.imgur.com/c7CsnYw.jpeg';   // fix this rendering
+    static spriteImagePath = NinjaPNG;   // fix this rendering
 
     sprite: PIXI.Sprite | undefined;
     movementDirection: MovementDirection;

@@ -4,6 +4,8 @@ import { Watermelon } from "./utility/projectiles/projectileWatermelon";
 import { KeyboardKeys } from "./utility/keyboardKeys";
 import { Character } from "./utility/character";
 
+import  WatermelonPNG from "./utility/assets/watermelon.png" // RECHECK LATER, MAYBE WE DONT NEED THIS
+
 const Play = () => {
     const gameContainer = useRef<HTMLDivElement>(null); 
     const appRef = useRef<PIXI.Application | null>(null);
@@ -31,7 +33,7 @@ const Play = () => {
         const spawnInterval = 2000;
         let isGameActive = true;
 
-        PIXI.Assets.load('./assets/watermelon.png');
+        PIXI.Assets.load(WatermelonPNG);
 
         const spawnProjectile = () => {
             if (isGameActive) {
