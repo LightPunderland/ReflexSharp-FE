@@ -21,6 +21,7 @@ const Play = () => {
 
         const character = new Character();
         character.loadSprite().then(() => {
+            
             app.stage.addChild(character.getSprite());
             character.spawnCharacter(app.view.width, app.view.height);
         });
@@ -53,12 +54,19 @@ const Play = () => {
         const projectileSpawner = setInterval(spawnProjectile, spawnInterval);
 
         app.ticker.add((deltaTime) => {
+            
             if (isGameActive) {
-                character.update(deltaTime);
+                character.update(deltaTime, projectiles);
+                
+                if(character.collided){
+                    app.renderer.background.color = '#ff0000';
+                }
 
                 projectiles.forEach((projectile) => projectile.update());
 
                 projectiles = projectiles.filter(projectile => projectile.sprite.parent !== null);
+
+
             }
         });
 

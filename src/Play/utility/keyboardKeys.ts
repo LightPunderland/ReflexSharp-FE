@@ -4,12 +4,14 @@ export class KeyboardKeys {
     static onKeyDown(ev: KeyboardEvent) {
         if (ev.code in KeyboardKeys.keyboardState) {
             KeyboardKeys.keyboardState[ev.code] = true;
+            
         }
     }
 
     static onKeyUp(ev: KeyboardEvent) {
         if (ev.code in KeyboardKeys.keyboardState) {
             KeyboardKeys.keyboardState[ev.code] = false;
+            
         }
     }
 

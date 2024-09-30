@@ -4,6 +4,7 @@ import { MovementMomentum } from "./characterMovement/movementMomentum";
 import { MovementPhysics } from "./characterMovement/movementPhysics";
 import * as PIXI from 'pixi.js';
 import NinjaPNG from "./assets/ninja.png"
+import { Watermelon } from "./projectiles/projectileWatermelon";
 
 export class Character {
     static reduceDiagonalSpeed = 0.707;
@@ -12,15 +13,20 @@ export class Character {
     sprite: PIXI.Sprite | undefined;
     movementDirection: MovementDirection;
     movementMomentum: MovementMomentum;
+    collided: boolean;
 
     constructor() {
+        //klase kurioje saugoma i kuria puse juda characteris
         this.movementDirection = new MovementDirection();
+
+        //klase kurioje saugoma 4 krypciu inercijos jegos veikiancio characteri
         this.movementMomentum = new MovementMomentum();
+
+        this.collided = false;
     }
 
     spawnCharacter(canvasWidth: number, canvasHeight: number) {
-        console.log("canvasWidth: " + canvasWidth);
-        console.log("canvasHeight: " + canvasHeight);
+        
         if (!this.sprite || this.sprite.parent == null) {
             throw new Error("[Character] Sprite not added to the stage");
         }
@@ -29,10 +35,44 @@ export class Character {
         this.sprite.y = canvasHeight / 2 - this.sprite.height / 2;
     }
 
-    update(tickerDeltaTime: number) {
+    update(tickerDeltaTime: number, projectileArray: Watermelon[]) {
+        this.checkForCollision(projectileArray);
         this.setCharacterMovementDirection();
         this.updateCharacterMomentum(tickerDeltaTime);
         this.moveCharacter();
+    }
+
+    checkForCollision(projectileArray: Watermelon[]){
+        for(let i = 0;i<projectileArray.length;i++){
+            let projectile = projectileArray[i].getSprite();
+
+            if(this.sprite && this._pointCollision(this.sprite.x, this.sprite.y, projectile)){
+                this.collided = true;
+            }
+            else if(this.sprite && this._pointCollision(this.sprite.x+this.sprite.width, this.sprite.y, projectile)){
+                this.collided = true;
+            }
+            else if(this.sprite && this._pointCollision(this.sprite.x, this.sprite.y+this.sprite.height, projectile)){
+                this.collided = true;
+            }
+            else if(this.sprite && this._pointCollision(this.sprite.x+this.sprite.width, this.sprite.y+this.sprite.height, projectile)){
+                this.collided = true;
+            }
+            else{
+                this.collided = false;
+            }
+        }
+    }
+
+    //Grazina true jeigu duotas characterio taskas collidina su projectile
+    _pointCollision(x: number, y: number, projectile: PIXI.Sprite){
+        if(projectile.x < x && x < projectile.x + projectile.width){
+            if(projectile.y < y && y < projectile.y + projectile.height){
+                return true;
+            }
+        }
+
+        return false;
     }
 
    async loadSprite() {
@@ -40,6 +80,7 @@ export class Character {
         const texture = await PIXI.Assets.load(Character.spriteImagePath);
         this.sprite = new PIXI.Sprite(texture);
         this.sprite.scale.set(1.15);
+
     } catch (error) {
         console.error("Failed to load sprite:", error);
     }
@@ -84,6 +125,7 @@ export class Character {
         }
 
         if (!KeyboardKeys.anyKeyPressed()) {
+            this.movementDirection._resetDirection();
             this.movementMomentum.loseMomentum();
         }
     }

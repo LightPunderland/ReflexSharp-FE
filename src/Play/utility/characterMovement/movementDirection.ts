@@ -8,7 +8,7 @@ export class MovementDirection {
     private _downleft: boolean = false;
     private _downright: boolean = false;
 
-    private _resetDirection(): void {
+    _resetDirection(): void {
         this._up = false;
         this._right = false;
         this._down = false;
