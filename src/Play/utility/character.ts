@@ -7,7 +7,7 @@ import NinjaPNG from "./assets/ninja.png"
 
 export class Character {
     static reduceDiagonalSpeed = 0.707;
-    static spriteImagePath = NinjaPNG;   // fix this rendering
+    static spriteImagePath = NinjaPNG;
 
     sprite: PIXI.Sprite | undefined;
     movementDirection: MovementDirection;
@@ -84,6 +84,7 @@ export class Character {
         }
 
         if (!KeyboardKeys.anyKeyPressed()) {
+            this.movementDirection._resetDirection();
             this.movementMomentum.loseMomentum();
         }
     }
@@ -113,6 +114,10 @@ export class Character {
         }
         if (KeyboardKeys.keyboardState["KeyS"]) {
             this.movementDirection.down = true;
+        }
+
+        if (!KeyboardKeys.anyKeyPressed()) {
+            this.movementMomentum.loseMomentum();
         }
     }
 

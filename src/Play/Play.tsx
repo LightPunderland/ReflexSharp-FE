@@ -29,7 +29,7 @@ const Play = () => {
         document.body.addEventListener("keyup", KeyboardKeys.onKeyUp);
 
         let projectiles: Watermelon[] = [];
-        const projectileSpeed = 5;
+        const projectileSpeed = 1;
         const spawnInterval = 2000;
         let isGameActive = true;
 
