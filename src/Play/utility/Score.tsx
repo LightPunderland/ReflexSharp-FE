@@ -1,24 +1,22 @@
-// Score.tsx
 import React from 'react';
 
 interface ScoreProps {
-    score: number;
+    score: number | null; //Score'as arba null, arba skaicius, pagal boso nurodymus.
 }
 
 const Score: React.FC<ScoreProps> = ({ score }) => {
     return (
         <div style={{ 
             position: 'absolute', 
-            top: '125px', 
+            top: '10px', 
             left: '50%', 
-            transform: 'translateX(-50%)', // Center horizontally
+            transform: 'translateX(-50%)', 
             backgroundColor: 'rgba(0, 0, 0, 0.5)', 
             color: 'white', 
             padding: '10px', 
-            borderRadius: '8px', 
-            zIndex: 1000 // Ensure it stays on top of other elements
+            borderRadius: '8px' 
         }}>
-            Score: {score !== null ? score : '-'}
+            Score: {score !== null ? score : '-'} {/* Display '-' if score is null */}
         </div>
     );
 };
