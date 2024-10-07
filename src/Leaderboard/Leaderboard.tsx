@@ -7,7 +7,12 @@ const LeaderboardLink = 'http://localhost:5050/api/leaderboard';
 
 function Leaderboard(){
 
-    const [leaderboard, setLeaderboard] = useState([]);
+    interface LeaderboardEntry {
+        username: string;
+        score: number;
+    }
+
+    const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
 
     useEffect(() => {
 
