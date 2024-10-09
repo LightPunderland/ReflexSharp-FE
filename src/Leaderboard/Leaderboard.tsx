@@ -3,8 +3,6 @@ import axios from "axios";
 
 const LeaderboardLink = 'http://localhost:5050/api/leaderboard';
 
-
-
 function Leaderboard(){
 
     interface LeaderboardEntry {

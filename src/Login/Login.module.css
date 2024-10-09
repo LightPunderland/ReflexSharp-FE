@@ -1,0 +1,86 @@
+
+.loginModal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url('./dojo.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    z-index: 9999;
+}
+
+
+.loginBox {
+    display: flex;
+    background: rgba(30, 29, 29, 0.9);
+    color: yellow;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.4);
+    width: 600px;
+    height: 400px;
+    flex-direction: column;
+    align-items: center;
+    font-size: 1.5rem;
+}
+
+.loginBox input {
+    margin: 15px 0;
+    padding: 15px;
+    width: 100%;
+    border: 1px solid #eed813;
+    background-color: #c3bf9d;;
+    border-radius: 8px;
+    font-size: 1.2rem;
+}
+
+.loginBox label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 1.3rem;
+}
+
+.buttonContainer {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 1.2rem;
+}
+
+.loginButton {
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    flex: 1;
+}
+
+.guestButton {
+    height: 60px;
+    padding: 10px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    flex: 1;
+}
+
+/* Button slight color change*/
+.loginButton:hover {
+    background-color: #0e73e0;
+}
+
+.guestButton:hover {
+    background-color: #165524;
+}
