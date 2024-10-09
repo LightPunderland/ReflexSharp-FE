@@ -9,7 +9,7 @@ export class Banana extends Projectile {
     constructor(player: { x: number; y: number }, speed: number) {
         super(player, speed, BananaPNG);
 
-        this.speedIncrement = 0.01;
+        this.speedIncrement = 0.03;
         this.archDelay = 1;         
         this.archStrength = 0.003;  
 

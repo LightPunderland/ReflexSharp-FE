@@ -38,17 +38,18 @@ const Play: React.FC = () => {
         document.body.addEventListener("keyup", KeyboardKeys.onKeyUp);
 
         let projectiles: Projectile[] = [];
-        const projectileSpeed = 1;
+        const projectileSpeed = 4;
         const spawnInterval = 2000; // Spawn projectiles every 2000 ms
         let isGameActive = true;
 
         PIXI.Assets.load(WatermelonPNG);
         PIXI.Assets.load(BananaPNG);
 
-        const spawnProjectile = () => {
+        const spawnProjectile = async () => {
             if (isGameActive) {
                 if(Math.random() > 0.6)
                     {
+                    await(Math.random() * 10000);
                     const newProjectile = new Banana(character.getSprite(), projectileSpeed);
                     app.stage.addChild(newProjectile.getSprite());
                     newProjectile.spawn(app.view.width, app.view.height);

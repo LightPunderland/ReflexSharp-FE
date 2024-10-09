@@ -8,7 +8,7 @@ const Score: React.FC<ScoreProps> = ({ score }) => {
     return (
         <div style={{ 
             position: 'absolute', 
-            top: '10px', 
+            top: '125px', 
             left: '50%', 
             transform: 'translateX(-50%)', 
             backgroundColor: 'rgba(0, 0, 0, 0.5)', 
