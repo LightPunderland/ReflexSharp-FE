@@ -18,12 +18,10 @@ const Play: React.FC = () => {
 
     const [score, setScore] = useState<number | null>(null);
 
-
-
     useEffect(() => {
         const app = new PIXI.Application({ antialias: true, backgroundColor: 0x1099bb, resizeTo: window });
         appRef.current = app;
-
+        
         if (gameContainer.current) {
             gameContainer.current.appendChild(app.view as HTMLCanvasElement);
         }
@@ -38,8 +36,10 @@ const Play: React.FC = () => {
         document.body.addEventListener("keyup", KeyboardKeys.onKeyUp);
 
         let projectiles: Projectile[] = [];
-        const projectileSpeed = 4;
-        const spawnInterval = 2000; // Spawn projectiles every 2000 ms
+        const characterBaseSpeed = 0.005; 
+        const projectileBaseSpeed = 0.01; 
+
+        const spawnInterval = 2000; 
         let isGameActive = true;
 
         PIXI.Assets.load(WatermelonPNG);
@@ -47,19 +47,20 @@ const Play: React.FC = () => {
 
         const spawnProjectile = async () => {
             if (isGameActive) {
-                if(Math.random() > 0.6)
-                    {
-                    await(Math.random() * 10000);
-                    const newProjectile = new Banana(character.getSprite(), projectileSpeed);
-                    app.stage.addChild(newProjectile.getSprite());
-                    newProjectile.spawn(app.view.width, app.view.height);
-                    projectiles.push(newProjectile);
-                    }
-                const newProjectile = new Watermelon(character.getSprite(), projectileSpeed);
-                app.stage.addChild(newProjectile.getSprite());
-                newProjectile.spawn(app.view.width, app.view.height);
-                projectiles.push(newProjectile);
+                const projectileSpeed = projectileBaseSpeed * Math.min(app.view.width, app.view.height); 
                 
+                if(Math.random() > 0.6) {
+                    await(Math.random() * 10000);
+                    const newBanana = new Banana(character.getSprite(), projectileSpeed);
+                    app.stage.addChild(newBanana.getSprite());
+                    newBanana.spawn(app.view.width, app.view.height);
+                    projectiles.push(newBanana);
+                }
+                
+                const newWatermelon = new Watermelon(character.getSprite(), projectileSpeed);
+                app.stage.addChild(newWatermelon.getSprite());
+                newWatermelon.spawn(app.view.width, app.view.height);
+                projectiles.push(newWatermelon);
             }
         };
 
@@ -68,12 +69,15 @@ const Play: React.FC = () => {
         };
 
         document.addEventListener('visibilitychange', visibilityChange);
-
         const projectileSpawner = setInterval(spawnProjectile, spawnInterval);
 
+        // **Frame-independent movement using deltaTime**
         app.ticker.add((deltaTime) => {
             if (isGameActive) {
-                character.update(deltaTime, projectiles);
+                const deltaSpeedChar = characterBaseSpeed * Math.min(app.view.width, app.view.height) * deltaTime;
+
+
+                character.update(deltaTime, projectiles, deltaSpeedChar);
                 
                 if (character.collided) {
                     app.renderer.background.color = '#ff0000'; 
@@ -84,20 +88,25 @@ const Play: React.FC = () => {
 
                 const remainingProjectiles = projectiles.filter(projectile => projectile.sprite.parent !== null);
                 const despawnedCount = projectiles.length - remainingProjectiles.length;
-                
+
                 // Uz kiekviena despawn'inta projectile pridedam taskus, jei dar neivyko collision
-            if(!isGameOver) {
-                if (despawnedCount > 0) {
+                if (!isGameOver && despawnedCount > 0) {
                     setScore(prevScore => {
                         const newScore = (prevScore === null) ? despawnedCount : prevScore + despawnedCount;
                         return Math.floor(newScore); // Kad score'as visada butu int'as (jei zinot geresni buda tam uztikrint pakeiskit)
                     });
                 }
-                
-            }
                 projectiles = remainingProjectiles;
-
             }
+        });
+
+        window.addEventListener('resize', () => {
+            const scale = Math.min(window.innerWidth / app.view.width, window.innerHeight / app.view.height);
+            
+            character.getSprite().scale.set(scale);
+            projectiles.forEach(projectile => {
+                projectile.getSprite().scale.set(scale);
+            });
         });
 
         return () => {

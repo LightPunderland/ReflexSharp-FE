@@ -35,11 +35,11 @@ export class Character {
         this.sprite.y = canvasHeight / 2 - this.sprite.height / 2;
     }
 
-    update(tickerDeltaTime: number, projectileArray: Watermelon[]) {
+    update(tickerDeltaTime: number, projectileArray: Watermelon[], deltaSpeed: number) {
         this.checkForCollision(projectileArray);
         this.setCharacterMovementDirection();
         this.updateCharacterMomentum(tickerDeltaTime);
-        this.moveCharacter();
+        this.moveCharacter(deltaSpeed);
     }
 
     checkForCollision(projectileArray: Watermelon[]){
@@ -162,29 +162,31 @@ export class Character {
         }
     }
 
-    moveCharacter() {
+    moveCharacter(deltaSpeed: number) {
         if (!this.sprite) return;
 
+        const calculatedSpeed = deltaSpeed * MovementPhysics.calculateSpeed(1, 1);
+
         if (this.movementDirection.up) {
-            this.sprite.y -= MovementPhysics.calculateSpeed(this.movementMomentum.upMomentum, 1);
+            this.sprite.y -= calculatedSpeed * this.movementMomentum.upMomentum;
         } else if (this.movementDirection.right) {
-            this.sprite.x += MovementPhysics.calculateSpeed(this.movementMomentum.rightMomentum, 1);
+            this.sprite.x += calculatedSpeed * this.movementMomentum.rightMomentum;
         } else if (this.movementDirection.down) {
-            this.sprite.y += MovementPhysics.calculateSpeed(this.movementMomentum.downMomentum, 1);
+            this.sprite.y += calculatedSpeed * this.movementMomentum.downMomentum;
         } else if (this.movementDirection.left) {
-            this.sprite.x -= MovementPhysics.calculateSpeed(this.movementMomentum.leftMomentum, 1);
+            this.sprite.x -= calculatedSpeed * this.movementMomentum.leftMomentum;
         } else if (this.movementDirection.upright) {
-            this.sprite.y -= MovementPhysics.calculateSpeed(this.movementMomentum.upMomentum, Character.reduceDiagonalSpeed);
-            this.sprite.x += MovementPhysics.calculateSpeed(this.movementMomentum.rightMomentum, Character.reduceDiagonalSpeed);
+            this.sprite.y -= calculatedSpeed * this.movementMomentum.upMomentum * Character.reduceDiagonalSpeed;
+            this.sprite.x += calculatedSpeed * this.movementMomentum.rightMomentum * Character.reduceDiagonalSpeed;
         } else if (this.movementDirection.downright) {
-            this.sprite.x += MovementPhysics.calculateSpeed(this.movementMomentum.rightMomentum, Character.reduceDiagonalSpeed);
-            this.sprite.y += MovementPhysics.calculateSpeed(this.movementMomentum.downMomentum, Character.reduceDiagonalSpeed);
+            this.sprite.x += calculatedSpeed * this.movementMomentum.rightMomentum * Character.reduceDiagonalSpeed;
+            this.sprite.y += calculatedSpeed * this.movementMomentum.downMomentum * Character.reduceDiagonalSpeed;
         } else if (this.movementDirection.downleft) {
-            this.sprite.y += MovementPhysics.calculateSpeed(this.movementMomentum.downMomentum, Character.reduceDiagonalSpeed);
-            this.sprite.x -= MovementPhysics.calculateSpeed(this.movementMomentum.leftMomentum, Character.reduceDiagonalSpeed);
+            this.sprite.y += calculatedSpeed * this.movementMomentum.downMomentum * Character.reduceDiagonalSpeed;
+            this.sprite.x -= calculatedSpeed * this.movementMomentum.leftMomentum * Character.reduceDiagonalSpeed;
         } else if (this.movementDirection.upleft) {
-            this.sprite.x -= MovementPhysics.calculateSpeed(this.movementMomentum.leftMomentum, Character.reduceDiagonalSpeed);
-            this.sprite.y -= MovementPhysics.calculateSpeed(this.movementMomentum.upMomentum, Character.reduceDiagonalSpeed);
+            this.sprite.x -= calculatedSpeed * this.movementMomentum.leftMomentum * Character.reduceDiagonalSpeed;
+            this.sprite.y -= calculatedSpeed * this.movementMomentum.upMomentum * Character.reduceDiagonalSpeed;
         }
     }
 
