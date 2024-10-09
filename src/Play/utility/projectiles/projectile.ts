@@ -8,12 +8,18 @@ export class Projectile {
     sprite: PIXI.Sprite;
     speedIncrement: number;
     direction!: { x: number; y: number };
+    time: number; //Kiek laiko praejo nuo sviedinio sukurimo
+    side: number;
+
 
     constructor(player: { x: number; y: number }, speed: number, imagePath: string) {
         this.speed = speed;
         this.player = player;
         this.imagePath = imagePath;
         this.sprite = PIXI.Sprite.from(this.imagePath);
+        this.time = 0;
+        this.side = Math.floor(Math.random() * 4);
+    
         
         this.speedIncrement = 0.1;
 
@@ -42,14 +48,12 @@ export class Projectile {
             throw new Error("[ProjectileBase] Sprite not added to the stage");
         }
 
-        const side = Math.floor(Math.random() * 4);
-
-        switch (side) {
+        switch (this.side) {
             case 0:
                 this.sprite.x = Math.random() * screenWidth;
-                this.sprite.y = -Projectile._spawnOffset; 
+                this.sprite.y = -Projectile._spawnOffset;
                 break;
-            case 1:
+            case 1: 
                 this.sprite.x = Math.random() * screenWidth;
                 this.sprite.y = screenHeight + Projectile._spawnOffset;
                 break;

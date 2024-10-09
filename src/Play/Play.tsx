@@ -1,11 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import * as PIXI from "pixi.js";
 import { Watermelon } from "./utility/projectiles/projectileWatermelon";
+import { Banana } from "./utility/projectiles/projectileBanana";
 import { KeyboardKeys } from "./utility/keyboardKeys";
 import { Character } from "./utility/character";
 import Score from './utility/Score';
 
-import WatermelonPNG from "./utility/assets/watermelon.png"; // Importing the watermelon image
+import WatermelonPNG from "./utility/assets/watermelon.png";
+import BananaPNG from "./utility/assets/banana.png";
+import { Projectile } from "./utility/projectiles/projectile";
 
 const Play: React.FC = () => {
     const gameContainer = useRef<HTMLDivElement>(null);
@@ -34,19 +37,29 @@ const Play: React.FC = () => {
         document.body.addEventListener("keydown", KeyboardKeys.onKeyDown);
         document.body.addEventListener("keyup", KeyboardKeys.onKeyUp);
 
-        let projectiles: Watermelon[] = [];
-        const projectileSpeed = 1;
+        let projectiles: Projectile[] = [];
+        const projectileSpeed = 4;
         const spawnInterval = 2000; // Spawn projectiles every 2000 ms
         let isGameActive = true;
 
         PIXI.Assets.load(WatermelonPNG);
+        PIXI.Assets.load(BananaPNG);
 
-        const spawnProjectile = () => {
+        const spawnProjectile = async () => {
             if (isGameActive) {
+                if(Math.random() > 0.6)
+                    {
+                    await(Math.random() * 10000);
+                    const newProjectile = new Banana(character.getSprite(), projectileSpeed);
+                    app.stage.addChild(newProjectile.getSprite());
+                    newProjectile.spawn(app.view.width, app.view.height);
+                    projectiles.push(newProjectile);
+                    }
                 const newProjectile = new Watermelon(character.getSprite(), projectileSpeed);
                 app.stage.addChild(newProjectile.getSprite());
                 newProjectile.spawn(app.view.width, app.view.height);
                 projectiles.push(newProjectile);
+                
             }
         };
 
@@ -80,6 +93,7 @@ const Play: React.FC = () => {
                         return Math.floor(newScore); // Kad score'as visada butu int'as (jei zinot geresni buda tam uztikrint pakeiskit)
                     });
                 }
+                
             }
                 projectiles = remainingProjectiles;
 
