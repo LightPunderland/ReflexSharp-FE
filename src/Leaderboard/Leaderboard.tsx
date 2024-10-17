@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { seedRandomUsername } from "./RandomName";
+import styles from './Leaderboard.module.css';
 
 const DEFAULT_ENTRY_COUNT = 5;
 
@@ -9,8 +11,9 @@ function Leaderboard(){
 
     const LeaderboardLink = `/host/leaderboard?count=${count}`;
     interface LeaderboardEntry {
-        username: string;
+        user: string | null;
         score: number;
+        id: string;
     }
 
     const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
@@ -30,17 +33,16 @@ function Leaderboard(){
     }, []);
     
 
+    return(<div className={styles.container}>
+            <p className={styles.title}>Leaderboard</p>
 
-    return(<div>
-            <p>Leaderboard</p>
-
-            <ul>
+            <ol className={styles.leaderboard}>
                 {leaderboard.map((entry, index) => (
-                    <li key={index}>
-                        {entry.username}: {entry.score}
+                    <li className={styles.entry} key={index}>
+                        {entry.user === null ? seedRandomUsername(entry.id) : entry.user}: {entry.score}
                     </li>
                 ))}
-            </ul>
+            </ol>
             </div>)
 }
 
