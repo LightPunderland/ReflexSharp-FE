@@ -3,13 +3,11 @@ import { MovementDirection } from "./characterMovement/movementDirection";
 import { MovementMomentum } from "./characterMovement/movementMomentum";
 import { MovementPhysics } from "./characterMovement/movementPhysics";
 import * as PIXI from 'pixi.js';
-import NinjaPNG from "./assets/ninja.png"
-import { Watermelon } from "./projectiles/projectileWatermelon";
+import { Projectile } from "./projectiles/projectile";
 
 export class Character {
     static reduceDiagonalSpeed = 0.707;
-    static spriteImagePath = NinjaPNG;
-
+    static NinjaPNG= 'http://localhost:5050/api/sprite/by-name/ninja';
     sprite: PIXI.Sprite | undefined;
     movementDirection: MovementDirection;
     movementMomentum: MovementMomentum;
@@ -35,14 +33,14 @@ export class Character {
         this.sprite.y = canvasHeight / 2 - this.sprite.height / 2;
     }
 
-    update(tickerDeltaTime: number, projectileArray: Watermelon[], deltaSpeed: number) {
+    update(tickerDeltaTime: number, projectileArray: Projectile[], deltaSpeed: number) {
         this.checkForCollision(projectileArray);
         this.setCharacterMovementDirection();
         this.updateCharacterMomentum(tickerDeltaTime);
         this.moveCharacter(deltaSpeed);
     }
 
-    checkForCollision(projectileArray: Watermelon[]){
+    checkForCollision(projectileArray: Projectile[]){
         for(let i = 0;i<projectileArray.length;i++){
             let projectile = projectileArray[i].getSprite();
 
@@ -75,16 +73,31 @@ export class Character {
         return false;
     }
 
-   async loadSprite() {
-    try {
-        const texture = await PIXI.Assets.load(Character.spriteImagePath);
-        this.sprite = new PIXI.Sprite(texture);
-        this.sprite.scale.set(1.15);
-
-    } catch (error) {
-        console.error("Failed to load sprite:", error);
+    async loadSprite() {
+        try {
+            // Fetch the image data from the backend
+            const response = await fetch(Character.NinjaPNG);
+            if (!response.ok) {
+                throw new Error("Failed to fetch sprite image");
+            }
+    
+            // Get the image blob
+            const blob = await response.blob();
+    
+            // Create a temporary URL for the image
+            const imageUrl = URL.createObjectURL(blob);
+    
+            // Create a PIXI.Texture from the image URL
+            const texture = PIXI.Texture.from(imageUrl);
+    
+            this.sprite = new PIXI.Sprite(texture);
+            this.sprite.scale.set(1.15);
+    
+        } catch (error) {
+            console.error("Failed to load sprite:", error);
+        }
     }
-}
+    
 
     getSprite() {
         if (!this.sprite) {
@@ -197,3 +210,4 @@ export class Character {
         console.log("leftMomentum" + this.movementMomentum.leftMomentum);
     }
 }
+

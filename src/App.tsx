@@ -5,6 +5,7 @@ import Play from './Play/Play';
 import Profile from './Profile/Profile';
 import Leaderboard from './Leaderboard/Leaderboard';
 import Login from './Login/Login';
+import styles from './App.css';
 
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false); // Not logged in by default, cookies go here later
@@ -26,7 +27,7 @@ function App() {
             <Routes>
                 <Route path="/play" element={<Play />} />
                 <Route path="/profile" element={<Profile />} />
-                <Route path="/leaderboard" element={<Leaderboard />} />
+                <Route path="/leaderboard" element={<Leaderboard/>} />
             </Routes>
         </>
     );

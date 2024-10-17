@@ -27,6 +27,7 @@ export class Projectile {
             throw new Error("ProjectileBase sprite not loaded");
         }        
     }
+    
 
     getSprite(): PIXI.Sprite {
         if (!this.sprite) {
