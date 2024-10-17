@@ -8,7 +8,11 @@ export function seedRandomUsername(id: string): string {
     const characterIndex = id.split('-')[1].charCodeAt(0) % characters.length;
     const character = characters[characterIndex];
 
-    const randomNumber = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+    let randomNumber = 0;
+    for(let i = 0; i < 4;i++) {
+        const indexChar = (id.split('-')[2].charCodeAt(i) % characters.length) % 10;
+        randomNumber = (randomNumber * 10) + indexChar;
+    }
 
     return `${color}${character}${randomNumber}`;
 }

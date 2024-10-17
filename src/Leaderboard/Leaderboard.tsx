@@ -4,6 +4,7 @@ import { seedRandomUsername } from "./RandomName";
 import styles from './Leaderboard.module.css';
 
 const DEFAULT_ENTRY_COUNT = 5;
+const REFRESH_INTERVAL_MINUTES = 5;
 
 function Leaderboard(){
 
@@ -14,6 +15,7 @@ function Leaderboard(){
         user: string | null;
         score: number;
         id: string;
+        userId: string;
     }
 
     const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
@@ -30,6 +32,9 @@ function Leaderboard(){
         };
 
         fetchLeader();
+
+        const interval = setInterval(fetchLeader, REFRESH_INTERVAL_MINUTES * 60 * 1000);
+        return () => clearInterval(interval);
     }, []);
     
 
@@ -39,7 +44,7 @@ function Leaderboard(){
             <ol className={styles.leaderboard}>
                 {leaderboard.map((entry, index) => (
                     <li className={styles.entry} key={index}>
-                        {entry.user === null ? seedRandomUsername(entry.id) : entry.user}: {entry.score}
+                        {entry.user === null ? seedRandomUsername(entry.userId) : entry.user}: {entry.score}
                     </li>
                 ))}
             </ol>
