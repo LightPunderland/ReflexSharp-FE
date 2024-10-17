@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-const LeaderboardLink = 'http://localhost:5050/api/leaderboard';
+const DEFAULT_ENTRY_COUNT = 5;
 
 function Leaderboard(){
 
+    const [count, setCount] = useState(DEFAULT_ENTRY_COUNT);
+
+    const LeaderboardLink = `/host/leaderboard?count=${count}`;
     interface LeaderboardEntry {
         username: string;
         score: number;

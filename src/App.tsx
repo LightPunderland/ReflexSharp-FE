@@ -26,7 +26,7 @@ function App() {
             <Routes>
                 <Route path="/play" element={<Play />} />
                 <Route path="/profile" element={<Profile />} />
-                <Route path="/leaderboard" element={<Leaderboard />} />
+                <Route path="/leaderboard" element={<Leaderboard/>} />
             </Routes>
         </>
     );
