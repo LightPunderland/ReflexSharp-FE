@@ -6,8 +6,6 @@ import { KeyboardKeys } from "./utility/keyboardKeys";
 import { Character } from "./utility/character";
 import Score from './utility/Score';
 
-import WatermelonPNG from "./utility/assets/watermelon.png";
-import BananaPNG from "./utility/assets/banana.png";
 import { Projectile } from "./utility/projectiles/projectile";
 
 const Play: React.FC = () => {
@@ -42,8 +40,6 @@ const Play: React.FC = () => {
         const spawnInterval = 2000; 
         let isGameActive = true;
 
-        PIXI.Assets.load(WatermelonPNG);
-        PIXI.Assets.load(BananaPNG);
 
         const spawnProjectile = async () => {
             if (isGameActive) {
