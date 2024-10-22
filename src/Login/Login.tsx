@@ -1,7 +1,11 @@
 import { useState } from 'react';
 import styles from './Login.module.css';
 
-function Login({ onLogin }) {
+interface LoginProps {
+    onLogin: (username: string, password: string) => void;
+}
+
+function Login({ onLogin }: LoginProps) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 

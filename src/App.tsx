@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
+import Leaderboard from './Leaderboard/Leaderboard';
+import Login from './Login/Login';
 import Navbar from './Navbar/Navbar';
 import Play from './Play/Play';
 import Profile from './Profile/Profile';
-import Leaderboard from './Leaderboard/Leaderboard';
-import Login from './Login/Login';
-import styles from './App.css';
+import { AppRoutes } from './enums/enums';
 
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false); // Not logged in by default, cookies go here later
@@ -18,17 +18,17 @@ function App() {
 
     // Login screen, keep it seperate from app for now as to not mess up game score before loading in
     if (!isLoggedIn) {
-        return <Login onLogin={handleLogin}/>;
+        return <Login onLogin={handleLogin} />;
     }
 
     return (
         <>
             <Navbar />
             <Routes>
-                <Route path="/play" element={<Play />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/leaderboard" element={<Leaderboard/>} />
-            </Routes>
+                <Route path={AppRoutes.Play} element={<Play />} />
+                <Route path={AppRoutes.Profile} element={<Profile />} />
+                <Route path={AppRoutes.Leaderboard} element={<Leaderboard />} />
+            </Routes >
         </>
     );
 }
