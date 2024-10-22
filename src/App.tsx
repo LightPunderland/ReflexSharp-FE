@@ -28,7 +28,7 @@ function App() {
                 <Route path={AppRoutes.Play} element={<Play />} />
                 <Route path={AppRoutes.Profile} element={<Profile />} />
                 <Route path={AppRoutes.Leaderboard} element={<Leaderboard />} />
-            </Routes>
+            </Routes >
         </>
     );
 }

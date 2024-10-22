@@ -1,13 +1,21 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { seedRandomUsername } from "./RandomName";
+import styles from './Leaderboard.module.css';
 
-const LeaderboardLink = 'http://localhost:5050/api/leaderboard';
+const DEFAULT_ENTRY_COUNT = 5;
+const REFRESH_INTERVAL_MINUTES = 5;
 
 function Leaderboard(){
 
+    const [count, setCount] = useState(DEFAULT_ENTRY_COUNT);
+
+    const LeaderboardLink = `/host/leaderboard?count=${count}`;
     interface LeaderboardEntry {
-        username: string;
+        user: string | null;
         score: number;
+        id: string;
+        userId: string;
     }
 
     const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
@@ -24,20 +32,22 @@ function Leaderboard(){
         };
 
         fetchLeader();
+
+        const interval = setInterval(fetchLeader, REFRESH_INTERVAL_MINUTES * 60 * 1000);
+        return () => clearInterval(interval);
     }, []);
     
 
+    return(<div className={styles.container}>
+            <p className={styles.title}>Leaderboard</p>
 
-    return(<div>
-            <p>Leaderboard</p>
-
-            <ul>
+            <ol className={styles.leaderboard}>
                 {leaderboard.map((entry, index) => (
-                    <li key={index}>
-                        {entry.username}: {entry.score}
+                    <li className={styles.entry} key={index}>
+                        {entry.user === null ? seedRandomUsername(entry.userId) : entry.user}: {entry.score}
                     </li>
                 ))}
-            </ul>
+            </ol>
             </div>)
 }
 
