@@ -11,6 +11,7 @@ import { Projectile } from "./utility/projectiles/projectile";
 const Play: React.FC = () => {
     const gameContainer = useRef<HTMLDivElement>(null);
     const appRef = useRef<PIXI.Application | null>(null);
+
     
     let isGameOver = false;
 
@@ -20,6 +21,21 @@ const Play: React.FC = () => {
         const app = new PIXI.Application({ antialias: true, backgroundColor: 0x1099bb, resizeTo: window });
         appRef.current = app;
         
+        const backgroundTexture = PIXI.Texture.from('src/Play/background.png');
+        const backgroundSprite = new PIXI.Sprite(backgroundTexture);
+
+        backgroundSprite.width = app.view.width;
+        backgroundSprite.height = app.view.height;
+        backgroundSprite.anchor.set(0.5);
+        backgroundSprite.position.set(app.view.width / 2, app.view.height / 2);
+
+        app.stage.addChild(backgroundSprite);
+
+        window.addEventListener('resize', () => {
+            backgroundSprite.width = app.screen.width;
+            backgroundSprite.height = app.screen.height;
+        });
+
         if (gameContainer.current) {
             gameContainer.current.appendChild(app.view as HTMLCanvasElement);
         }
@@ -46,7 +62,6 @@ const Play: React.FC = () => {
                 const projectileSpeed = projectileBaseSpeed * Math.min(app.view.width, app.view.height); 
                 
                 if(Math.random() > 0.6) {
-                    await(Math.random() * 10000);
                     const newBanana = new Banana(character.getSprite(), projectileSpeed);
                     app.stage.addChild(newBanana.getSprite());
                     newBanana.spawn(app.view.width, app.view.height);
@@ -66,6 +81,7 @@ const Play: React.FC = () => {
 
         document.addEventListener('visibilitychange', visibilityChange);
         const projectileSpawner = setInterval(spawnProjectile, spawnInterval);
+        
 
         // **Frame-independent movement using deltaTime**
         app.ticker.add((deltaTime) => {
@@ -93,6 +109,10 @@ const Play: React.FC = () => {
                     });
                 }
                 projectiles = remainingProjectiles;
+
+                if (isGameOver) {
+                    app.stage.removeChild(backgroundSprite);
+                }
             }
         });
 
