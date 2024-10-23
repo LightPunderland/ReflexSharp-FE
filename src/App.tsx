@@ -10,7 +10,11 @@ import { AppRoutes } from './enums/enums';
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false); // Not logged in by default, cookies go here later
 
-    const handleLogin = (username, password) => {
+    interface LoginProps {
+        onLogin: (username: string, password: string) => void;
+    }
+
+    const handleLogin = (username: string, password: string): void => {
         if (username && password) {
             setIsLoggedIn(true);
         }
