@@ -2,22 +2,24 @@ import { useState } from 'react';
 import styles from './Login.module.css';
 
 interface LoginProps {
-    onLogin: (username: string, password: string) => void;
+    onLogin: (username: string, password: string, userId: string) => void;
 }
 
 function Login({ onLogin }: LoginProps) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [userId, setUserId] = useState('');
 
     const handleLogin = () => {
-        onLogin(username, password);
+        onLogin(username, password, userId);
     };
 
     // Guest usernames will be randomly generated later down the line, for now we will be using a test user
     const handleGuest = () => {
-        const guestUsername = 'testas';
-        const guestPassword = 'testUser123';
-        onLogin(guestUsername, guestPassword);
+        const guestUsername = 'IamAGuest';
+        const userId = 'b6fbd4d9-55f5-481a-a9cf-b274269cbe82'; // MOCK TEST USER ID
+        const guestPassword = "password";
+        onLogin(guestUsername, guestPassword, userId);
     };
 
     return (
