@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Leaderboard from './Leaderboard/Leaderboard';
 import Login from './Login/Login';
@@ -9,12 +9,22 @@ import { AppRoutes } from './enums/enums';
 
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false); // Not logged in by default, cookies go here later
+    const [audio] = useState(new Audio('http://localhost:5050/api/Audio/1')); // Brute-force menu music for now, fix this retroactivly
 
-    const handleLogin = (username, password) => {
+    audio.volume = 0.15;  // PROTECT YOUR EARS
+
+    const handleLogin = (username: string, password: string) => {
         if (username && password) {
             setIsLoggedIn(true);
+            audio.play();
         }
     };
+
+    useEffect(() => {
+            return () => {
+                audio.pause();
+            };
+        }, [audio]);
 
     // Login screen, keep it seperate from app for now as to not mess up game score before loading in
     if (!isLoggedIn) {
