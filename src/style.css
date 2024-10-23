@@ -1,0 +1,87 @@
+body {
+    background-image: linear-gradient(to right,rgba(188, 127, 37, 0.806), rgba(151, 96, 12, 0.76), rgba(137, 88, 15, 0.76));
+}
+
+.menu-options-container{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    height: 83vh;
+    gap: 0.9em;
+}
+
+.menu-options-container div{
+    width: 112vh;
+    height: 18vh;
+    background-size: cover;
+    background-position: center;
+    text-align: center;
+    background-color: white;
+    cursor: pointer;
+    margin-top: 4px;
+}
+.menu-options-container div:hover{
+    transform: scale(1.05);
+}  
+
+#leaderboard-container,
+#settings-container,
+#credits-container{
+    display: none;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    gap: 0.9em;
+    background-color: gray;
+    color: black;
+}
+
+
+.back-arrow{
+    background-image: url('assets/back-arrow-button-asset-temp.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    position: fixed;
+    bottom: -80px;
+    left: 20px;
+    width: 60vh;
+    height: 20vh;
+    cursor: pointer;
+    display: none;
+}
+
+.play-button{
+    background-image: url('assets/play-button-asset-temp.png');
+}
+
+.leaderboard-button{
+    background-image: url('assets/leaderboard-button-asset-temp.png');
+}
+
+.settings-button{
+    background-image: url('assets/settings-button-asset-temp.png');
+}
+
+.credits-button{
+    background-image: url('assets/credits-button-asset-temp.png');
+}
+
+footer{
+    font-size: 1.65em;
+    font-weight: 100em;
+    font-style: normal;
+    background-color: rgb(237, 212, 18);
+    justify-content: center;
+    text-align: left;
+    opacity: 0.85;
+}
+
+header{
+    display: flexbox;
+    vertical-align: top;
+    text-align: center;
+    background-color:#c5c4c7;
+    text-align: center;
+}
