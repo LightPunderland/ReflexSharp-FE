@@ -83,6 +83,8 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
         };
 
         const visibilityChange = () => {
+            isGameActive = document.visibilityState === 'visible';
+
               if (document.visibilityState === 'visible') {
                 setIsGameActive(true);
             } else {
@@ -105,6 +107,8 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
                 // Player dies
                 if (character.collided) {
                     setIsGameActive(false);
+                    isGameActive = false;
+
                     setIsGameOver(true);
                     app.renderer.background.color = '#ff0000'; 
 
@@ -164,9 +168,7 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
 
     //Rodo Score
     const handlePlayAgain = () => {
-        setIsGameActive(true);
-        setIsGameOver(false);
-        setScore(0);
+        window.location.reload();
     };
 
     return (
