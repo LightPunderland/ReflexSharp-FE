@@ -13,7 +13,7 @@ export const PostScore = async (userId: string, score: number): Promise<void> =>
 
     console.log('I am alive');
     try {
-        await axios.post('http://localhost:5050/api/leaderboard/create', scoreData);
+        await axios.post('/host/leaderboard/create', scoreData);
         console.log('Score posted successfully!');
     } catch (error) {
         console.error('Error wen making post', error);
