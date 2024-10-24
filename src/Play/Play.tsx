@@ -28,6 +28,9 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
         const backgroundTexture = PIXI.Texture.from('src/Play/background.png');
         const backgroundSprite = new PIXI.Sprite(backgroundTexture);
 
+        //useState scoras returnina rezultatus tiktai kitam renderi, o mes canvas nenorim rerenderinti
+        let localGameScore = 0
+
         backgroundSprite.width = app.view.width;
         backgroundSprite.height = app.view.height;
         backgroundSprite.anchor.set(0.5);
@@ -107,9 +110,9 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
 
 
                     // Score posting
-                    if (score !== null && doItOnce) {
+                    if (localGameScore !== null && doItOnce) {
                         doItOnce = false;
-                        PostScore(userId, score).catch(e => {
+                        PostScore(userId, localGameScore).catch(e => {
                             console.error('Error posting score: ', e);
                         }); 
                     }
@@ -128,6 +131,8 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
                         const newScore = (prevScore === null) ? despawnedCount : prevScore + despawnedCount; // wtf is this
                         return Math.floor(newScore); // Kad score'as visada butu int'as (jei zinot geresni buda tam uztikrint pakeiskit)
                     });
+
+                    localGameScore += despawnedCount;
                 }
                 projectiles = remainingProjectiles;
 
@@ -155,7 +160,7 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
             document.body.removeEventListener("keyup", KeyboardKeys.onKeyUp);
             app.destroy(true, { children: true });
         };
-    }, [isGameActive, score, userId]);
+    }, []);
 
     //Rodo Score
     const handlePlayAgain = () => {
