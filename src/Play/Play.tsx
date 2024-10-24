@@ -5,16 +5,20 @@ import { Banana } from "./utility/projectiles/projectileBanana";
 import { KeyboardKeys } from "./utility/keyboardKeys";
 import { Character } from "./utility/character";
 import Score from './utility/Score';
+import Replay from './Replay/Replay';
+import { PostScore } from "./PostScore";
 
 import { Projectile } from "./utility/projectiles/projectile";
 
-const Play: React.FC = () => {
+const Play: React.FC<{userId: string}> = ({ userId }) => {
+
+    let doItOnce = true; // DO NOT MAKE REMOVE THIS, WILL BREAK POSTS, NEED TO FIX IN TESTING
+
     const gameContainer = useRef<HTMLDivElement>(null);
     const appRef = useRef<PIXI.Application | null>(null);
 
-    
-    let isGameOver = false;
-
+    const [isGameActive, setIsGameActive] = useState(true);
+    const [isGameOver, setIsGameOver] = useState(false);
     const [score, setScore] = useState<number | null>(null);
 
     useEffect(() => {
@@ -23,6 +27,9 @@ const Play: React.FC = () => {
         
         const backgroundTexture = PIXI.Texture.from('src/Play/background.png');
         const backgroundSprite = new PIXI.Sprite(backgroundTexture);
+
+        //useState scoras returnina rezultatus tiktai kitam renderi, o mes canvas nenorim rerenderinti
+        let localGameScore = 0
 
         backgroundSprite.width = app.view.width;
         backgroundSprite.height = app.view.height;
@@ -76,7 +83,11 @@ const Play: React.FC = () => {
         };
 
         const visibilityChange = () => {
-            isGameActive = document.visibilityState === 'visible';
+              if (document.visibilityState === 'visible') {
+                setIsGameActive(true);
+            } else {
+                setIsGameActive(false);
+            }
         };
 
         document.addEventListener('visibilitychange', visibilityChange);
@@ -91,9 +102,22 @@ const Play: React.FC = () => {
 
                 character.update(deltaTime, projectiles, deltaSpeedChar);
                 
+                // Player dies
                 if (character.collided) {
+                    setIsGameActive(false);
+                    setIsGameOver(true);
                     app.renderer.background.color = '#ff0000'; 
-                    isGameOver = true;
+
+
+                    // Score posting
+                    if (localGameScore !== null && doItOnce) {
+                        doItOnce = false;
+                        PostScore(userId, localGameScore).catch(e => {
+                            console.error('Error posting score: ', e);
+                        }); 
+                    }
+
+                    return;
                 }
 
                 projectiles.forEach((projectile) => projectile.update());
@@ -104,15 +128,19 @@ const Play: React.FC = () => {
                 // Uz kiekviena despawn'inta projectile pridedam taskus, jei dar neivyko collision
                 if (!isGameOver && despawnedCount > 0) {
                     setScore(prevScore => {
-                        const newScore = (prevScore === null) ? despawnedCount : prevScore + despawnedCount;
+                        const newScore = (prevScore === null) ? despawnedCount : prevScore + despawnedCount; // wtf is this
                         return Math.floor(newScore); // Kad score'as visada butu int'as (jei zinot geresni buda tam uztikrint pakeiskit)
                     });
+
+                    localGameScore += despawnedCount;
                 }
                 projectiles = remainingProjectiles;
 
+                
                 if (isGameOver) {
                     app.stage.removeChild(backgroundSprite);
                 }
+                
             }
         });
 
@@ -135,9 +163,16 @@ const Play: React.FC = () => {
     }, []);
 
     //Rodo Score
+    const handlePlayAgain = () => {
+        setIsGameActive(true);
+        setIsGameOver(false);
+        setScore(0);
+    };
+
     return (
         <div ref={gameContainer} style={{ width: '100%', height: '100%' }}>
-            <Score score={score} /> {/* Pass the score to the Score component */}
+            <Score score={score} />
+            {!isGameActive && <Replay score={score} onPlayAgain={handlePlayAgain} />}
         </div>
     );
 };
