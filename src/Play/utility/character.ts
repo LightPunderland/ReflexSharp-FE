@@ -42,6 +42,7 @@ export class Character {
 
     checkForCollision(projectileArray: Projectile[]){
         for(let i = 0;i<projectileArray.length;i++){
+            //BANANAS1, BANANAS2, ARBUZAS
             let projectile = projectileArray[i].getSprite();
 
             if(this.sprite && this._pointCollision(this.sprite.x, this.sprite.y, projectile)){
@@ -56,9 +57,9 @@ export class Character {
             else if(this.sprite && this._pointCollision(this.sprite.x+this.sprite.width, this.sprite.y+this.sprite.height, projectile)){
                 this.collided = true;
             }
-            else{
-                this.collided = false;
-            }
+            // else{
+            //     this.collided = false;
+            // }
         }
     }
 
