@@ -4,6 +4,7 @@ import { MovementMomentum } from "./characterMovement/movementMomentum";
 import { MovementPhysics } from "./characterMovement/movementPhysics";
 import * as PIXI from 'pixi.js';
 import { Projectile } from "./projectiles/projectile";
+import { Pumpkin } from "./projectiles/projectilePumpkin";
 
 export class Character {
     static reduceDiagonalSpeed = 0.707;
@@ -42,9 +43,8 @@ export class Character {
 
     checkForCollision(projectileArray: Projectile[]){
         for(let i = 0;i<projectileArray.length;i++){
-            //BANANAS1, BANANAS2, ARBUZAS
-            let projectile = projectileArray[i].getSprite();
-
+            let projectile = projectileArray[i];
+            
             if(this.sprite && this._pointCollision(this.sprite.x, this.sprite.y, projectile)){
                 this.collided = true;
             }
@@ -57,16 +57,14 @@ export class Character {
             else if(this.sprite && this._pointCollision(this.sprite.x+this.sprite.width, this.sprite.y+this.sprite.height, projectile)){
                 this.collided = true;
             }
-            // else{
-            //     this.collided = false;
-            // }
+            
         }
     }
 
     //Grazina true jeigu duotas characterio taskas collidina su projectile
-    _pointCollision(x: number, y: number, projectile: PIXI.Sprite){
-        if(projectile.x < x && x < projectile.x + projectile.width){
-            if(projectile.y < y && y < projectile.y + projectile.height){
+    _pointCollision(x: number, y: number, projectile: Projectile){
+        if(projectile.getCollisionBox().x < x && x < projectile.getCollisionBox().x + projectile.getCollisionBox().width){
+            if(projectile.getCollisionBox().y < y && y < projectile.getCollisionBox().y + projectile.getCollisionBox().height){
                 return true;
             }
         }
