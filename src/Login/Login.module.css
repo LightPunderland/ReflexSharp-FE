@@ -1,3 +1,5 @@
+/* Temp fontas scary is google*/
+@import url('https://fonts.googleapis.com/css2?family=Creepster&display=swap'); 
 
 .loginModal {
     position: fixed;
@@ -8,7 +10,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-image: url('./dojo.jpg');
+    background-image: url('./halloween_temp.png');
     background-size: cover;
     background-repeat: no-repeat;
     z-index: 9999;
@@ -27,13 +29,15 @@
     flex-direction: column;
     align-items: center;
     font-size: 1.5rem;
+    font-family: 'Creepster', cursive;
+    font-size: 28px;
 }
 
 .loginBox input {
     margin: 15px 0;
     padding: 15px;
     width: 100%;
-    border: 1px solid #eed813;
+    border: 1px solid #d60909;
     background-color: #c3bf9d;;
     border-radius: 8px;
     font-size: 1.2rem;
@@ -53,34 +57,39 @@
     justify-content: space-between;
     width: 100%;
     font-size: 1.2rem;
+    font-family: 'Creepster', cursive;
 }
 
 .loginButton {
     padding: 10px;
-    background-color: #007bff;
-    color: white;
+    background-color: #f1a014;
+    color: rgb(0, 0, 0);
     border: none;
     border-radius: 5px;
     cursor: pointer;
     flex: 1;
+    font-family: 'Creepster', cursive;
+    font-size: 25px;
 }
 
 .guestButton {
     height: 60px;
     padding: 10px;
-    background-color: #28a745;
-    color: white;
+    background-color: #a7a728;
+    color: rgb(0, 0, 0);
     border: none;
     border-radius: 5px;
     cursor: pointer;
     flex: 1;
+    font-family: 'Creepster', cursive;
+    font-size: 25px;
 }
 
 /* Button slight color change*/
 .loginButton:hover {
-    background-color: #0e73e0;
+    background-color: #885d12;
 }
 
 .guestButton:hover {
-    background-color: #165524;
+    background-color: #82821e;
 }

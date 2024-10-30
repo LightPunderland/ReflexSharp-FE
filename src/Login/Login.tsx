@@ -25,7 +25,7 @@ function Login({ onLogin }: LoginProps) {
     return (
         <div className={styles.loginModal}>
             <div className={styles.loginBox}>
-                <h2>Login</h2>
+                <h2>Welcome, please login!</h2>
                 <div>
                     <label>Username:</label>
                     <input
