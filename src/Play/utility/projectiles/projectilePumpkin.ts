@@ -12,6 +12,15 @@ export class Pumpkin extends Projectile {
         'http://localhost:5050/api/sprite/by-name/pumpkin3',
         'http://localhost:5050/api/sprite/by-name/pumpkin4'
     ];
+
+    // laikinas fixas cachinimo images, veliau reikes normalu buda padaryt visiem projectiles
+    private pumpkinSpriteCache: PIXI.Texture<PIXI.Resource>[] = [
+        PIXI.Texture.from('http://localhost:5050/api/sprite/by-name/pumpkin0'),
+        PIXI.Texture.from('http://localhost:5050/api/sprite/by-name/pumpkin1'),
+        PIXI.Texture.from('http://localhost:5050/api/sprite/by-name/pumpkin2'),
+        PIXI.Texture.from('http://localhost:5050/api/sprite/by-name/pumpkin3'),
+        PIXI.Texture.from('http://localhost:5050/api/sprite/by-name/pumpkin4'),
+    ]
     
     constructor(player: { x: number; y: number }, speed: number) {
         
@@ -28,7 +37,7 @@ export class Pumpkin extends Projectile {
 
     private updateSprite(): void {
         if (this.sprite) {
-            this.sprite.texture = PIXI.Texture.from(this.pumpkinSprites[this.phase]);
+            this.sprite.texture = this.pumpkinSpriteCache[this.phase];
         }
     }
 
