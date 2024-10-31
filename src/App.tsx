@@ -39,8 +39,8 @@ function App() {
             <Navbar />
             <Routes>
                 <Route path={AppRoutes.Play} element={<Play userId={userId}/>} />
-                <Route path={AppRoutes.Profile} element={<Profile />} />
                 <Route path={AppRoutes.Leaderboard} element={<Leaderboard />} />
+                <Route path={AppRoutes.Profile} element={<Profile />} />
             </Routes >
         </>
     );

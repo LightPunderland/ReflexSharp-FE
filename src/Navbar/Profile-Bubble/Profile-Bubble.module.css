@@ -1,0 +1,37 @@
+.profileBubble {
+    display: flex;
+    align-items: center; /* Center the content vertically */
+    justify-content: flex-start; /* Align items to the left within the bubble */
+    padding: 10px; /* Add padding for better spacing */
+    background-color: rgba(1, 1, 1, 0.1); /* Slightly transparent background */
+    border-radius: 8px; /* Rounded corners */
+    margin-left: auto; /* Pushes the bubble to the right */
+}
+
+.infoContainer {
+    display: flex;
+    flex-direction: column;
+    margin-right: 10px;
+    color: rgb(233, 160, 15);
+}
+
+.username {
+    font-weight: bold;
+    margin: 0;
+}
+
+.rank {
+    margin: 0;
+}
+
+.coins, .xp {
+    margin: 0;
+    font-size: 0.9em;
+}
+
+.profileImage {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
