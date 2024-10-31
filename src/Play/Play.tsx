@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import * as PIXI from "pixi.js";
 import { Watermelon } from "./utility/projectiles/projectileWatermelon";
 import { Banana } from "./utility/projectiles/projectileBanana";
+import { Pumpkin } from "./utility/projectiles/projectilePumpkin";
 import { KeyboardKeys } from "./utility/keyboardKeys";
 import { Character } from "./utility/character";
 import Score from './utility/Score';
@@ -57,6 +58,7 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
         document.body.addEventListener("keyup", KeyboardKeys.onKeyUp);
 
         let projectiles: Projectile[] = [];
+        let pumpkins: Pumpkin[] = [];
         const characterBaseSpeed = 0.005; 
         const projectileBaseSpeed = 0.01; 
 
@@ -67,6 +69,13 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
         const spawnProjectile = async () => {
             if (isGameActive) {
                 const projectileSpeed = projectileBaseSpeed * Math.min(app.view.width, app.view.height); 
+
+                if(Math.random() > 0.4) {
+                    const newPumpkin = new Pumpkin(character.getSprite(), projectileSpeed);
+                    app.stage.addChild(newPumpkin.getSprite());
+                    newPumpkin.spawn();
+                    pumpkins.push(newPumpkin);
+                }
                 
                 if(Math.random() > 0.6) {
                     const newBanana = new Banana(character.getSprite(), projectileSpeed);
@@ -101,7 +110,13 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
             if (isGameActive) {
                 const deltaSpeedChar = characterBaseSpeed * Math.min(app.view.width, app.view.height) * deltaTime;
 
-
+                for (let i = pumpkins.length - 1; i >= 0; i--) {
+                    if (pumpkins[i].getPhase() === 4) {
+                        projectiles.push(pumpkins[i]);
+                        pumpkins.splice(i, 1); // Remove the pumpkin from the pumpkins array
+                    }
+                }
+                
                 character.update(deltaTime, projectiles, deltaSpeedChar);
                 
                 // Player dies
@@ -125,6 +140,7 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
                 }
 
                 projectiles.forEach((projectile) => projectile.update());
+                pumpkins.forEach((pumpkin) => pumpkin.update());
 
                 const remainingProjectiles = projectiles.filter(projectile => projectile.sprite.parent !== null);
                 const despawnedCount = projectiles.length - remainingProjectiles.length;

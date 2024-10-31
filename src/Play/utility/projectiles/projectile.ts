@@ -19,7 +19,7 @@ export class Projectile {
         this.sprite = PIXI.Sprite.from(this.imagePath);
         this.time = 0;
         this.side = Math.floor(Math.random() * 4);
-    
+        this.sprite.anchor.set(0.5, 0.5);
         
         this.speedIncrement = 0.1;
 
@@ -70,6 +70,16 @@ export class Projectile {
 
         this.direction = this.calculateDirection(this.sprite.x, this.sprite.y, this.player.x, this.player.y);
     }
+
+    getCollisionBox(): { x: number, y: number, width: number, height: number } {
+        return {
+            x: this.sprite.x - this.sprite.width / 2,
+            y: this.sprite.y - this.sprite.height / 2,
+            width: this.sprite.width,
+            height: this.sprite.height,
+        };
+    }
+    
 
     update(): void {
         this.speed += this.speedIncrement;
