@@ -20,6 +20,10 @@ export class Character {
         //klase kurioje saugoma 4 krypciu inercijos jegos veikiancio characteri
         this.movementMomentum = new MovementMomentum();
 
+        this.sprite = new PIXI.Sprite(SpriteCache.instance.ninjaTexture);
+
+        this.sprite.scale.set(1.15);   
+
         this.collided = false;
     }
 
@@ -68,13 +72,7 @@ export class Character {
         }
 
         return false;
-    }
-
-    async loadSprite() {
-        this.sprite = new PIXI.Sprite(SpriteCache.instance.ninjaTexture);
-        this.sprite.scale.set(1.15);    
-    }
-    
+    }    
 
     getSprite() {
         if (!this.sprite) {

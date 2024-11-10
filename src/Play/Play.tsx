@@ -53,10 +53,8 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
         }
 
         const character = new Character();
-        character.loadSprite().then(() => {
-            app.stage.addChild(character.getSprite());
-            character.spawnCharacter(app.view.width, app.view.height);
-        });
+        app.stage.addChild(character.getSprite());
+        character.spawnCharacter(app.view.width, app.view.height);
 
         document.body.addEventListener("keydown", KeyboardKeys.onKeyDown);
         document.body.addEventListener("keyup", KeyboardKeys.onKeyUp);
@@ -68,7 +66,6 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
 
         const spawnInterval = 2000; 
         let isGameActive = true;
-
 
         const spawnProjectile = async () => {
             if (isGameActive) {
