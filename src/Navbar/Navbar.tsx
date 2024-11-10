@@ -28,9 +28,9 @@ function Navbar() {
 
                 </ul>
 
-                <div className={styles.preview}>
+                {/* <div className={styles.preview}>
                     <ProfileBubble ProfileId={'b6fbd4d9-55f5-481a-a9cf-b274269cbe82'} />
-                </div>
+                </div> */}
             </nav>
         </header>
     );
