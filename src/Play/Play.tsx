@@ -10,10 +10,15 @@ import Replay from './Replay/Replay';
 import { PostScore } from "./PostScore";
 
 import { Projectile } from "./utility/projectiles/projectile";
+import { SpriteCache } from "./utility/spriteCache";
 
 const Play: React.FC<{userId: string}> = ({ userId }) => {
 
     let doItOnce = true; // DO NOT MAKE REMOVE THIS, WILL BREAK POSTS, NEED TO FIX IN TESTING
+
+    // Singletonas, SpriteCache.instance po sito bus uzloadinta visur
+    // Davai chebra tik nepanaikinkit sitos eilutes, nors kintamasis nenaudojamas vistiek uzloadina cia viska i memory
+    const spriteCache: SpriteCache = SpriteCache.instance; 
 
     const gameContainer = useRef<HTMLDivElement>(null);
     const appRef = useRef<PIXI.Application | null>(null);
@@ -26,8 +31,7 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
         const app = new PIXI.Application({ antialias: true, backgroundColor: 0x1099bb, resizeTo: window });
         appRef.current = app;
         
-        const backgroundTexture = PIXI.Texture.from('src/Play/background.png');
-        const backgroundSprite = new PIXI.Sprite(backgroundTexture);
+        const backgroundSprite = new PIXI.Sprite(SpriteCache.instance.backgroundTexture);
 
         //useState scoras returnina rezultatus tiktai kitam renderi, o mes canvas nenorim rerenderinti
         let localGameScore = 0
@@ -104,7 +108,6 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
         document.addEventListener('visibilitychange', visibilityChange);
         const projectileSpawner = setInterval(spawnProjectile, spawnInterval);
         
-
         // **Frame-independent movement using deltaTime**
         app.ticker.add((deltaTime) => {
             if (isGameActive) {

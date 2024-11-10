@@ -4,19 +4,16 @@ export class Projectile {
     static _spawnOffset: number = 50;
     speed: number;
     player: { x: number; y: number };
-    imagePath: string;
     sprite: PIXI.Sprite;
     speedIncrement: number;
     direction!: { x: number; y: number };
     time: number; //Kiek laiko praejo nuo sviedinio sukurimo
     side: number;
 
-
-    constructor(player: { x: number; y: number }, speed: number, imagePath: string) {
+    constructor(player: { x: number; y: number }, speed: number, spriteTexture: PIXI.Texture) {
         this.speed = speed;
         this.player = player;
-        this.imagePath = imagePath;
-        this.sprite = PIXI.Sprite.from(this.imagePath);
+        this.sprite = PIXI.Sprite.from(spriteTexture);
         this.time = 0;
         this.side = Math.floor(Math.random() * 4);
         this.sprite.anchor.set(0.5, 0.5);
