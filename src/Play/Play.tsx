@@ -1,16 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import * as PIXI from "pixi.js";
-import { Watermelon } from "./utility/projectiles/projectileWatermelon";
-import { Banana } from "./utility/projectiles/projectileBanana";
-import { Pumpkin } from "./utility/projectiles/projectilePumpkin";
 import { KeyboardKeys } from "./utility/keyboardKeys";
 import { Character } from "./utility/character";
 import Score from './utility/Score';
 import Replay from './Replay/Replay';
 import { PostScore } from "./PostScore";
-
-import { Projectile } from "./utility/projectiles/projectile";
 import { SpriteCache } from "./utility/spriteCache";
+import { ProjectileSpawner } from "./utility/projectileSpawner";
 
 const Play: React.FC<{userId: string}> = ({ userId }) => {
 
@@ -59,35 +55,9 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
         document.body.addEventListener("keydown", KeyboardKeys.onKeyDown);
         document.body.addEventListener("keyup", KeyboardKeys.onKeyUp);
 
-        let projectiles: Projectile[] = [];
-        let pumpkins: Pumpkin[] = [];
+        const projectileSpawner = new ProjectileSpawner(app, character);
 
-        const spawnInterval = 2000; 
         let isGameActive = true;
-
-        const spawnProjectile = async () => {
-            if (isGameActive) {
-
-                if(Math.random() > 0.4) {
-                    const newPumpkin = new Pumpkin(character.getSprite());
-                    app.stage.addChild(newPumpkin.getSprite());
-                    newPumpkin.spawn();
-                    pumpkins.push(newPumpkin);
-                }
-                
-                if(Math.random() > 0) {
-                    const newBanana = new Banana(character.getSprite());
-                    app.stage.addChild(newBanana.getSprite());
-                    newBanana.spawn(app.view.width, app.view.height);
-                    projectiles.push(newBanana);
-                }
-                
-                const newWatermelon = new Watermelon(character.getSprite());
-                app.stage.addChild(newWatermelon.getSprite());
-                newWatermelon.spawn(app.view.width, app.view.height);
-                projectiles.push(newWatermelon);
-            }
-        };
 
         const visibilityChange = () => {
             isGameActive = document.visibilityState === 'visible';
@@ -100,20 +70,19 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
         };
 
         document.addEventListener('visibilitychange', visibilityChange);
-        const projectileSpawner = setInterval(spawnProjectile, spawnInterval);
 
         // **Frame-independent movement using deltaTime**
         app.ticker.add((deltaTime) => {
             if (isGameActive) {
 
-                for (let i = pumpkins.length - 1; i >= 0; i--) {
-                    if (pumpkins[i].getPhase() === 4) {
-                        projectiles.push(pumpkins[i]);
-                        pumpkins.splice(i, 1); // Remove the pumpkin from the pumpkins array
+                for (let i = projectileSpawner.pumpkins.length - 1; i >= 0; i--) {
+                    if (projectileSpawner.pumpkins[i].getPhase() === 4) {
+                        projectileSpawner.projectiles.push(projectileSpawner.pumpkins[i]);
+                        projectileSpawner.pumpkins.splice(i, 1); // Remove the pumpkin from the pumpkins array
                     }
                 }
                 
-                character.update(projectiles, deltaTime);
+                character.update(projectileSpawner.projectiles, deltaTime);
                 
                 // Player dies
                 if (character.collided) {
@@ -135,11 +104,14 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
                     return;
                 }
 
-                projectiles.forEach((projectile) => projectile.update(deltaTime));
-                pumpkins.forEach((pumpkin) => pumpkin.update(deltaTime));
 
-                const remainingProjectiles = projectiles.filter(projectile => projectile.sprite.parent !== null);
-                const despawnedCount = projectiles.length - remainingProjectiles.length;
+                projectileSpawner.projectiles.forEach((projectile) => projectile.update(deltaTime));
+
+                projectileSpawner.pumpkins.forEach((pumpkin) => pumpkin.update(deltaTime));
+
+
+                const remainingProjectiles = projectileSpawner.projectiles.filter(projectile => projectile.sprite.parent !== null);
+                const despawnedCount = projectileSpawner.projectiles.length - remainingProjectiles.length;
 
                 // Uz kiekviena despawn'inta projectile pridedam taskus, jei dar neivyko collision
                 if (!isGameOver && despawnedCount > 0) {
@@ -151,7 +123,7 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
                     localGameScore += despawnedCount;
                 }
 
-                projectiles = remainingProjectiles;
+                projectileSpawner.projectiles = remainingProjectiles;
                 
                 if (isGameOver) {
                     app.stage.removeChild(backgroundSprite);
@@ -164,13 +136,13 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
             const scale = Math.min(window.innerWidth / app.view.width, window.innerHeight / app.view.height);
             
             character.getSprite().scale.set(scale);
-            projectiles.forEach(projectile => {
+            projectileSpawner.projectiles.forEach(projectile => {
                 projectile.getSprite().scale.set(scale);
             });
         });
 
         return () => {
-            clearInterval(projectileSpawner);
+            projectileSpawner.clearIntervals();
             document.removeEventListener('visibilitychange', visibilityChange);
             document.body.removeEventListener("keydown", KeyboardKeys.onKeyDown);
             document.body.removeEventListener("keyup", KeyboardKeys.onKeyUp);
