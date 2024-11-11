@@ -113,7 +113,7 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
                     }
                 }
                 
-                character.update(deltaTime, projectiles, deltaTime);
+                character.update(projectiles, deltaTime);
                 
                 // Player dies
                 if (character.collided) {

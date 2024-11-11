@@ -17,10 +17,5 @@ export class Watermelon extends Projectile {
 
         // Define an oval hit area
         this.sprite.hitArea = new PIXI.Ellipse(centerX, centerY, width / 2, height / 2);
-
-        // const debugGraphics = new PIXI.Graphics();
-        // debugGraphics.lineStyle(2, 0xFF0000);
-        // debugGraphics.drawEllipse(centerX, centerY, width / 2, height / 2);
-        // this.sprite.addChild(debugGraphics);
     }
 }
