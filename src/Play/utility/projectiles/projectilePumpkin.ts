@@ -9,8 +9,10 @@ export class Pumpkin extends Projectile {
     
     
     constructor(player: { x: number; y: number }) {
-        super(player, SpriteCache.instance.pumpkinTextures[0]);
-        //this.sprite.anchor.set(0.5, 0.5); <--- jeigu atkomentuosi tai padarysi pumpkino hitboxa dideliu berniuku
+
+        super(player, SpriteCache.instance.pumpkinTextures[0], SpriteCache.instance.bananaTexture);
+        this.sprite.anchor.set(0.5, 0.5);
+
         this.updateSprite();
         this.setHitArea();
     }

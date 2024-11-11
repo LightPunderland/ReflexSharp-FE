@@ -6,7 +6,9 @@ export class Watermelon extends Projectile {
     static WatermelonPNG= 'http://localhost:5050/api/sprite/by-name/watermelon';
 
     constructor(player: { x: number; y: number }) {
-        super(player, SpriteCache.instance.watermelonTexture);   // doesn't render properly, fix this
+
+        super(player, SpriteCache.instance.watermelonTexture, SpriteCache.instance.watermelonWarningTexture);   // doesn't render properly, fix this
+
 
         this.speedIncrement = 0.08;
 
@@ -17,10 +19,5 @@ export class Watermelon extends Projectile {
 
         // Define an oval hit area
         this.sprite.hitArea = new PIXI.Ellipse(centerX, centerY, width / 2, height / 2);
-
-        // const debugGraphics = new PIXI.Graphics();
-        // debugGraphics.lineStyle(2, 0xFF0000);
-        // debugGraphics.drawEllipse(centerX, centerY, width / 2, height / 2);
-        // this.sprite.addChild(debugGraphics);
     }
 }

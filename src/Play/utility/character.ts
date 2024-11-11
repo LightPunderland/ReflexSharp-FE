@@ -38,10 +38,10 @@ export class Character {
         this.sprite.y = canvasHeight / 2 - this.sprite.height / 2;
     }
 
-    update(tickerDeltaTime: number, projectileArray: Projectile[], deltaTime: number) {
+    update(projectileArray: Projectile[], deltaTime: number) {
         this.checkForCollision(projectileArray);
         this.setCharacterMovementDirection();
-        this.updateCharacterMomentum(tickerDeltaTime);
+        this.updateCharacterMomentum(deltaTime);
         this.moveCharacter(deltaTime);
         this.checkForOutOfBounds();
     }
@@ -66,7 +66,7 @@ export class Character {
         if (!this.sprite) return;
         
         const width = this.sprite.width;
-        const height = this.sprite.height; // Remove 5 pixels from top and bottom
+        const height = this.sprite.height; 
         const centerX = (width * 1.15) / 2;
         const centerY = height / 2;
     

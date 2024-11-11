@@ -26,6 +26,9 @@ export class SpriteCache{
     public bananaTexture = PIXI.Texture.from('http://localhost:5050/api/sprite/by-name/banana');
     public watermelonTexture = PIXI.Texture.from('http://localhost:5050/api/sprite/by-name/watermelon');
     public backgroundTexture = PIXI.Texture.from('src/Play/background.png');
+    
+    public bananaWarningTexture = PIXI.Texture.from('http://localhost:5050/api/sprite/by-name/bananaWarning');
+    public watermelonWarningTexture = PIXI.Texture.from('http://localhost:5050/api/sprite/by-name/watermelonWarning');
 
     public texturesLoaded(){
         const textures = [
@@ -49,26 +52,4 @@ export class SpriteCache{
 
         return true;
     }
-
-    // public texturesLoaded = new Promise<boolean>((resolve) => {
-    //     // a resolved promise after certain hours
-    //     const textures = [this.ninjaTexture, this.bananaTexture, this.watermelonTexture, this.backgroundTexture]
-
-    //     while(true){
-    //         let breaked = false;
-    //         for(let i = 0;i<textures.length;i++){
-    //             if(textures[i].valid == false){
-    //                 breaked = true;
-    //                 break;
-    //             }
-    //         }
-
-    //         if(!breaked){
-    //             break;
-    //         }
-    //     }
-
-    //     resolve(true);
-    // })
-
 }
