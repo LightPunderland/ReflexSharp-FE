@@ -8,9 +8,9 @@ export class Pumpkin extends Projectile {
     private phaseTimer: number = 0;         
     
     
-    constructor(player: { x: number; y: number }, speed: number) {
-        super(player, speed, SpriteCache.instance.pumpkinTextures[0]);
-        this.sprite.anchor.set(0.5, 0.5);
+    constructor(player: { x: number; y: number }) {
+        super(player, SpriteCache.instance.pumpkinTextures[0]);
+        //this.sprite.anchor.set(0.5, 0.5); <--- jeigu atkomentuosi tai padarysi pumpkino hitboxa dideliu berniuku
         this.updateSprite();
         this.setHitArea();
     }
@@ -68,8 +68,8 @@ export class Pumpkin extends Projectile {
         }
     }
 
-    update(): void {
-        this.phaseTimer++;
+    update(deltaTime: number): void {
+        this.phaseTimer += deltaTime;
         
         if (this.phaseTimer >= this.phaseDuration) {
             this.phase++;

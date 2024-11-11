@@ -7,8 +7,8 @@ export class Banana extends Projectile {
     private archStrength: number; 
     private archDirection: { x: number; y: number }; 
 
-    constructor(player: { x: number; y: number }, speed: number) {
-        super(player, speed, SpriteCache.instance.bananaTexture);
+    constructor(player: { x: number; y: number }) {
+        super(player, SpriteCache.instance.bananaTexture);
 
         this.speedIncrement = 0.03;
         this.archDelay = 1;         
@@ -54,15 +54,15 @@ export class Banana extends Projectile {
         this.sprite.hitArea = hitPolygon;
     }
 
-    update(): void {
-        this.speed += this.speedIncrement;
-        this.time += 0.05;
+    update(deltaTime: number): void {
+        this.speed += this.speedIncrement * deltaTime;
+        this.time += 0.05 * deltaTime;
 
 
         // Pries delay judam tiesiai, po delay arka
         if (this.time > this.archDelay) {
-            this.direction.x += this.archDirection.x * this.archStrength;
-            this.direction.y += this.archDirection.y * this.archStrength;
+            this.direction.x += this.archDirection.x * this.archStrength * deltaTime;
+            this.direction.y += this.archDirection.y * this.archStrength * deltaTime;
         }
 
         // normalizuojam direction'a
@@ -71,8 +71,8 @@ export class Banana extends Projectile {
         this.direction.y /= magnitude;
 
         if (this.sprite) {
-            this.sprite.x += this.direction.x * this.speed;
-            this.sprite.y += this.direction.y * this.speed;
+            this.sprite.x += this.direction.x * this.speed * deltaTime;
+            this.sprite.y += this.direction.y * this.speed * deltaTime;
         }
 
         // Panaikinam jei iseina is ekrano

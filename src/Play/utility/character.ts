@@ -38,11 +38,11 @@ export class Character {
         this.sprite.y = canvasHeight / 2 - this.sprite.height / 2;
     }
 
-    update(tickerDeltaTime: number, projectileArray: Projectile[], deltaSpeed: number) {
+    update(tickerDeltaTime: number, projectileArray: Projectile[], deltaTime: number) {
         this.checkForCollision(projectileArray);
         this.setCharacterMovementDirection();
         this.updateCharacterMomentum(tickerDeltaTime);
-        this.moveCharacter(deltaSpeed);
+        this.moveCharacter(deltaTime);
         this.checkForOutOfBounds();
     }
 
@@ -208,10 +208,10 @@ export class Character {
         }
     }
 
-    moveCharacter(deltaSpeed: number) {
+    moveCharacter(deltaTime: number) {
         if (!this.sprite) return;
 
-        const calculatedSpeed = deltaSpeed * MovementPhysics.calculateSpeed(1, 1);
+        const calculatedSpeed = (deltaTime) * MovementPhysics.calculateSpeed();
 
         if (this.movementDirection.up) {
             this.sprite.y -= calculatedSpeed * this.movementMomentum.upMomentum;
