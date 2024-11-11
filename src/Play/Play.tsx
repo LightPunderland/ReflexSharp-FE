@@ -79,7 +79,7 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
 
     const spawnWatermelon = async () => {
         if (isGameActive) {
-            const newWatermelon = new Watermelon(character.getSprite(), projectileSpeed);
+            const newWatermelon = new Watermelon(character.getSprite());
             app.stage.addChild(newWatermelon.getSprite());
             app.stage.addChild(newWatermelon.getWarningSprite());
             newWatermelon.spawn(app.view.width, app.view.height);
@@ -91,7 +91,7 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
 
     const spawnBanana = async () => {
         if (isGameActive) {
-            const newBanana = new Banana(character.getSprite(), projectileSpeed);
+            const newBanana = new Banana(character.getSprite());
             app.stage.addChild(newBanana.getSprite());
             app.stage.addChild(newBanana.getWarningSprite());
             newBanana.spawn(app.view.width, app.view.height);
@@ -103,7 +103,7 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
 
     const spawnPumpkin = async () => {
         if (isGameActive) {
-            const newPumpkin = new Pumpkin(character.getSprite(), projectileSpeed);
+            const newPumpkin = new Pumpkin(character.getSprite());
             app.stage.addChild(newPumpkin.getSprite());
             newPumpkin.spawn();
             pumpkins.push(newPumpkin);
@@ -205,7 +205,7 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
                     return;
                 }
 
-                projectiles.forEach((projectile) => projectile.update());
+                projectiles.forEach((projectile) => projectile.update(deltaTime));
                 pumpkins.forEach((pumpkin) => pumpkin.update());
 
                 const remainingProjectiles = projectiles.filter(projectile => projectile.sprite.parent !== null);

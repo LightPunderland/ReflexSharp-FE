@@ -5,8 +5,8 @@ import * as PIXI from 'pixi.js';
 export class Watermelon extends Projectile {
     static WatermelonPNG= 'http://localhost:5050/api/sprite/by-name/watermelon';
 
-    constructor(player: { x: number; y: number }, speed: number) {
-        super(player, speed, SpriteCache.instance.watermelonTexture, SpriteCache.instance.watermelonWarningTexture);   // doesn't render properly, fix this
+    constructor(player: { x: number; y: number }) {
+        super(player, SpriteCache.instance.watermelonTexture, SpriteCache.instance.watermelonWarningTexture);   // doesn't render properly, fix this
 
         this.speedIncrement = 0.04;
 

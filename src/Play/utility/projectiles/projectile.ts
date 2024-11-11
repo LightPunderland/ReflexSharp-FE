@@ -12,8 +12,8 @@ export class Projectile {
     side: number;
     warnTime: number;
 
-    constructor(player: { x: number; y: number }, speed: number, spriteTexture: PIXI.Texture, warningTexture: PIXI.Texture) {
-        this.speed = speed;
+    constructor(player: { x: number; y: number }, spriteTexture: PIXI.Texture, warningTexture: PIXI.Texture) {
+        this.speed = 12;
         this.player = player;
         this.sprite = PIXI.Sprite.from(spriteTexture);
         this.warningSprite = PIXI.Sprite.from(warningTexture);
@@ -94,13 +94,13 @@ export class Projectile {
         return this.warnTime < 100;
     }
 
-    update(): void {
+    update(deltaTime: number): void {
         
         this.warnTime++;
         if(this.warnTime > 100) {
         if(!this.direction) this.direction = this.calculateDirection(this.sprite.x, this.sprite.y, this.player.x, this.player.y);
 
-        this.speed += this.speedIncrement;
+        this.speed += this.speedIncrement * deltaTime;
 
         this.sprite.x += this.direction.x * this.speed;
         this.sprite.y += this.direction.y * this.speed;

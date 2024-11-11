@@ -8,8 +8,8 @@ export class Pumpkin extends Projectile {
     private phaseTimer: number = 0;         
     
     
-    constructor(player: { x: number; y: number }, speed: number) {
-        super(player, speed, SpriteCache.instance.pumpkinTextures[0], SpriteCache.instance.bananaTexture);
+    constructor(player: { x: number; y: number }) {
+        super(player, SpriteCache.instance.pumpkinTextures[0], SpriteCache.instance.bananaTexture);
         this.sprite.anchor.set(0.5, 0.5);
         this.updateSprite();
         this.setHitArea();

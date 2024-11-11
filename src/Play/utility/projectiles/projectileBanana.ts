@@ -7,8 +7,8 @@ export class Banana extends Projectile {
     private archStrength: number; 
     private archDirection: { x: number; y: number }; 
 
-    constructor(player: { x: number; y: number }, speed: number) {
-        super(player, speed, SpriteCache.instance.bananaTexture, SpriteCache.instance.bananaWarningTexture);
+    constructor(player: { x: number; y: number }) {
+        super(player, SpriteCache.instance.bananaTexture, SpriteCache.instance.bananaWarningTexture);
 
         this.speedIncrement = 0.03;
         this.archDelay = 1;         
@@ -22,19 +22,6 @@ export class Banana extends Projectile {
             };
             this.setCustomHitPolygon();
 
-            // const debugGraphics = new PIXI.Graphics();
-            // debugGraphics.lineStyle(2, 0xFF0000);
-            // debugGraphics.drawPolygon([
-            //     // Define points for quadrants "b", "c", "d"
-            //     this.sprite.width / 2 + 14, 0,             // Top-mid (between "a" and "b")
-            //     this.sprite.width-4, 0,         // Top-right corner ("b")
-            //     this.sprite.width-4, 40,                  // Bottom-right corner ("d")
-            //     40, this.sprite.height - 5,            // Bottom-right corner ("d")             
-            //     0, this.sprite.height - 5,                // Bottom-left corner ("c")
-            //     0, this.sprite.height / 2 + 16,             // Mid-left (between "a" and "c")
-            //     this.sprite.width / 2, this.sprite.height/2 + 10,  // Middle   
-            // ]);
-            // this.sprite.addChild(debugGraphics);
         } else {
             this.archDirection = { x: 0, y: 0 }; // Default values if sprite is null
         }
@@ -67,15 +54,15 @@ export class Banana extends Projectile {
         this.sprite.hitArea = hitPolygon;
     }
 
-    update(): void {
+    update(deltaTime: number): void {
 
         this.warnTime++;
 
         if(this.warnTime > 100) {
 
         if(!this.direction) this.direction = this.calculateDirection(this.sprite.x, this.sprite.y, this.player.x, this.player.y);
-        this.speed += this.speedIncrement;
-        this.time += 0.05;
+        this.speed += this.speedIncrement * deltaTime;
+        this.time += 0.05 * deltaTime;
 
 
         // Pries delay judam tiesiai, po delay arka
