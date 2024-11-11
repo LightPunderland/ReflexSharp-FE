@@ -11,7 +11,7 @@ export class Watermelon extends Projectile {
         this.speedIncrement = 0.04;
 
         const width = this.sprite.width;
-        const height = this.sprite.height - 10; // Remove 5 pixels from top and bottom
+        const height = this.sprite.height; // Remove 5 pixels from top and bottom
         const centerX = width / 2;
         const centerY = this.sprite.height / 2;
 

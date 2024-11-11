@@ -20,21 +20,8 @@ export class Banana extends Projectile {
                 x: this.sprite.x < window.innerWidth / 2 ? 1 : -1, // Left or right
                 y: this.sprite.y < window.innerHeight / 2 ? 1 : -1 // Top or bottom
             };
+            
             this.setCustomHitPolygon();
-
-            // const debugGraphics = new PIXI.Graphics();
-            // debugGraphics.lineStyle(2, 0xFF0000);
-            // debugGraphics.drawPolygon([
-            //     // Define points for quadrants "b", "c", "d"
-            //     this.sprite.width / 2 + 14, 0,             // Top-mid (between "a" and "b")
-            //     this.sprite.width-4, 0,         // Top-right corner ("b")
-            //     this.sprite.width-4, 40,                  // Bottom-right corner ("d")
-            //     40, this.sprite.height - 5,            // Bottom-right corner ("d")             
-            //     0, this.sprite.height - 5,                // Bottom-left corner ("c")
-            //     0, this.sprite.height / 2 + 16,             // Mid-left (between "a" and "c")
-            //     this.sprite.width / 2, this.sprite.height/2 + 10,  // Middle   
-            // ]);
-            // this.sprite.addChild(debugGraphics);
         } else {
             this.archDirection = { x: 0, y: 0 }; // Default values if sprite is null
         }

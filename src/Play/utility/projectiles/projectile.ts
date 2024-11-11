@@ -16,7 +16,6 @@ export class Projectile {
         this.sprite = PIXI.Sprite.from(spriteTexture);
         this.time = 0;
         this.side = Math.floor(Math.random() * 4);
-        //this.sprite.anchor.set(0.5, 0.5);
         
         this.speedIncrement = 0.1;
 
