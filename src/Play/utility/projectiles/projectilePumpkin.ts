@@ -6,8 +6,8 @@ export class Pumpkin extends Projectile {
     private phaseDuration: number = 150;      
     private phaseTimer: number = 0;         
     
-    constructor(player: { x: number; y: number }, speed: number) {
-        super(player, speed, SpriteCache.instance.pumpkinTextures[0]);
+    constructor(player: { x: number; y: number }) {
+        super(player, SpriteCache.instance.pumpkinTextures[0]);
         this.updateSprite();
     }
 
@@ -22,8 +22,8 @@ export class Pumpkin extends Projectile {
         }
     }
 
-    update(): void {
-        this.phaseTimer++;
+    update(deltaTime: number): void {
+        this.phaseTimer += 1 * deltaTime;
         
         if (this.phaseTimer >= this.phaseDuration) {
             this.phase++;
