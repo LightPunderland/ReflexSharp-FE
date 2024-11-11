@@ -62,10 +62,9 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
 
         let projectiles: Projectile[] = [];
         let pumpkins: Pumpkin[] = [];
-        const characterBaseSpeed = 0.005; 
-        const projectileBaseSpeed = 0.01; 
 
         let isGameActive = true;
+
 
         const projectileSpeed = projectileBaseSpeed * Math.min(app.view.width, app.view.height); 
 
@@ -158,7 +157,6 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
     let watermelonInterval = setInterval(spawnWatermelon, currentIntervalWatermelon);
 
 
-
         const visibilityChange = () => {
             isGameActive = document.visibilityState === 'visible';
 
@@ -170,11 +168,10 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
         };
 
         document.addEventListener('visibilitychange', visibilityChange);
-        
+
         // **Frame-independent movement using deltaTime**
         app.ticker.add((deltaTime) => {
             if (isGameActive) {
-                const deltaSpeedChar = characterBaseSpeed * Math.min(app.view.width, app.view.height) * deltaTime;
 
                 for (let i = pumpkins.length - 1; i >= 0; i--) {
                     if (pumpkins[i].getPhase() === 4) {
@@ -183,7 +180,7 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
                     }
                 }
                 
-                character.update(deltaTime, projectiles, deltaSpeedChar);
+                character.update(projectiles, deltaTime);
                 
                 // Player dies
                 if (character.collided) {
@@ -206,7 +203,9 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
                 }
 
                 projectiles.forEach((projectile) => projectile.update(deltaTime));
-                pumpkins.forEach((pumpkin) => pumpkin.update());
+
+                pumpkins.forEach((pumpkin) => pumpkin.update(deltaTime));
+
 
                 const remainingProjectiles = projectiles.filter(projectile => projectile.sprite.parent !== null);
                 const despawnedCount = projectiles.length - remainingProjectiles.length;
@@ -220,8 +219,8 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
 
                     localGameScore += despawnedCount;
                 }
-                projectiles = remainingProjectiles;
 
+                projectiles = remainingProjectiles;
                 
                 if (isGameOver) {
                     app.stage.removeChild(backgroundSprite);

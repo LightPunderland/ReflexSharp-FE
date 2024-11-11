@@ -12,13 +12,16 @@ export class Projectile {
     side: number;
     warnTime: number;
 
+
     constructor(player: { x: number; y: number }, spriteTexture: PIXI.Texture, warningTexture: PIXI.Texture) {
+
         this.speed = 12;
         this.player = player;
         this.sprite = PIXI.Sprite.from(spriteTexture);
         this.warningSprite = PIXI.Sprite.from(warningTexture);
         this.time = 0;
         this.side = Math.floor(Math.random() * 4);
+
         this.warnTime = 0;
 
         this.speedIncrement = 0.1;
@@ -28,7 +31,6 @@ export class Projectile {
         }        
     }
     
-
     getSprite(): PIXI.Sprite {
         if (!this.sprite) {
             throw new Error("ProjectileBase sprite not loaded");
@@ -102,8 +104,8 @@ export class Projectile {
 
         this.speed += this.speedIncrement * deltaTime;
 
-        this.sprite.x += this.direction.x * this.speed;
-        this.sprite.y += this.direction.y * this.speed;
+        this.sprite.x += this.direction.x * this.speed * deltaTime;
+        this.sprite.y += this.direction.y * this.speed * deltaTime;
 
         if (this.sprite.x < -Projectile._spawnOffset ||
             this.sprite.x > window.innerWidth + Projectile._spawnOffset ||

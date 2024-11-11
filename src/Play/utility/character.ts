@@ -38,11 +38,11 @@ export class Character {
         this.sprite.y = canvasHeight / 2 - this.sprite.height / 2;
     }
 
-    update(tickerDeltaTime: number, projectileArray: Projectile[], deltaSpeed: number) {
+    update(projectileArray: Projectile[], deltaTime: number) {
         this.checkForCollision(projectileArray);
         this.setCharacterMovementDirection();
-        this.updateCharacterMomentum(tickerDeltaTime);
-        this.moveCharacter(deltaSpeed);
+        this.updateCharacterMomentum(deltaTime);
+        this.moveCharacter(deltaTime);
         this.checkForOutOfBounds();
     }
 
@@ -65,14 +65,13 @@ export class Character {
     setHitArea() {
         if (!this.sprite) return;
         
-        const width = this.sprite.width - 16;
-        const height = this.sprite.height - 10; // Remove 5 pixels from top and bottom
-        const centerX = (width*1.15) / 2;
+        const width = this.sprite.width;
+        const height = this.sprite.height; 
+        const centerX = (width * 1.15) / 2;
         const centerY = height / 2;
     
-        this.sprite.hitArea = new PIXI.Ellipse(centerX, centerY, width / 2, height / 2);
+        this.sprite.hitArea = new PIXI.Ellipse(centerX, centerY, width + 30, height + 30);
     }
-    
 
     checkForCollision(projectileArray: Projectile[]) {
         for (let i = 0; i < projectileArray.length; i++) {
@@ -101,13 +100,15 @@ export class Character {
     
             // Convert the hitAreas to SAT shapes
             if (characterHitArea instanceof PIXI.Ellipse) {
-                characterShape = new SAT.Circle(new SAT.Vector(character.x, character.y), characterHitArea.width/2);
+                characterShape = new SAT.Circle(new SAT.Vector(character.x, character.y), characterHitArea.width);
             }
     
             if (projectileHitArea instanceof PIXI.Ellipse) {
                 projectileShape = new SAT.Circle(new SAT.Vector(projectile.sprite.x, projectile.sprite.y), projectileHitArea.width / 2);
             } else if (projectileHitArea instanceof PIXI.Polygon) {
-                projectileShape = new SAT.Polygon(new SAT.Vector(projectile.sprite.x, projectile.sprite.y), projectileHitArea.points.map((p, i) => i % 2 === 0 ? new SAT.Vector(projectileHitArea.points[i], projectileHitArea.points[i + 1]) : null).filter(p => p !== null) as SAT.Vector[]);
+                projectileShape = new SAT.Polygon(
+                    new SAT.Vector(projectile.sprite.x, projectile.sprite.y), 
+                    projectileHitArea.points.map((_, i) => i % 2 === 0 ? new SAT.Vector(projectileHitArea.points[i], projectileHitArea.points[i + 1]) : null).filter(p => p !== null) as SAT.Vector[]);
             } else {
                 console.error('Unexpected projectile hitArea type:', projectileHitArea);
                 return false;
@@ -122,7 +123,6 @@ export class Character {
                 collided = SAT.testCirclePolygon(characterShape, projectileShape, response);
             }
             
-            
             // Log if collision occurs
             if (collided) {
                 console.log('Collision detected between character and projectile');
@@ -132,11 +132,6 @@ export class Character {
         return false;
     }
     
-    
-    
-    
-    
-
     getSprite() {
         if (!this.sprite) {
             throw new Error("Character sprite not loaded");
@@ -213,10 +208,10 @@ export class Character {
         }
     }
 
-    moveCharacter(deltaSpeed: number) {
+    moveCharacter(deltaTime: number) {
         if (!this.sprite) return;
 
-        const calculatedSpeed = deltaSpeed * MovementPhysics.calculateSpeed(1, 1);
+        const calculatedSpeed = (deltaTime) * MovementPhysics.calculateSpeed();
 
         if (this.movementDirection.up) {
             this.sprite.y -= calculatedSpeed * this.movementMomentum.upMomentum;

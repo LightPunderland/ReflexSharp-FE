@@ -9,8 +9,10 @@ export class Pumpkin extends Projectile {
     
     
     constructor(player: { x: number; y: number }) {
+
         super(player, SpriteCache.instance.pumpkinTextures[0], SpriteCache.instance.bananaTexture);
         this.sprite.anchor.set(0.5, 0.5);
+
         this.updateSprite();
         this.setHitArea();
     }
@@ -68,8 +70,8 @@ export class Pumpkin extends Projectile {
         }
     }
 
-    update(): void {
-        this.phaseTimer++;
+    update(deltaTime: number): void {
+        this.phaseTimer += deltaTime;
         
         if (this.phaseTimer >= this.phaseDuration) {
             this.phase++;

@@ -8,7 +8,9 @@ export class Banana extends Projectile {
     private archDirection: { x: number; y: number }; 
 
     constructor(player: { x: number; y: number }) {
+
         super(player, SpriteCache.instance.bananaTexture, SpriteCache.instance.bananaWarningTexture);
+
 
         this.speedIncrement = 0.03;
         this.archDelay = 1;         
@@ -20,6 +22,7 @@ export class Banana extends Projectile {
                 x: this.sprite.x < window.innerWidth / 2 ? 1 : -1, // Left or right
                 y: this.sprite.y < window.innerHeight / 2 ? 1 : -1 // Top or bottom
             };
+            
             this.setCustomHitPolygon();
 
         } else {
@@ -61,14 +64,15 @@ export class Banana extends Projectile {
         if(this.warnTime > 100) {
 
         if(!this.direction) this.direction = this.calculateDirection(this.sprite.x, this.sprite.y, this.player.x, this.player.y);
+
         this.speed += this.speedIncrement * deltaTime;
         this.time += 0.05 * deltaTime;
 
 
         // Pries delay judam tiesiai, po delay arka
         if (this.time > this.archDelay) {
-            this.direction.x += this.archDirection.x * this.archStrength;
-            this.direction.y += this.archDirection.y * this.archStrength;
+            this.direction.x += this.archDirection.x * this.archStrength * deltaTime;
+            this.direction.y += this.archDirection.y * this.archStrength * deltaTime;
         }
 
         // normalizuojam direction'a
@@ -77,8 +81,8 @@ export class Banana extends Projectile {
         this.direction.y /= magnitude;
 
         if (this.sprite) {
-            this.sprite.x += this.direction.x * this.speed;
-            this.sprite.y += this.direction.y * this.speed;
+            this.sprite.x += this.direction.x * this.speed * deltaTime;
+            this.sprite.y += this.direction.y * this.speed * deltaTime;
         }
 
         // Panaikinam jei iseina is ekrano
