@@ -10,14 +10,15 @@ export class Projectile {
     time: number; //Kiek laiko praejo nuo sviedinio sukurimo
     side: number;
 
-    constructor(player: { x: number; y: number }, speed: number, spriteTexture: PIXI.Texture) {
-        this.speed = speed;
+    constructor(player: { x: number; y: number }, spriteTexture: PIXI.Texture) {
+        this.speed = 12;
         this.player = player;
         this.sprite = PIXI.Sprite.from(spriteTexture);
         this.time = 0;
         this.side = Math.floor(Math.random() * 4);
         this.sprite.anchor.set(0.5, 0.5);
         
+        // Sita value tiesiog default, ja childrenai overridina beveik visada
         this.speedIncrement = 0.1;
 
         if (!this.sprite) {
@@ -78,11 +79,11 @@ export class Projectile {
     }
     
 
-    update(): void {
-        this.speed += this.speedIncrement;
+    update(deltaTime: number): void {
+        this.speed += this.speedIncrement * deltaTime;
 
-        this.sprite.x += this.direction.x * this.speed;
-        this.sprite.y += this.direction.y * this.speed;
+        this.sprite.x += this.direction.x * this.speed * deltaTime;
+        this.sprite.y += this.direction.y * this.speed * deltaTime;
 
         if (this.sprite.x < -Projectile._spawnOffset ||
             this.sprite.x > window.innerWidth + Projectile._spawnOffset ||

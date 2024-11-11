@@ -61,31 +61,28 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
 
         let projectiles: Projectile[] = [];
         let pumpkins: Pumpkin[] = [];
-        const characterBaseSpeed = 0.005; 
-        const projectileBaseSpeed = 0.01; 
 
         const spawnInterval = 2000; 
         let isGameActive = true;
 
         const spawnProjectile = async () => {
             if (isGameActive) {
-                const projectileSpeed = projectileBaseSpeed * Math.min(app.view.width, app.view.height); 
 
                 if(Math.random() > 0.4) {
-                    const newPumpkin = new Pumpkin(character.getSprite(), projectileSpeed);
+                    const newPumpkin = new Pumpkin(character.getSprite());
                     app.stage.addChild(newPumpkin.getSprite());
                     newPumpkin.spawn();
                     pumpkins.push(newPumpkin);
                 }
                 
                 if(Math.random() > 0.6) {
-                    const newBanana = new Banana(character.getSprite(), projectileSpeed);
+                    const newBanana = new Banana(character.getSprite());
                     app.stage.addChild(newBanana.getSprite());
                     newBanana.spawn(app.view.width, app.view.height);
                     projectiles.push(newBanana);
                 }
                 
-                const newWatermelon = new Watermelon(character.getSprite(), projectileSpeed);
+                const newWatermelon = new Watermelon(character.getSprite());
                 app.stage.addChild(newWatermelon.getSprite());
                 newWatermelon.spawn(app.view.width, app.view.height);
                 projectiles.push(newWatermelon);
@@ -104,11 +101,10 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
 
         document.addEventListener('visibilitychange', visibilityChange);
         const projectileSpawner = setInterval(spawnProjectile, spawnInterval);
-        
+
         // **Frame-independent movement using deltaTime**
         app.ticker.add((deltaTime) => {
             if (isGameActive) {
-                const deltaSpeedChar = characterBaseSpeed * Math.min(app.view.width, app.view.height) * deltaTime;
 
                 for (let i = pumpkins.length - 1; i >= 0; i--) {
                     if (pumpkins[i].getPhase() === 4) {
@@ -117,7 +113,7 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
                     }
                 }
                 
-                character.update(deltaTime, projectiles, deltaSpeedChar);
+                character.update(deltaTime, projectiles, deltaTime);
                 
                 // Player dies
                 if (character.collided) {
@@ -139,8 +135,8 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
                     return;
                 }
 
-                projectiles.forEach((projectile) => projectile.update());
-                pumpkins.forEach((pumpkin) => pumpkin.update());
+                projectiles.forEach((projectile) => projectile.update(deltaTime));
+                pumpkins.forEach((pumpkin) => pumpkin.update(deltaTime));
 
                 const remainingProjectiles = projectiles.filter(projectile => projectile.sprite.parent !== null);
                 const despawnedCount = projectiles.length - remainingProjectiles.length;
@@ -154,8 +150,8 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
 
                     localGameScore += despawnedCount;
                 }
-                projectiles = remainingProjectiles;
 
+                projectiles = remainingProjectiles;
                 
                 if (isGameOver) {
                     app.stage.removeChild(backgroundSprite);
