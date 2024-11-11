@@ -27,4 +27,7 @@ export class SpriteCache{
     public watermelonTexture = PIXI.Texture.from('http://localhost:5050/api/sprite/by-name/watermelon');
     public backgroundTexture = PIXI.Texture.from('src/Play/background.png');
 
+    public bananaWarningTexture = PIXI.Texture.from('http://localhost:5050/api/sprite/by-name/bananaWarning');
+    public watermelonWarningTexture = PIXI.Texture.from('http://localhost:5050/api/sprite/by-name/watermelonWarning');
+
 }

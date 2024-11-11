@@ -8,7 +8,7 @@ export class Banana extends Projectile {
     private archDirection: { x: number; y: number }; 
 
     constructor(player: { x: number; y: number }, speed: number) {
-        super(player, speed, SpriteCache.instance.bananaTexture);
+        super(player, speed, SpriteCache.instance.bananaTexture, SpriteCache.instance.bananaWarningTexture);
 
         this.speedIncrement = 0.03;
         this.archDelay = 1;         
@@ -68,6 +68,12 @@ export class Banana extends Projectile {
     }
 
     update(): void {
+
+        this.warnTime++;
+
+        if(this.warnTime > 100) {
+
+        if(!this.direction) this.direction = this.calculateDirection(this.sprite.x, this.sprite.y, this.player.x, this.player.y);
         this.speed += this.speedIncrement;
         this.time += 0.05;
 
@@ -98,5 +104,32 @@ export class Banana extends Projectile {
                 this.sprite.parent.removeChild(this.sprite);
             }
         }
+        if(this.warningSprite.parent) {
+
+            this.warningSprite.parent.removeChild(this.warningSprite);
+        }
+    }else{
+        switch (this.side) {
+            case 0:
+                this.warningSprite.x = this.sprite.x;
+                this.warningSprite.y = this.sprite.y + Projectile._spawnOffset*2;
+                break;
+            case 1: 
+                this.warningSprite.x = this.sprite.x;
+                this.warningSprite.y = this.sprite.y - Projectile._spawnOffset*3;
+                break;
+            case 2:
+                this.warningSprite.x = this.sprite.x + Projectile._spawnOffset*2;
+                this.warningSprite.y = this.sprite.y;
+                break;
+            case 3:
+                this.warningSprite.x = this.sprite.x - Projectile._spawnOffset*2;
+                this.warningSprite.y = this.sprite.y;
+                break;
+        }
+        
+        this.warningSprite.width = this.sprite.width;
+        this.warningSprite.height = this.sprite.height;
     }
+}
 }

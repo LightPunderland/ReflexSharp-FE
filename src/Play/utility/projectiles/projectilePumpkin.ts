@@ -9,7 +9,7 @@ export class Pumpkin extends Projectile {
     
     
     constructor(player: { x: number; y: number }, speed: number) {
-        super(player, speed, SpriteCache.instance.pumpkinTextures[0]);
+        super(player, speed, SpriteCache.instance.pumpkinTextures[0], SpriteCache.instance.bananaTexture);
         this.sprite.anchor.set(0.5, 0.5);
         this.updateSprite();
         this.setHitArea();

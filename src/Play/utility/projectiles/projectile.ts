@@ -1,23 +1,26 @@
 import * as PIXI from 'pixi.js';
 
 export class Projectile {
-    static _spawnOffset: number = 50;
+    static _spawnOffset: number = 100;
     speed: number;
     player: { x: number; y: number };
     sprite: PIXI.Sprite;
+    warningSprite: PIXI.Sprite;
     speedIncrement: number;
     direction!: { x: number; y: number };
     time: number; //Kiek laiko praejo nuo sviedinio sukurimo
     side: number;
+    warnTime: number;
 
-    constructor(player: { x: number; y: number }, speed: number, spriteTexture: PIXI.Texture) {
+    constructor(player: { x: number; y: number }, speed: number, spriteTexture: PIXI.Texture, warningTexture: PIXI.Texture) {
         this.speed = speed;
         this.player = player;
         this.sprite = PIXI.Sprite.from(spriteTexture);
+        this.warningSprite = PIXI.Sprite.from(warningTexture);
         this.time = 0;
         this.side = Math.floor(Math.random() * 4);
-        //this.sprite.anchor.set(0.5, 0.5);
-        
+        this.warnTime = 0;
+
         this.speedIncrement = 0.1;
 
         if (!this.sprite) {
@@ -31,6 +34,13 @@ export class Projectile {
             throw new Error("ProjectileBase sprite not loaded");
         }
         return this.sprite;
+    }
+
+    getWarningSprite(): PIXI.Sprite {
+        if (!this.warningSprite) {
+            throw new Error("ProjectileBase warning sprite not loaded");
+        }
+        return this.warningSprite;
     }
 
     calculateDirection(startX: number, startY: number, targetX: number, targetY: number): { x: number; y: number } {
@@ -50,6 +60,7 @@ export class Projectile {
             case 0:
                 this.sprite.x = Math.random() * screenWidth;
                 this.sprite.y = -Projectile._spawnOffset;
+                this.warningSprite.rotation = Math.PI;
                 break;
             case 1: 
                 this.sprite.x = Math.random() * screenWidth;
@@ -58,14 +69,16 @@ export class Projectile {
             case 2:
                 this.sprite.x = -Projectile._spawnOffset; 
                 this.sprite.y = Math.random() * screenHeight;
+                this.warningSprite.rotation = Math.PI/2;
                 break;
             case 3:
                 this.sprite.x = screenWidth + Projectile._spawnOffset; 
                 this.sprite.y = Math.random() * screenHeight;
+                this.warningSprite.rotation = -Math.PI/2;
                 break;
         }
 
-        this.direction = this.calculateDirection(this.sprite.x, this.sprite.y, this.player.x, this.player.y);
+        
     }
 
     getCollisionBox(): { x: number, y: number, width: number, height: number } {
@@ -77,8 +90,16 @@ export class Projectile {
         };
     }
     
+    getIsWarningActive(): boolean {
+        return this.warnTime < 100;
+    }
 
     update(): void {
+        
+        this.warnTime++;
+        if(this.warnTime > 100) {
+        if(!this.direction) this.direction = this.calculateDirection(this.sprite.x, this.sprite.y, this.player.x, this.player.y);
+
         this.speed += this.speedIncrement;
 
         this.sprite.x += this.direction.x * this.speed;
@@ -93,5 +114,33 @@ export class Projectile {
                 this.sprite.parent.removeChild(this.sprite);
             }
         }
+        if(this.warningSprite.parent) {
+
+            this.warningSprite.parent.removeChild(this.warningSprite);
+        }
+    }else {
+        switch (this.side) {
+            case 0:
+                this.warningSprite.x = this.sprite.x;
+                this.warningSprite.y = this.sprite.y + Projectile._spawnOffset*2;
+                break;
+            case 1: 
+                this.warningSprite.x = this.sprite.x;
+                this.warningSprite.y = this.sprite.y - Projectile._spawnOffset*3;
+                break;
+            case 2:
+                this.warningSprite.x = this.sprite.x + Projectile._spawnOffset*2;
+                this.warningSprite.y = this.sprite.y;
+                break;
+            case 3:
+                this.warningSprite.x = this.sprite.x - Projectile._spawnOffset*2;
+                this.warningSprite.y = this.sprite.y;
+                break;
+        }
+        
+        this.warningSprite.width = this.sprite.width;
+        this.warningSprite.height = this.sprite.height;
     }
+    
+}
 }

@@ -8,7 +8,6 @@ import { Character } from "./utility/character";
 import Score from './utility/Score';
 import Replay from './Replay/Replay';
 import { PostScore } from "./PostScore";
-
 import { Projectile } from "./utility/projectiles/projectile";
 import { SpriteCache } from "./utility/spriteCache";
 
@@ -26,6 +25,8 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
     const [isGameActive, setIsGameActive] = useState(true);
     const [isGameOver, setIsGameOver] = useState(false);
     const [score, setScore] = useState<number | null>(null);
+
+    
 
     useEffect(() => {
         const app = new PIXI.Application({ antialias: true, backgroundColor: 0x1099bb, resizeTo: window });
@@ -64,33 +65,99 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
         const characterBaseSpeed = 0.005; 
         const projectileBaseSpeed = 0.01; 
 
-        const spawnInterval = 2000; 
         let isGameActive = true;
 
-        const spawnProjectile = async () => {
-            if (isGameActive) {
-                const projectileSpeed = projectileBaseSpeed * Math.min(app.view.width, app.view.height); 
+        const projectileSpeed = projectileBaseSpeed * Math.min(app.view.width, app.view.height); 
 
-                if(Math.random() > 0.4) {
-                    const newPumpkin = new Pumpkin(character.getSprite(), projectileSpeed);
-                    app.stage.addChild(newPumpkin.getSprite());
-                    newPumpkin.spawn();
-                    pumpkins.push(newPumpkin);
-                }
-                
-                if(Math.random() > 0) {
-                    const newBanana = new Banana(character.getSprite(), projectileSpeed);
-                    app.stage.addChild(newBanana.getSprite());
-                    newBanana.spawn(app.view.width, app.view.height);
-                    projectiles.push(newBanana);
-                }
-                
-                const newWatermelon = new Watermelon(character.getSprite(), projectileSpeed);
-                app.stage.addChild(newWatermelon.getSprite());
-                newWatermelon.spawn(app.view.width, app.view.height);
-                projectiles.push(newWatermelon);
-            }
-        };
+        const initialInterval = 2500; // Initial spawn interval in milliseconds
+    const minInterval = 500; // Minimum interval cap in milliseconds
+    const difficultyFactor = 0.99; // How quickly the interval decreases (0.99 = 1% decrease per spawn)
+
+    let currentIntervalWatermelon = initialInterval * 0.9;
+    let currentIntervalBanana = initialInterval * 1.1;
+    let currentIntervalPumpkin = initialInterval * 1.3;
+
+    const spawnWatermelon = async () => {
+        if (isGameActive) {
+            const newWatermelon = new Watermelon(character.getSprite(), projectileSpeed);
+            app.stage.addChild(newWatermelon.getSprite());
+            app.stage.addChild(newWatermelon.getWarningSprite());
+            newWatermelon.spawn(app.view.width, app.view.height);
+            projectiles.push(newWatermelon);
+
+            adjustInterval("watermelon");
+        }
+    };
+
+    const spawnBanana = async () => {
+        if (isGameActive) {
+            const newBanana = new Banana(character.getSprite(), projectileSpeed);
+            app.stage.addChild(newBanana.getSprite());
+            app.stage.addChild(newBanana.getWarningSprite());
+            newBanana.spawn(app.view.width, app.view.height);
+            projectiles.push(newBanana);
+
+            adjustInterval("banana");
+        }
+    };
+
+    const spawnPumpkin = async () => {
+        if (isGameActive) {
+            const newPumpkin = new Pumpkin(character.getSprite(), projectileSpeed);
+            app.stage.addChild(newPumpkin.getSprite());
+            newPumpkin.spawn();
+            pumpkins.push(newPumpkin);
+
+            adjustInterval("pumpkin");
+        }
+    };
+        let currentInterval: number;
+        let interval;
+        const adjustInterval = (type: string) => {
+        
+
+        // Select the appropriate interval variable based on the projectile type
+        if (type === "watermelon") {
+            currentInterval = currentIntervalWatermelon;
+        } else if (type === "banana") {
+            currentInterval = currentIntervalBanana;
+        } else if (type === "pumpkin") {
+            currentInterval = currentIntervalPumpkin;
+        }
+
+        currentInterval = Math.max(minInterval, currentInterval * difficultyFactor);
+
+        // Add some randomness (±20% of the current interval)
+        const randomOffset = Math.random() * 0.4 - 0.2;
+        const adjustedInterval = currentInterval * (1 + randomOffset);
+
+        // Update the interval variable for the specific type
+        if (type === "watermelon") {
+            currentIntervalWatermelon = adjustedInterval;
+        } else if (type === "banana") {
+            currentIntervalBanana = adjustedInterval;
+        } else if (type === "pumpkin") {
+            currentIntervalPumpkin = adjustedInterval;
+        }
+
+        // Clear and reset only the interval for the given type
+        if (type === "watermelon") {
+            clearInterval(watermelonInterval);
+            watermelonInterval = setInterval(spawnWatermelon, adjustedInterval);
+        } else if (type === "banana") {
+            clearInterval(bananaInterval);
+            bananaInterval = setInterval(spawnBanana, adjustedInterval);
+        } else if (type === "pumpkin") {
+            clearInterval(pumpkinInterval);
+            pumpkinInterval = setInterval(spawnPumpkin, adjustedInterval);
+        }
+    };
+
+    let bananaInterval = setInterval(spawnBanana, currentIntervalBanana);
+    let pumpkinInterval = setInterval(spawnPumpkin, currentIntervalPumpkin);
+    let watermelonInterval = setInterval(spawnWatermelon, currentIntervalWatermelon);
+
+
 
         const visibilityChange = () => {
             isGameActive = document.visibilityState === 'visible';
@@ -103,7 +170,6 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
         };
 
         document.addEventListener('visibilitychange', visibilityChange);
-        const projectileSpawner = setInterval(spawnProjectile, spawnInterval);
         
         // **Frame-independent movement using deltaTime**
         app.ticker.add((deltaTime) => {
@@ -174,7 +240,9 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
         });
 
         return () => {
-            clearInterval(projectileSpawner);
+            clearInterval(watermelonInterval);
+            clearInterval(bananaInterval);
+            clearInterval(pumpkinInterval);
             document.removeEventListener('visibilitychange', visibilityChange);
             document.body.removeEventListener("keydown", KeyboardKeys.onKeyDown);
             document.body.removeEventListener("keyup", KeyboardKeys.onKeyUp);
