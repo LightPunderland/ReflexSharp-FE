@@ -1,13 +1,13 @@
+import { SpriteCache } from '../spriteCache';
 import { Projectile } from './projectile';
 
 export class Banana extends Projectile {
     private archDelay: number;  
     private archStrength: number; 
     private archDirection: { x: number; y: number }; 
-    static BananaPNG= 'http://localhost:5050/api/sprite/by-name/banana';
 
     constructor(player: { x: number; y: number }, speed: number) {
-        super(player, speed, Banana.BananaPNG);
+        super(player, speed, SpriteCache.instance.bananaTexture);
 
         this.speedIncrement = 0.03;
         this.archDelay = 1;         

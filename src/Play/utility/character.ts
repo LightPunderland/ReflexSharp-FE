@@ -4,11 +4,10 @@ import { MovementMomentum } from "./characterMovement/movementMomentum";
 import { MovementPhysics } from "./characterMovement/movementPhysics";
 import * as PIXI from 'pixi.js';
 import { Projectile } from "./projectiles/projectile";
-import { Pumpkin } from "./projectiles/projectilePumpkin";
+import { SpriteCache } from "./spriteCache";
 
 export class Character {
     static reduceDiagonalSpeed = 0.707;
-    static NinjaPNG= 'http://localhost:5050/api/sprite/by-name/ninja';
     sprite: PIXI.Sprite | undefined;
     movementDirection: MovementDirection;
     movementMomentum: MovementMomentum;
@@ -21,11 +20,14 @@ export class Character {
         //klase kurioje saugoma 4 krypciu inercijos jegos veikiancio characteri
         this.movementMomentum = new MovementMomentum();
 
+        this.sprite = new PIXI.Sprite(SpriteCache.instance.ninjaTexture);
+
+        this.sprite.scale.set(1.15);   
+
         this.collided = false;
     }
 
     spawnCharacter(canvasWidth: number, canvasHeight: number) {
-        
         if (!this.sprite || this.sprite.parent == null) {
             throw new Error("[Character] Sprite not added to the stage");
         }
@@ -70,33 +72,7 @@ export class Character {
         }
 
         return false;
-    }
-
-    async loadSprite() {
-        try {
-            // Fetch the image data from the backend
-            const response = await fetch(Character.NinjaPNG);
-            if (!response.ok) {
-                throw new Error("Failed to fetch sprite image");
-            }
-    
-            // Get the image blob
-            const blob = await response.blob();
-    
-            // Create a temporary URL for the image
-            const imageUrl = URL.createObjectURL(blob);
-    
-            // Create a PIXI.Texture from the image URL
-            const texture = PIXI.Texture.from(imageUrl);
-    
-            this.sprite = new PIXI.Sprite(texture);
-            this.sprite.scale.set(1.15);
-    
-        } catch (error) {
-            console.error("Failed to load sprite:", error);
-        }
-    }
-    
+    }    
 
     getSprite() {
         if (!this.sprite) {

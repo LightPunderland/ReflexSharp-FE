@@ -53,3 +53,9 @@ a:hover {
     text-decoration: underline;
 
 }
+
+.preview {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+}
