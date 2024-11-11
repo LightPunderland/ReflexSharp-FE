@@ -102,9 +102,21 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
         document.addEventListener('visibilitychange', visibilityChange);
         const projectileSpawner = setInterval(spawnProjectile, spawnInterval);
 
+        const loadingText = new PIXI.Text("Loading game...");
+        loadingText.x = app.view.width/2 - loadingText.width/2;
+        loadingText.y = app.view.height/3;
+        let gameLoaded = false;
+
         // **Frame-independent movement using deltaTime**
         app.ticker.add((deltaTime) => {
-            if (isGameActive) {
+            if (!SpriteCache.instance.texturesLoaded()){
+                app.stage.addChild(loadingText);
+            }
+            else if (isGameActive) {
+                if(!gameLoaded){
+                    gameLoaded = true
+                    app.stage.removeChild(loadingText);
+                }
 
                 for (let i = pumpkins.length - 1; i >= 0; i--) {
                     if (pumpkins[i].getPhase() === 4) {
