@@ -75,7 +75,7 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
                     pumpkins.push(newPumpkin);
                 }
                 
-                if(Math.random() > 0.6) {
+                if(Math.random() > 0) {
                     const newBanana = new Banana(character.getSprite());
                     app.stage.addChild(newBanana.getSprite());
                     newBanana.spawn(app.view.width, app.view.height);
