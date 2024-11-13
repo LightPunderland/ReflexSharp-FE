@@ -50,7 +50,6 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
 
         const character = new Character();
         app.stage.addChild(character.getSprite());
-        character.spawnCharacter(app.view.width, app.view.height);
 
         document.body.addEventListener("keydown", KeyboardKeys.onKeyDown);
         document.body.addEventListener("keyup", KeyboardKeys.onKeyUp);
@@ -85,6 +84,9 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
                 if(!gameLoaded){
                     gameLoaded = true
                     app.stage.removeChild(loadingText);
+                    console.log(character.getSprite().width);
+                    console.log(character.getSprite().height);
+                    character.spawnCharacter(app.view.width, app.view.height);
                 }
 
                 for (let i = projectileSpawner.pumpkins.length - 1; i >= 0; i--) {

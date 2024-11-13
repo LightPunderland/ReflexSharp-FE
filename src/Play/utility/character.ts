@@ -35,7 +35,7 @@ export class Character {
         }
 
         this.sprite.x = canvasWidth / 2 - this.sprite.width / 2;
-        this.sprite.y = canvasHeight / 2 - this.sprite.height / 2;
+        this.sprite.y = canvasHeight / 2 - this.sprite.height;
     }
 
     update(projectileArray: Projectile[], deltaTime: number) {
