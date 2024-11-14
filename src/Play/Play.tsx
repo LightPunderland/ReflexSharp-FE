@@ -12,18 +12,19 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
 
     let doItOnce = true; // DO NOT MAKE REMOVE THIS, WILL BREAK POSTS, NEED TO FIX IN TESTING
 
-    // Singletonas, SpriteCache.instance po sito bus uzloadinta visur
-    // Davai chebra tik nepanaikinkit sitos eilutes, nors kintamasis nenaudojamas vistiek uzloadina cia viska i memory
-    const spriteCache: SpriteCache = SpriteCache.instance; 
-
     const gameContainer = useRef<HTMLDivElement>(null);
     const appRef = useRef<PIXI.Application | null>(null);
 
     const [isGameActive, setIsGameActive] = useState(true);
     const [isGameOver, setIsGameOver] = useState(false);
     const [score, setScore] = useState<number | null>(null);
+    const [playAgain, setPlayAgain] = useState<number>(0);
 
     useEffect(() => {
+        // Singletonas, SpriteCache.instance po sito bus uzloadinta visur
+        // Davai chebra tik nepanaikinkit sitos eilutes, nors kintamasis nenaudojamas vistiek uzloadina cia viska i memory
+        const spriteCache: SpriteCache = SpriteCache.instance; 
+
         const app = new PIXI.Application({ antialias: true, backgroundColor: 0x1099bb, resizeTo: window });
         appRef.current = app;
         
@@ -84,8 +85,6 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
                 if(!gameLoaded){
                     gameLoaded = true
                     app.stage.removeChild(loadingText);
-                    console.log(character.getSprite().width);
-                    console.log(character.getSprite().height);
                     character.spawnCharacter(app.view.width, app.view.height);
                 }
 
@@ -104,8 +103,6 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
                     isGameActive = false;
 
                     setIsGameOver(true);
-                    app.renderer.background.color = '#ff0000'; 
-
 
                     // Score posting
                     if (localGameScore !== null && doItOnce) {
@@ -115,6 +112,8 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
                         }); 
                     }
 
+                    app.ticker.stop();
+
                     return;
                 }
 
@@ -122,7 +121,6 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
                 projectileSpawner.projectiles.forEach((projectile) => projectile.update(deltaTime));
 
                 projectileSpawner.pumpkins.forEach((pumpkin) => pumpkin.update(deltaTime));
-
 
                 const remainingProjectiles = projectileSpawner.projectiles.filter(projectile => projectile.sprite.parent !== null);
                 const despawnedCount = projectileSpawner.projectiles.length - remainingProjectiles.length;
@@ -138,11 +136,6 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
                 }
 
                 projectileSpawner.projectiles = remainingProjectiles;
-                
-                if (isGameOver) {
-                    app.stage.removeChild(backgroundSprite);
-                }
-                
             }
         });
 
@@ -162,11 +155,14 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
             document.body.removeEventListener("keyup", KeyboardKeys.onKeyUp);
             app.destroy(true, { children: true });
         };
-    }, []);
+    }, [playAgain]);
 
     //Rodo Score
     const handlePlayAgain = () => {
-        window.location.reload();
+        setIsGameActive(true);
+        setIsGameOver(false);
+        setPlayAgain(playAgain + 1);
+        setScore(null);
     };
 
     return (
