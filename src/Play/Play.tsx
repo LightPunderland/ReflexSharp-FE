@@ -10,6 +10,7 @@ import Xp from './utility/Xp';
 import Gold from './utility/Gold';
 import Replay from './Replay/Replay';
 import { PostScore } from "./PostScore";
+import { rewardGoldXp } from "./PostScore";
 import { Projectile } from "./utility/projectiles/projectile";
 import { SpriteCache } from "./utility/spriteCache";
 
@@ -175,11 +176,16 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
 
         document.addEventListener('visibilitychange', visibilityChange);
         
+        let timeElapsed = 0;
+
         // **Frame-independent movement using deltaTime**
         app.ticker.add((deltaTime) => {
-            localGameXp += 0.1*difficultyFactor*deltaTime;
-            setXp(localGameXp);
+            
             if (isGameActive) {
+                
+                timeElapsed += 0.01;  // Convert deltaTime from ms to seconds
+                localGameXp = 1.001 * Math.pow(timeElapsed, 1.3);
+                setXp(Math.floor(localGameXp));
                 const deltaSpeedChar = characterBaseSpeed * Math.min(app.view.width, app.view.height) * deltaTime;
 
                 for (let i = pumpkins.length - 1; i >= 0; i--) {
@@ -203,9 +209,14 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
                     // Score posting
                     if (localGameScore !== null && doItOnce) {
                         doItOnce = false;
+                        console.log('Posting score: ', localGameXp);
                         PostScore(userId, localGameScore).catch(e => {
-                            console.error('Error posting score: ', e);
+                            console.error('Error posting score: ', e);    
                         }); 
+                        rewardGoldXp(userId, Math.floor(localGameGold), Math.floor(localGameXp)).catch(e => {
+    
+                            console.error('Error rewarding gold and xp: ', e);
+                        });
                     }
 
                     return;
