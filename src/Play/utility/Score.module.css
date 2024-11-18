@@ -1,12 +1,12 @@
 .scoreContainer {
-    position: fixed;
-    top: 20px;
+    position: absolute;
+    top: 125px;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 1000;
-    background: rgba(255, 255, 255, 0.3);
-    padding: 8px 16px;
-    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
     min-width: 120px;
     text-align: center;
 }
@@ -18,17 +18,15 @@
     transform: translateY(-50%);
     margin-left: 10px;
     pointer-events: none;
-    z-index: 999;
 }
 
 .plusOne {
     color: #ff0000;
-    font-size: 28px;
+    font-size: 24px;
     font-weight: bold;
     animation: floatRight 0.5s ease-out forwards;
     opacity: 0;
     white-space: nowrap;
-    background: none;
 }
 
 @keyframes floatRight {

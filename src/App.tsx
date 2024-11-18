@@ -14,7 +14,6 @@ function App() {
 
     audio.volume = 0.11;  // PROTECT YOUR EARS
 
-
     const handleLogin = (username: string, password: string, userId: string) => {
         if (username && password) {
             setIsLoggedIn(true);
@@ -40,7 +39,7 @@ function App() {
             <Routes>
                 <Route path={AppRoutes.Play} element={<Play userId={userId}/>} />
                 <Route path={AppRoutes.Leaderboard} element={<Leaderboard />} />
-                <Route path={AppRoutes.Profile} element={<Profile />} />
+                <Route path={AppRoutes.Profile} element={<Profile userId={userId}/>} />
             </Routes >
         </>
     );

@@ -1,0 +1,83 @@
+/* Profile.module.css */
+.profileContainer {
+    min-height: 100vh;
+    background-color: #242424;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.title {
+    color: #f1a014;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.statsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    max-width: 500px;
+}
+
+.statBox {
+    background-color: #333;
+    padding: 1.5rem;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease-in-out;
+}
+
+.statBox:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Different colors for each label */
+.statBox:nth-child(1) .label {
+    color: #9b4dca; /* Purple for Username */
+}
+
+.statBox:nth-child(2) .label {
+    color: #4a90e2; /* Blue for Rank */
+}
+
+.statBox:nth-child(3) .label {
+    color: #50c878; /* Green for XP */
+}
+
+.statBox:nth-child(4) .label {
+    color: #ffd700; /* Yellow for Gold */
+}
+
+.label {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.value {
+    color: #ffffff; /* White color for all values */
+    font-size: 1.2rem;
+}
+
+.loading, .error {
+    color: #f1a014;
+    font-size: 1.5rem;
+    text-align: center;
+    padding: 2rem;
+    background-color: #242424;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.error {
+    color: #ff6b6b;
+}
