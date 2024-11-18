@@ -1,26 +1,23 @@
-import React from 'react';
-
-interface ScoreProps {
-    score: number | null; //Score'as arba null, arba skaicius, pagal boso nurodymus.
+interface XpProps {
+    xp: number; 
 }
 
 
-const Score: React.FC<ScoreProps> = ({ score }) => {
+const Xp: React.FC<XpProps> = ({ xp }) => {
     return (
         <div style={{ 
             position: 'absolute', 
             top: '125px', 
-            left: '50%', 
+            left: '59.65%', 
             transform: 'translateX(-50%)', 
             backgroundColor: 'rgba(0, 0, 0, 0.5)', 
             color: 'white', 
             padding: '10px', 
             borderRadius: '8px' 
         }}>
-            Score: {score !== null ? score : '-'} {/* Display '-' if score is null */}
+            Xp: {xp} {}
         </div>
     );
 };
 
-
-export default Score;
+export default Xp;

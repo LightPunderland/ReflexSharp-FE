@@ -6,6 +6,8 @@ import { Pumpkin } from "./utility/projectiles/projectilePumpkin";
 import { KeyboardKeys } from "./utility/keyboardKeys";
 import { Character } from "./utility/character";
 import Score from './utility/Score';
+import Xp from './utility/Xp';
+import Gold from './utility/Gold';
 import Replay from './Replay/Replay';
 import { PostScore } from "./PostScore";
 import { Projectile } from "./utility/projectiles/projectile";
@@ -25,8 +27,8 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
     const [isGameActive, setIsGameActive] = useState(true);
     const [isGameOver, setIsGameOver] = useState(false);
     const [score, setScore] = useState<number | null>(null);
-
-    
+    const [xp, setXp] = useState<number>(0);
+    const [gold, setGold] = useState<number>(0);
 
     useEffect(() => {
         const app = new PIXI.Application({ antialias: true, backgroundColor: 0x1099bb, resizeTo: window });
@@ -36,6 +38,8 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
 
         //useState scoras returnina rezultatus tiktai kitam renderi, o mes canvas nenorim rerenderinti
         let localGameScore = 0
+        let localGameGold = 0
+        let localGameXp = 0
 
         backgroundSprite.width = app.view.width;
         backgroundSprite.height = app.view.height;
@@ -70,12 +74,12 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
         const projectileSpeed = projectileBaseSpeed * Math.min(app.view.width, app.view.height); 
 
         const initialInterval = 2500; // Initial spawn interval in milliseconds
-    const minInterval = 500; // Minimum interval cap in milliseconds
-    const difficultyFactor = 0.99; // How quickly the interval decreases (0.99 = 1% decrease per spawn)
+        const minInterval = 500; // Minimum interval cap in milliseconds
+        const difficultyFactor = 0.99; // How quickly the interval decreases (0.99 = 1% decrease per spawn)
 
-    let currentIntervalWatermelon = initialInterval * 0.9;
-    let currentIntervalBanana = initialInterval * 1.1;
-    let currentIntervalPumpkin = initialInterval * 1.3;
+        let currentIntervalWatermelon = initialInterval * 0.9;
+        let currentIntervalBanana = initialInterval * 1.1;
+        let currentIntervalPumpkin = initialInterval * 1.3;
 
     const spawnWatermelon = async () => {
         if (isGameActive) {
@@ -173,6 +177,8 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
         
         // **Frame-independent movement using deltaTime**
         app.ticker.add((deltaTime) => {
+            localGameXp += 0.1*difficultyFactor*deltaTime;
+            setXp(localGameXp);
             if (isGameActive) {
                 const deltaSpeedChar = characterBaseSpeed * Math.min(app.view.width, app.view.height) * deltaTime;
 
@@ -219,6 +225,9 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
                     });
 
                     localGameScore += despawnedCount;
+                    if(localGameScore % 5 == 0 && localGameScore !== 0){
+                        localGameGold += 1;
+                        setGold(localGameGold);}
                 }
                 projectiles = remainingProjectiles;
 
@@ -258,6 +267,8 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
     return (
         <div ref={gameContainer} style={{ width: '100%', height: '100%' }}>
             <Score score={score} />
+            <Xp xp={xp} />
+            <Gold gold={gold} />
             {!isGameActive && <Replay score={score} onPlayAgain={handlePlayAgain} />}
         </div>
     );
