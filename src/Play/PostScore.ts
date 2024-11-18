@@ -19,3 +19,17 @@ export const PostScore = async (userId: string, score: number): Promise<void> =>
         console.error('Error wen making post', error);
     }
 };
+
+
+export const rewardGoldXp = async (userId: string, gold: number, xp: number): Promise<void> => {
+    const url = `/host/users/${userId}/rewardGoldXp?addGold=${gold}&addXp=${xp}`;
+
+    console.log('Sending reward data...');
+    try {
+        await axios.post(url);
+        console.log('Reward data sent successfully!');
+    } catch (error) {
+        console.error('Error when making post request', error);
+    }
+};
+

@@ -4,6 +4,7 @@ interface ScoreProps {
     score: number | null; //Score'as arba null, arba skaicius, pagal boso nurodymus.
 }
 
+
 const Score: React.FC<ScoreProps> = ({ score }) => {
     return (
         <div className={styles.scoreContainer}>
@@ -14,5 +15,6 @@ const Score: React.FC<ScoreProps> = ({ score }) => {
         </div>
     );
 };
+
 
 export default Score;
