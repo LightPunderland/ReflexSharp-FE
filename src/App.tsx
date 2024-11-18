@@ -10,8 +10,11 @@ import { AppRoutes } from './enums/enums';
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false); // Not logged in by default, cookies go here later
     const [userId, setUserId] = useState(''); // L: Maybe use cookies here later?
-    const [audio] = useState(new Audio('/host/Audio/34')); // Brute-force menu music for now, fix this retroactivly
-
+    const [audio] = useState(() => {
+        const audio = new Audio('/host/Audio/34');
+        audio.volume = 0.11;
+        return audio;
+    });
     audio.volume = 0.11;  // PROTECT YOUR EARS
 
     const handleLogin = (username: string, password: string, userId: string) => {
@@ -22,11 +25,18 @@ function App() {
         }
     };
 
-    useEffect(() => {
-            return () => {
-                audio.pause();
-            };
-        }, [audio]);
+   useEffect(() => {
+        audio.addEventListener('error', (e) => {
+            console.warn('Audio failed to load:', e);
+        });
+
+        return () => {
+            audio.pause();
+            audio.removeEventListener('error', (e) => {
+                console.warn('Audio failed to load:', e);
+            });
+        };
+    }, [audio]);
 
     // Login screen, keep it seperate from app for now as to not mess up game score before loading in
     if (!isLoggedIn) {

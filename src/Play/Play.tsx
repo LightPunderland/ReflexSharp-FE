@@ -12,6 +12,7 @@ import { rewardGoldXp } from "./PostScore";
 
 import { SpriteCache } from "./utility/spriteCache";
 import { ProjectileSpawner } from "./utility/projectileSpawner";
+const characterBaseSpeed = 0.1; // error?
 
 const Play: React.FC<{userId: string}> = ({ userId }) => {
 
@@ -195,8 +196,8 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
     return (
         <div ref={gameContainer} style={{ width: '100%', height: '100%' }}>
             <Score score={score} />
-            <Xp xp={xp} />
-            <Gold gold={gold} />
+            <Xp xp={score} />
+            <Gold gold={score} />
             {!isGameActive && <Replay score={score} onPlayAgain={handlePlayAgain} />}
         </div>
     );
