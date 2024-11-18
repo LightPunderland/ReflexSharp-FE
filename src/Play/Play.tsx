@@ -1,8 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import * as PIXI from "pixi.js";
-import { Watermelon } from "./utility/projectiles/projectileWatermelon";
-import { Banana } from "./utility/projectiles/projectileBanana";
-import { Pumpkin } from "./utility/projectiles/projectilePumpkin";
 import { KeyboardKeys } from "./utility/keyboardKeys";
 import { Character } from "./utility/character";
 import Score from './utility/Score';
@@ -10,17 +7,15 @@ import Xp from './utility/Xp';
 import Gold from './utility/Gold';
 import Replay from './Replay/Replay';
 import { PostScore } from "./PostScore";
+
 import { rewardGoldXp } from "./PostScore";
-import { Projectile } from "./utility/projectiles/projectile";
+
 import { SpriteCache } from "./utility/spriteCache";
+import { ProjectileSpawner } from "./utility/projectileSpawner";
 
 const Play: React.FC<{userId: string}> = ({ userId }) => {
 
     let doItOnce = true; // DO NOT MAKE REMOVE THIS, WILL BREAK POSTS, NEED TO FIX IN TESTING
-
-    // Singletonas, SpriteCache.instance po sito bus uzloadinta visur
-    // Davai chebra tik nepanaikinkit sitos eilutes, nors kintamasis nenaudojamas vistiek uzloadina cia viska i memory
-    const spriteCache: SpriteCache = SpriteCache.instance; 
 
     const gameContainer = useRef<HTMLDivElement>(null);
     const appRef = useRef<PIXI.Application | null>(null);
@@ -28,10 +23,18 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
     const [isGameActive, setIsGameActive] = useState(true);
     const [isGameOver, setIsGameOver] = useState(false);
     const [score, setScore] = useState<number | null>(null);
+
     const [xp, setXp] = useState<number>(0);
     const [gold, setGold] = useState<number>(0);
 
+    const [playAgain, setPlayAgain] = useState<number>(0);
+
+
     useEffect(() => {
+        // Singletonas, SpriteCache.instance po sito bus uzloadinta visur
+        // Davai chebra tik nepanaikinkit sitos eilutes, nors kintamasis nenaudojamas vistiek uzloadina cia viska i memory
+        const spriteCache: SpriteCache = SpriteCache.instance; 
+
         const app = new PIXI.Application({ antialias: true, backgroundColor: 0x1099bb, resizeTo: window });
         appRef.current = app;
         
@@ -60,109 +63,13 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
 
         const character = new Character();
         app.stage.addChild(character.getSprite());
-        character.spawnCharacter(app.view.width, app.view.height);
 
         document.body.addEventListener("keydown", KeyboardKeys.onKeyDown);
         document.body.addEventListener("keyup", KeyboardKeys.onKeyUp);
 
-        let projectiles: Projectile[] = [];
-        let pumpkins: Pumpkin[] = [];
-        const characterBaseSpeed = 0.005; 
-        const projectileBaseSpeed = 0.01; 
+        const projectileSpawner = new ProjectileSpawner(app, character);
 
         let isGameActive = true;
-
-        const projectileSpeed = projectileBaseSpeed * Math.min(app.view.width, app.view.height); 
-
-        const initialInterval = 2500; // Initial spawn interval in milliseconds
-        const minInterval = 500; // Minimum interval cap in milliseconds
-        const difficultyFactor = 0.99; // How quickly the interval decreases (0.99 = 1% decrease per spawn)
-
-        let currentIntervalWatermelon = initialInterval * 0.9;
-        let currentIntervalBanana = initialInterval * 1.1;
-        let currentIntervalPumpkin = initialInterval * 1.3;
-
-    const spawnWatermelon = async () => {
-        if (isGameActive) {
-            const newWatermelon = new Watermelon(character.getSprite());
-            app.stage.addChild(newWatermelon.getSprite());
-            app.stage.addChild(newWatermelon.getWarningSprite());
-            newWatermelon.spawn(app.view.width, app.view.height);
-            projectiles.push(newWatermelon);
-
-            adjustInterval("watermelon");
-        }
-    };
-
-    const spawnBanana = async () => {
-        if (isGameActive) {
-            const newBanana = new Banana(character.getSprite());
-            app.stage.addChild(newBanana.getSprite());
-            app.stage.addChild(newBanana.getWarningSprite());
-            newBanana.spawn(app.view.width, app.view.height);
-            projectiles.push(newBanana);
-
-            adjustInterval("banana");
-        }
-    };
-
-    const spawnPumpkin = async () => {
-        if (isGameActive) {
-            const newPumpkin = new Pumpkin(character.getSprite());
-            app.stage.addChild(newPumpkin.getSprite());
-            newPumpkin.spawn();
-            pumpkins.push(newPumpkin);
-
-            adjustInterval("pumpkin");
-        }
-    };
-        let currentInterval: number;
-        let interval;
-        const adjustInterval = (type: string) => {
-        
-
-        // Select the appropriate interval variable based on the projectile type
-        if (type === "watermelon") {
-            currentInterval = currentIntervalWatermelon;
-        } else if (type === "banana") {
-            currentInterval = currentIntervalBanana;
-        } else if (type === "pumpkin") {
-            currentInterval = currentIntervalPumpkin;
-        }
-
-        currentInterval = Math.max(minInterval, currentInterval * difficultyFactor);
-
-        // Add some randomness (±20% of the current interval)
-        const randomOffset = Math.random() * 0.4 - 0.2;
-        const adjustedInterval = currentInterval * (1 + randomOffset);
-
-        // Update the interval variable for the specific type
-        if (type === "watermelon") {
-            currentIntervalWatermelon = adjustedInterval;
-        } else if (type === "banana") {
-            currentIntervalBanana = adjustedInterval;
-        } else if (type === "pumpkin") {
-            currentIntervalPumpkin = adjustedInterval;
-        }
-
-        // Clear and reset only the interval for the given type
-        if (type === "watermelon") {
-            clearInterval(watermelonInterval);
-            watermelonInterval = setInterval(spawnWatermelon, adjustedInterval);
-        } else if (type === "banana") {
-            clearInterval(bananaInterval);
-            bananaInterval = setInterval(spawnBanana, adjustedInterval);
-        } else if (type === "pumpkin") {
-            clearInterval(pumpkinInterval);
-            pumpkinInterval = setInterval(spawnPumpkin, adjustedInterval);
-        }
-    };
-
-    let bananaInterval = setInterval(spawnBanana, currentIntervalBanana);
-    let pumpkinInterval = setInterval(spawnPumpkin, currentIntervalPumpkin);
-    let watermelonInterval = setInterval(spawnWatermelon, currentIntervalWatermelon);
-
-
 
         const visibilityChange = () => {
             isGameActive = document.visibilityState === 'visible';
@@ -175,27 +82,39 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
         };
 
         document.addEventListener('visibilitychange', visibilityChange);
-        
+
         let timeElapsed = 0;
+  
+        const loadingText = new PIXI.Text("Loading game...");
+        loadingText.x = app.view.width/2 - loadingText.width/2;
+        loadingText.y = app.view.height/3;
+        let gameLoaded = false;
 
         // **Frame-independent movement using deltaTime**
         app.ticker.add((deltaTime) => {
-            
-            if (isGameActive) {
-                
+            if (!SpriteCache.instance.texturesLoaded()){
+                app.stage.addChild(loadingText);
+            }
+            else if (isGameActive) {
                 timeElapsed += 0.01;  // Convert deltaTime from ms to seconds
                 localGameXp = 1.001 * Math.pow(timeElapsed, 1.3);
                 setXp(Math.floor(localGameXp));
                 const deltaSpeedChar = characterBaseSpeed * Math.min(app.view.width, app.view.height) * deltaTime;
+                if(!gameLoaded){
+                    gameLoaded = true
+                    app.stage.removeChild(loadingText);
+                    character.spawnCharacter(app.view.width, app.view.height);
+                }
 
-                for (let i = pumpkins.length - 1; i >= 0; i--) {
-                    if (pumpkins[i].getPhase() === 4) {
-                        projectiles.push(pumpkins[i]);
-                        pumpkins.splice(i, 1); // Remove the pumpkin from the pumpkins array
+
+                for (let i = projectileSpawner.pumpkins.length - 1; i >= 0; i--) {
+                    if (projectileSpawner.pumpkins[i].getPhase() === 4) {
+                        projectileSpawner.projectiles.push(projectileSpawner.pumpkins[i]);
+                        projectileSpawner.pumpkins.splice(i, 1); // Remove the pumpkin from the pumpkins array
                     }
                 }
                 
-                character.update(deltaTime, projectiles, deltaSpeedChar);
+                character.update(projectileSpawner.projectiles, deltaTime);
                 
                 // Player dies
                 if (character.collided) {
@@ -203,8 +122,6 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
                     isGameActive = false;
 
                     setIsGameOver(true);
-                    app.renderer.background.color = '#ff0000'; 
-
 
                     // Score posting
                     if (localGameScore !== null && doItOnce) {
@@ -219,14 +136,18 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
                         });
                     }
 
+                    app.ticker.stop();
+
                     return;
                 }
 
-                projectiles.forEach((projectile) => projectile.update(deltaTime));
-                pumpkins.forEach((pumpkin) => pumpkin.update());
 
-                const remainingProjectiles = projectiles.filter(projectile => projectile.sprite.parent !== null);
-                const despawnedCount = projectiles.length - remainingProjectiles.length;
+                projectileSpawner.projectiles.forEach((projectile) => projectile.update(deltaTime));
+
+                projectileSpawner.pumpkins.forEach((pumpkin) => pumpkin.update(deltaTime));
+
+                const remainingProjectiles = projectileSpawner.projectiles.filter(projectile => projectile.sprite.parent !== null);
+                const despawnedCount = projectileSpawner.projectiles.length - remainingProjectiles.length;
 
                 // Uz kiekviena despawn'inta projectile pridedam taskus, jei dar neivyko collision
                 if (!isGameOver && despawnedCount > 0) {
@@ -240,13 +161,8 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
                         localGameGold += 1;
                         setGold(localGameGold);}
                 }
-                projectiles = remainingProjectiles;
 
-                
-                if (isGameOver) {
-                    app.stage.removeChild(backgroundSprite);
-                }
-                
+                projectileSpawner.projectiles = remainingProjectiles;
             }
         });
 
@@ -254,25 +170,26 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
             const scale = Math.min(window.innerWidth / app.view.width, window.innerHeight / app.view.height);
             
             character.getSprite().scale.set(scale);
-            projectiles.forEach(projectile => {
+            projectileSpawner.projectiles.forEach(projectile => {
                 projectile.getSprite().scale.set(scale);
             });
         });
 
         return () => {
-            clearInterval(watermelonInterval);
-            clearInterval(bananaInterval);
-            clearInterval(pumpkinInterval);
+            projectileSpawner.clearIntervals();
             document.removeEventListener('visibilitychange', visibilityChange);
             document.body.removeEventListener("keydown", KeyboardKeys.onKeyDown);
             document.body.removeEventListener("keyup", KeyboardKeys.onKeyUp);
             app.destroy(true, { children: true });
         };
-    }, []);
+    }, [playAgain]);
 
     //Rodo Score
     const handlePlayAgain = () => {
-        window.location.reload();
+        setIsGameActive(true);
+        setIsGameOver(false);
+        setPlayAgain(playAgain + 1);
+        setScore(null);
     };
 
     return (
