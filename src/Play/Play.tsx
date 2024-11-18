@@ -7,6 +7,7 @@ import Replay from './Replay/Replay';
 import { PostScore } from "./PostScore";
 import { SpriteCache } from "./utility/spriteCache";
 import { ProjectileSpawner } from "./utility/projectileSpawner";
+import styles from './Play.module.css';
 
 const Play: React.FC<{userId: string}> = ({ userId }) => {
 
@@ -167,7 +168,12 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
 
     return (
         <div ref={gameContainer} style={{ width: '100%', height: '100%' }}>
-            <Score score={score} />
+            <div className={styles.scoreContainer}>
+                <Score score={score} />
+                <div className={styles.plusOneContainer} key={score}>
+                    <div className={styles.plusOne}>+1</div>
+                </div>
+            </div>
             {!isGameActive && <Replay score={score} onPlayAgain={handlePlayAgain} />}
         </div>
     );

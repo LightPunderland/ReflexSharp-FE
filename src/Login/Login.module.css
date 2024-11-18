@@ -1,5 +1,4 @@
-/* Temp fontas scary is google*/
-@import url('https://fonts.googleapis.com/css2?family=Creepster&display=swap'); 
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap');
 
 .loginModal {
     position: fixed;
@@ -10,86 +9,86 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-image: url('./halloween_temp.png');
-    background-size: cover;
-    background-repeat: no-repeat;
+    background-color: #535151;
+    background-image: linear-gradient(45deg, #d56363);
+    background-size: 60px 60px;
+    background-position: 0 0, 30px 30px;
     z-index: 9999;
 }
 
-
 .loginBox {
     display: flex;
-    background: rgba(30, 29, 29, 0.9);
-    color: yellow;
+    background: rgba(20, 20, 20, 0.95);
+    color: #e6e6e6;
     padding: 40px;
-    border-radius: 15px;
-    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.4);
+    border-radius: 2px;
+    box-shadow: 0 0 30px rgba(255, 0, 0, 0.1),
+                0 0 10px rgba(255, 0, 0, 0.1);
     width: 600px;
     height: 400px;
     flex-direction: column;
     align-items: center;
-    font-size: 1.5rem;
-    font-family: 'Creepster', cursive;
-    font-size: 28px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 24px;
+    border: 1px solid #333;
 }
 
 .loginBox input {
     margin: 15px 0;
     padding: 15px;
     width: 100%;
-    border: 1px solid #d60909;
-    background-color: #c3bf9d;;
-    border-radius: 8px;
-    font-size: 1.2rem;
+    border: 1px solid #333;
+    background-color: #0f0f0f;
+    color: #e6e6e6;
+    border-radius: 2px;
+    font-size: 1.1rem;
+    transition: border-color 0.3s ease;
+}
+
+.loginBox input:focus {
+    outline: none;
+    border-color: #ff0000;
+    box-shadow: 0 0 5px rgba(255, 0, 0, 0.2);
 }
 
 .loginBox label {
     display: block;
-    font-weight: bold;
+    font-weight: 700;
     margin-bottom: 5px;
-    font-size: 1.3rem;
+    font-size: 1.2rem;
+    color: #ff0000;
 }
 
 .buttonContainer {
     margin-top: 20px;
     display: flex;
-    gap: 10px;
+    gap: 20px;
     justify-content: space-between;
     width: 100%;
-    font-size: 1.2rem;
-    font-family: 'Creepster', cursive;
 }
 
-.loginButton {
-    padding: 10px;
-    background-color: #f1a014;
-    color: rgb(0, 0, 0);
-    border: none;
-    border-radius: 5px;
+.loginButton, .guestButton {
+    padding: 12px 20px;
+    background-color: #1a1a1a;
+    color: #e6e6e6;
+    border: 1px solid #333;
+    border-radius: 2px;
     cursor: pointer;
     flex: 1;
-    font-family: 'Creepster', cursive;
-    font-size: 25px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 18px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-.guestButton {
-    height: 60px;
-    padding: 10px;
-    background-color: #a7a728;
-    color: rgb(0, 0, 0);
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    flex: 1;
-    font-family: 'Creepster', cursive;
-    font-size: 25px;
+.loginButton:hover, .guestButton:hover {
+    background-color: #ff0000;
+    color: #fff;
+    border-color: #ff0000;
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
 }
 
-/* Button slight color change*/
-.loginButton:hover {
-    background-color: #885d12;
-}
-
-.guestButton:hover {
-    background-color: #82821e;
+.loginButton:active, .guestButton:active {
+    transform: scale(0.98);
 }

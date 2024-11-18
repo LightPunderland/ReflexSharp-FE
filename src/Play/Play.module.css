@@ -1,0 +1,37 @@
+.scoreContainer {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+}
+
+.plusOneContainer {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: calc(100% + 20px);
+    pointer-events: none;
+    z-index: 999;
+}
+
+.plusOne {
+    color: #ff0000;
+    font-size: 28px;
+    font-weight: bold;
+    animation: floatUp 0.5s ease-out forwards;
+    opacity: 0;
+    white-space: nowrap;
+    background: none;
+}
+
+@keyframes floatUp {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+}
