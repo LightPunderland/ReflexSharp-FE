@@ -39,7 +39,6 @@ export class MovementMomentum {
     }
 
     resetDownMomentum(): void {
-
         this._downMomentumTime = MovementMomentum.initialMomentumTime;
         this.downMomentum = 0;
     }
@@ -61,7 +60,6 @@ export class MovementMomentum {
     }
 
     gainDownMomentum(momentumTime: number): void {
-
         this._downMomentumTime = Math.min(this._downMomentumTime + momentumTime, MovementMomentum.momentumMaxTime);
         this.downMomentum = Math.sqrt(this._downMomentumTime / MovementMomentum.momentumMaxTime);
         this.resetUpMomentum();
