@@ -1,6 +1,7 @@
 import { GoogleLogin } from '@react-oauth/google';
 import { useState } from 'react';
 import styles from './Login.module.css';
+import LoginService from './api/Login';
 
 interface LoginProps {
     onLogin: (username: string, password: string, userId: string) => void;
@@ -10,6 +11,11 @@ interface GoogleSignInResponse {
     clientId: string;
     credential: string;
     select_by: string;
+}
+interface GoogleSignInRequestParams {
+    clientId: string;
+    username: string;
+    token: string
 }
 function Login({ onLogin }: LoginProps) {
     const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
@@ -33,10 +39,27 @@ function Login({ onLogin }: LoginProps) {
 
     };
 
-    const handleGoogleSignInSuccess = (response: GoogleSignInResponse) => {
+    const handleGoogleSignInSuccess = async (response: GoogleSignInResponse): Promise<void> => {
         // const token = response.credential;
         // const userId = response.clientId;
         console.log("Google Login Success:", response);
+        try {
+            const data: GoogleSignInRequestParams = {
+                clientId: response.clientId,
+                username: username,
+                token: response.credential
+
+            }
+
+            const backendResponse = await LoginService.googleSignIn(data);
+
+            console.log("Backend Response:", backendResponse);
+        } catch (error) {
+            console.error("Google Sign-In failed:", error);
+            throw error;
+        }
+
+
         // onLogin(username, token, userId);
     }
     const handleGoogleError = () => {
