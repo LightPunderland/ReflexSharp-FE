@@ -51,6 +51,8 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
         backgroundSprite.anchor.set(0.5);
         backgroundSprite.position.set(app.view.width / 2, app.view.height / 2);
 
+        console.log(window.innerWidth, window.innerHeight);
+
         app.stage.addChild(backgroundSprite);
 
         window.addEventListener('resize', () => {
