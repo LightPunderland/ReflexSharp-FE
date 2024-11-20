@@ -7,6 +7,11 @@ import Play from './Play/Play';
 import Profile from './Profile/Profile';
 import { AppRoutes } from './enums/enums';
 
+// interface GoogleSignInResponse {
+//     credential: string;
+//     clientId: string;
+// }
+
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false); // Not logged in by default, cookies go here later
     const [userId, setUserId] = useState(''); // L: Maybe use cookies here later?
@@ -17,6 +22,7 @@ function App() {
     });
     audio.volume = 0.11;  // PROTECT YOUR EARS
 
+
     const handleLogin = (username: string, password: string, userId: string) => {
         if (username && password) {
             setIsLoggedIn(true);
@@ -25,7 +31,14 @@ function App() {
         }
     };
 
-   useEffect(() => {
+    // const handleGoogleSignin = (response: GoogleSignInResponse) => {
+    //     const token = response.credential;
+    //     const userId = response.clientId;
+    //     console.log("Google Login Success:", response);
+    //     handleLogin(token, token, userId);
+    // }
+
+    useEffect(() => {
         audio.addEventListener('error', (e) => {
             console.warn('Audio failed to load:', e);
         });
@@ -47,9 +60,9 @@ function App() {
         <>
             <Navbar />
             <Routes>
-                <Route path={AppRoutes.Play} element={<Play userId={userId}/>} />
+                <Route path={AppRoutes.Play} element={<Play userId={userId} />} />
                 <Route path={AppRoutes.Leaderboard} element={<Leaderboard />} />
-                <Route path={AppRoutes.Profile} element={<Profile userId={userId}/>} />
+                <Route path={AppRoutes.Profile} element={<Profile userId={userId} />} />
             </Routes >
         </>
     );
