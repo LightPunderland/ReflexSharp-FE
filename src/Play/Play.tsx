@@ -196,8 +196,8 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
     return (
         <div ref={gameContainer} style={{ width: '100%', height: '100%' }}>
             <Score score={score} />
-            <Xp xp={score} />
-            <Gold gold={score} />
+            <Xp xp={xp} />
+            <Gold gold={gold} />
             {!isGameActive && <Replay score={score} onPlayAgain={handlePlayAgain} />}
         </div>
     );
