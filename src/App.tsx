@@ -23,8 +23,9 @@ function App() {
     audio.volume = 0.11;  // PROTECT YOUR EARS
 
 
-    const handleLogin = (username: string, password: string, userId: string) => {
-        if (username && password) {
+    const handleLogin = (username: string, userId: string) => {
+        if (username && userId) {
+            console.log("Login Success", username, userId);
             setIsLoggedIn(true);
             setUserId(userId)
             audio.play();

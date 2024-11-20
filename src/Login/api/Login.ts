@@ -9,19 +9,43 @@ interface GoogleSignInData {
 
 }
 
+interface UserDTO {
+    id: string;
+    googleId: string;
+    email: string;
+    displayName: string;
+    publicRank: string;
+    xp: number;
+    gold: number;
+}
+
 const LoginService = {
-    googleSignIn: async (data: GoogleSignInData) => {
-        try {
-            const response = await axios.post(`${API_URL}/auth/google-signin`, data, {
-                headers: {
-                    "Content-Type": "application/json",
-                },
+    googleSignIn: async (data: GoogleSignInData): Promise<UserDTO> => {
+        return axios
+            .post<{ message: string; user: UserDTO }>(
+                `${API_URL}/auth/google-signin`,
+                data,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            )
+            .then((response) => {
+                const { message, user } = response.data;
+
+                console.log("Backend Response:", message);
+
+                // Store the user in session storage
+                sessionStorage.setItem("user", JSON.stringify(user));
+
+                // Return the user object
+                return user;
+            })
+            .catch((error) => {
+                console.error("Google Sign-In failed:", error);
+                throw error;
             });
-            return response.data;
-        } catch (error) {
-            console.error("Google Sign-In failed:", error);
-            throw error;
-        }
     }
 }
 

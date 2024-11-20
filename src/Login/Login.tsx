@@ -4,7 +4,7 @@ import styles from './Login.module.css';
 import LoginService from './api/Login';
 
 interface LoginProps {
-    onLogin: (username: string, password: string, userId: string) => void;
+    onLogin: (username: string, userId: string) => void;
 }
 
 interface GoogleSignInResponse {
@@ -17,6 +17,16 @@ interface GoogleSignInRequestParams {
     username: string;
     token: string
 }
+
+interface UserDTO {
+    id: string;
+    googleId: string;
+    email: string;
+    displayName: string;
+    publicRank: string; // Enum values as strings (None, Noob, Pro, etc.)
+    xp: number;
+    gold: number;
+}
 function Login({ onLogin }: LoginProps) {
     const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
@@ -25,10 +35,10 @@ function Login({ onLogin }: LoginProps) {
     const [userId, setUserId] = useState('');
     const [showGoogleSignIn, setShowGoogleSignIn] = useState(false);
 
-    const handleLogin = () => {
-        onLogin(username, password, userId);
+    // const handleLogin = () => {
+    //     onLogin(username, userId);
 
-    };
+    // };
 
     const handleNext = () => {
         if (!username.trim()) {
@@ -40,9 +50,7 @@ function Login({ onLogin }: LoginProps) {
     };
 
     const handleGoogleSignInSuccess = async (response: GoogleSignInResponse): Promise<void> => {
-        // const token = response.credential;
-        // const userId = response.clientId;
-        console.log("Google Login Success:", response);
+
         try {
             const data: GoogleSignInRequestParams = {
                 clientId: response.clientId,
@@ -51,9 +59,14 @@ function Login({ onLogin }: LoginProps) {
 
             }
 
-            const backendResponse = await LoginService.googleSignIn(data);
+            const user: UserDTO = await LoginService.googleSignIn(data);
+            setUsername(user.displayName);
+            setUserId(user.id);
 
-            console.log("Backend Response:", backendResponse);
+            sessionStorage.setItem('user', JSON.stringify(user));
+            onLogin(user.displayName, user.id);
+
+            // console.log("Backend Response:", backendResponse);
         } catch (error) {
             console.error("Google Sign-In failed:", error);
             throw error;
@@ -73,8 +86,8 @@ function Login({ onLogin }: LoginProps) {
     const handleGuest = () => {
         const guestUsername = 'IamAGuest';
         const userId = 'b6fbd4d9-55f5-481a-a9cf-b274269cbe82'; // MOCK TEST USER ID
-        const guestPassword = "password";
-        onLogin(guestUsername, guestPassword, userId);
+        // const guestPassword = "password";
+        onLogin(guestUsername, userId);
     };
 
 
@@ -127,14 +140,14 @@ function Login({ onLogin }: LoginProps) {
                     </div>
                 )}
 
-                <div className={styles.buttonContainer}>
+                {/* <div className={styles.buttonContainer}>
                     <button className={styles.loginButton} onClick={handleLogin}>
                         Login
                     </button>
                     <button className={styles.guestButton} onClick={handleGuest}>
                         Play as Guest
                     </button>
-                </div>
+                </div> */}
             </div>
         </div>
     );
