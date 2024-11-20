@@ -191,6 +191,7 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
         setIsGameOver(false);
         setPlayAgain(playAgain + 1);
         setScore(null);
+        setGold(0);
     };
 
     return (
