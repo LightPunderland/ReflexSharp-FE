@@ -1,54 +1,64 @@
+// Leaderboard.tsx
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { GetLeaderboard, LeaderboardEntry } from "./GetLeaderboard";
 import { seedRandomUsername } from "./RandomName";
 import styles from './Leaderboard.module.css';
 
 const DEFAULT_ENTRY_COUNT = 5;
 const REFRESH_INTERVAL_MINUTES = 5;
 
-function Leaderboard(){
-
-    const [count, setCount] = useState(DEFAULT_ENTRY_COUNT);
-
-    const LeaderboardLink = `/host/leaderboard?count=${count}`;
-    interface LeaderboardEntry {
-        user: string | null;
-        score: number;
-        id: string;
-        userId: string;
-    }
-
+function Leaderboard() {
     const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-
-        const fetchLeader = async () =>{
+        const fetchLeader = async () => {
             try {
-                const response = await axios.get(LeaderboardLink);
-                setLeaderboard(response.data);
-            } catch(e){
-                console.error("Error ",  e);
+                setLoading(true);
+                const data = await GetLeaderboard(DEFAULT_ENTRY_COUNT);
+                setLeaderboard(data);
+                setError(null);
+            } catch (e) {
+                setError('Failed to load leaderboard');
+            } finally {
+                setLoading(false);
             }
         };
 
         fetchLeader();
-
         const interval = setInterval(fetchLeader, REFRESH_INTERVAL_MINUTES * 60 * 1000);
         return () => clearInterval(interval);
     }, []);
-    
 
-    return(<div className={styles.container}>
-            <p className={styles.title}>Leaderboard</p>
+    if (loading) {
+        return <div className={styles.loading}>Loading...</div>;
+    }
 
-            <ol className={styles.leaderboard}>
-                {leaderboard.map((entry, index) => (
-                    <li className={styles.entry} key={index}>
-                        {entry.user === null ? seedRandomUsername(entry.userId) : entry.user}: {entry.score}
-                    </li>
-                ))}
-            </ol>
-            </div>)
+    if (error) {
+        return <div className={styles.error}>{error}</div>;
+    }
+
+    return (
+        <div className={styles.container}>
+            <h1 className={styles.title}>Leaderboard</h1>
+            <div className={styles.content}>
+                <ol className={styles.leaderboard}>
+                    {leaderboard.map((entry, index) => (
+                        <li className={styles.entry} key={entry.id}>
+                            <div className={styles.rank}>{index + 1}</div>
+                            <div className={styles.playerInfo}>
+                                <span className={styles.name}>
+                                    {entry.user === null ? seedRandomUsername(entry.userId) : entry.user}
+                                </span>
+                                <span className={styles.score}>{entry.score}</span>
+                            </div>
+                        </li>
+                    ))}
+                </ol>
+            </div>
+        </div>
+    );
 }
 
 export default Leaderboard;

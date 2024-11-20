@@ -3,10 +3,16 @@ import * as PIXI from "pixi.js";
 import { KeyboardKeys } from "./utility/keyboardKeys";
 import { Character } from "./utility/character";
 import Score from './utility/Score';
+import Xp from './utility/Xp';
+import Gold from './utility/Gold';
 import Replay from './Replay/Replay';
 import { PostScore } from "./PostScore";
+
+import { rewardGoldXp } from "./PostScore";
+
 import { SpriteCache } from "./utility/spriteCache";
 import { ProjectileSpawner } from "./utility/projectileSpawner";
+const characterBaseSpeed = 0.1; // error?
 
 const Play: React.FC<{userId: string}> = ({ userId }) => {
 
@@ -18,7 +24,12 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
     const [isGameActive, setIsGameActive] = useState(true);
     const [isGameOver, setIsGameOver] = useState(false);
     const [score, setScore] = useState<number | null>(null);
+
+    const [xp, setXp] = useState<number>(0);
+    const [gold, setGold] = useState<number>(0);
+
     const [playAgain, setPlayAgain] = useState<number>(0);
+
 
     useEffect(() => {
         // Singletonas, SpriteCache.instance po sito bus uzloadinta visur
@@ -32,6 +43,8 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
 
         //useState scoras returnina rezultatus tiktai kitam renderi, o mes canvas nenorim rerenderinti
         let localGameScore = 0
+        let localGameGold = 0
+        let localGameXp = 0
 
         backgroundSprite.width = app.view.width;
         backgroundSprite.height = app.view.height;
@@ -71,6 +84,8 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
 
         document.addEventListener('visibilitychange', visibilityChange);
 
+        let timeElapsed = 0;
+  
         const loadingText = new PIXI.Text("Loading game...");
         loadingText.x = app.view.width/2 - loadingText.width/2;
         loadingText.y = app.view.height/3;
@@ -82,11 +97,16 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
                 app.stage.addChild(loadingText);
             }
             else if (isGameActive) {
+                timeElapsed += 0.01;  // Convert deltaTime from ms to seconds
+                localGameXp = 1.001 * Math.pow(timeElapsed, 1.3);
+                setXp(Math.floor(localGameXp));
+                const deltaSpeedChar = characterBaseSpeed * Math.min(app.view.width, app.view.height) * deltaTime;
                 if(!gameLoaded){
                     gameLoaded = true
                     app.stage.removeChild(loadingText);
                     character.spawnCharacter(app.view.width, app.view.height);
                 }
+
 
                 for (let i = projectileSpawner.pumpkins.length - 1; i >= 0; i--) {
                     if (projectileSpawner.pumpkins[i].getPhase() === 4) {
@@ -107,9 +127,14 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
                     // Score posting
                     if (localGameScore !== null && doItOnce) {
                         doItOnce = false;
+                        console.log('Posting score: ', localGameXp);
                         PostScore(userId, localGameScore).catch(e => {
-                            console.error('Error posting score: ', e);
+                            console.error('Error posting score: ', e);    
                         }); 
+                        rewardGoldXp(userId, Math.floor(localGameGold), Math.floor(localGameXp)).catch(e => {
+    
+                            console.error('Error rewarding gold and xp: ', e);
+                        });
                     }
 
                     app.ticker.stop();
@@ -133,6 +158,9 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
                     });
 
                     localGameScore += despawnedCount;
+                    if(localGameScore % 5 == 0 && localGameScore !== 0){
+                        localGameGold += 1;
+                        setGold(localGameGold);}
                 }
 
                 projectileSpawner.projectiles = remainingProjectiles;
@@ -163,11 +191,14 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
         setIsGameOver(false);
         setPlayAgain(playAgain + 1);
         setScore(null);
+        setGold(0);
     };
 
     return (
         <div ref={gameContainer} style={{ width: '100%', height: '100%' }}>
             <Score score={score} />
+            <Xp xp={xp} />
+            <Gold gold={gold} />
             {!isGameActive && <Replay score={score} onPlayAgain={handlePlayAgain} />}
         </div>
     );

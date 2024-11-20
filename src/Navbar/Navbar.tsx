@@ -24,6 +24,12 @@ function Navbar() {
                         </NavLink>
                     </li>
 
+                    <li>
+                        <NavLink to="/profile">
+                            <a>Profile</a>
+                        </NavLink>
+                    </li>
+
                
 
                 </ul>

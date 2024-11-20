@@ -7,27 +7,50 @@ import Play from './Play/Play';
 import Profile from './Profile/Profile';
 import { AppRoutes } from './enums/enums';
 
+// interface GoogleSignInResponse {
+//     credential: string;
+//     clientId: string;
+// }
+
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false); // Not logged in by default, cookies go here later
     const [userId, setUserId] = useState(''); // L: Maybe use cookies here later?
-    const [audio] = useState(new Audio('/host/Audio/34')); // Brute-force menu music for now, fix this retroactivly
-
+    const [audio] = useState(() => {
+        const audio = new Audio('/host/Audio/34');
+        audio.volume = 0.11;
+        return audio;
+    });
     audio.volume = 0.11;  // PROTECT YOUR EARS
 
 
-    const handleLogin = (username: string, password: string, userId: string) => {
-        if (username && password) {
+    const handleLogin = (username: string, userId: string) => {
+        if (username && userId) {
+            console.log("Login Success", username, userId);
             setIsLoggedIn(true);
             setUserId(userId)
             audio.play();
         }
     };
 
+    // const handleGoogleSignin = (response: GoogleSignInResponse) => {
+    //     const token = response.credential;
+    //     const userId = response.clientId;
+    //     console.log("Google Login Success:", response);
+    //     handleLogin(token, token, userId);
+    // }
+
     useEffect(() => {
-            return () => {
-                audio.pause();
-            };
-        }, [audio]);
+        audio.addEventListener('error', (e) => {
+            console.warn('Audio failed to load:', e);
+        });
+
+        return () => {
+            audio.pause();
+            audio.removeEventListener('error', (e) => {
+                console.warn('Audio failed to load:', e);
+            });
+        };
+    }, [audio]);
 
     // Login screen, keep it seperate from app for now as to not mess up game score before loading in
     if (!isLoggedIn) {
@@ -38,9 +61,9 @@ function App() {
         <>
             <Navbar />
             <Routes>
-                <Route path={AppRoutes.Play} element={<Play userId={userId}/>} />
+                <Route path={AppRoutes.Play} element={<Play userId={userId} />} />
                 <Route path={AppRoutes.Leaderboard} element={<Leaderboard />} />
-                <Route path={AppRoutes.Profile} element={<Profile />} />
+                <Route path={AppRoutes.Profile} element={<Profile userId={userId} />} />
             </Routes >
         </>
     );
