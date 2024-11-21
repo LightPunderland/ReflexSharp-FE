@@ -10,6 +10,7 @@ import { PostScore } from "./PostScore";
 import { rewardGoldXp } from "./PostScore";
 import { SpriteCache } from "./utility/spriteCache";
 import { ProjectileSpawner } from "./utility/projectileSpawner";
+import { RankUpMessage } from './RankUpMessage/RankUpMessage';
 
 const characterBaseSpeed = 0.1; // error?
 
@@ -46,7 +47,6 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
         return audio;
     });
 
-    // Start game music
     useEffect(() => {
         gameAudio.play();
         return () => {
@@ -149,8 +149,8 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
                     setIsGameActive(false);
                     isGameActive = false;
                     setIsGameOver(true);
-                    deathSound.play();  // Play death sound
-                    gameAudio.pause();   // Stop game music
+                    deathSound.play();  
+                    gameAudio.pause(); 
 
                     // Score posting
                     if (localGameScore !== null && doItOnce) {
