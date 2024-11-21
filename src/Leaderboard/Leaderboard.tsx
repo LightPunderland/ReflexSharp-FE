@@ -1,10 +1,8 @@
-// Leaderboard.tsx
 import { useEffect, useState } from "react";
 import { GetLeaderboard, LeaderboardEntry } from "./GetLeaderboard";
-import { seedRandomUsername } from "./RandomName";
 import styles from './Leaderboard.module.css';
 
-const DEFAULT_ENTRY_COUNT = 5;
+const DEFAULT_ENTRY_COUNT = 10;
 const REFRESH_INTERVAL_MINUTES = 5;
 
 function Leaderboard() {
@@ -48,9 +46,7 @@ function Leaderboard() {
                         <li className={styles.entry} key={entry.id}>
                             <div className={styles.rank}>{index + 1}</div>
                             <div className={styles.playerInfo}>
-                                <span className={styles.name}>
-                                    {entry.user === null ? seedRandomUsername(entry.userId) : entry.user}
-                                </span>
+                                <span className={styles.name}>{entry.user}</span>
                                 <span className={styles.score}>{entry.score}</span>
                             </div>
                         </li>

@@ -1,0 +1,41 @@
+.notificationOverlay {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2000;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.notification {
+    background: rgba(0, 0, 0, 0.9);
+    color: #ffd700;
+    padding: 20px 40px;
+    border-radius: 10px;
+    text-align: center;
+    border: 2px solid #ffd700;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+}
+
+.notification h2 {
+    margin: 0 0 10px 0;
+    font-size: 24px;
+    color: #ffd700;
+}
+
+.notification p {
+    margin: 0;
+    font-size: 20px;
+    color: white;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -40%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
