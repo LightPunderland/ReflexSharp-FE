@@ -26,7 +26,7 @@ function Navbar() {
 
                     <li>
                         <NavLink to="/profile">
-                            <a>Profile</a>
+                            <img src={profileImage} alt="Profile" />
                         </NavLink>
                     </li>
 
