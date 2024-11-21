@@ -7,29 +7,53 @@ import Xp from './utility/Xp';
 import Gold from './utility/Gold';
 import Replay from './Replay/Replay';
 import { PostScore } from "./PostScore";
-
 import { rewardGoldXp } from "./PostScore";
-
 import { SpriteCache } from "./utility/spriteCache";
 import { ProjectileSpawner } from "./utility/projectileSpawner";
+
 const characterBaseSpeed = 0.1; // error?
 
 const Play: React.FC<{userId: string}> = ({ userId }) => {
-
     let doItOnce = true; // DO NOT MAKE REMOVE THIS, WILL BREAK POSTS, NEED TO FIX IN TESTING
 
     const gameContainer = useRef<HTMLDivElement>(null);
     const appRef = useRef<PIXI.Application | null>(null);
-
+    
     const [isGameActive, setIsGameActive] = useState(true);
     const [isGameOver, setIsGameOver] = useState(false);
     const [score, setScore] = useState<number | null>(null);
-
     const [xp, setXp] = useState<number>(0);
     const [gold, setGold] = useState<number>(0);
-
     const [playAgain, setPlayAgain] = useState<number>(0);
 
+    // Audio setup
+    const [gameAudio] = useState(() => {
+        const audio = new Audio('/host/Audio/67');
+        audio.volume = 0.1;
+        audio.loop = true;
+        return audio;
+    });
+
+    const [deathSound] = useState(() => {
+        const audio = new Audio('/host/Audio/68');
+        audio.volume = 0.1;
+        return audio;
+    });
+
+    const [dodgeSound] = useState(() => {
+        const audio = new Audio('/host/Audio/69');
+        audio.volume = 0.1;
+        return audio;
+    });
+
+    // Start game music
+    useEffect(() => {
+        gameAudio.play();
+        return () => {
+            gameAudio.pause();
+            gameAudio.currentTime = 0;
+        };
+    }, [playAgain]);
 
     useEffect(() => {
         // Singletonas, SpriteCache.instance po sito bus uzloadinta visur
@@ -77,10 +101,12 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
         const visibilityChange = () => {
             isGameActive = document.visibilityState === 'visible';
 
-              if (document.visibilityState === 'visible') {
+            if (document.visibilityState === 'visible') {
                 setIsGameActive(true);
+                gameAudio.play();
             } else {
                 setIsGameActive(false);
+                gameAudio.pause();
             }
         };
 
@@ -109,7 +135,6 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
                     character.spawnCharacter(app.view.width, app.view.height);
                 }
 
-
                 for (let i = projectileSpawner.pumpkins.length - 1; i >= 0; i--) {
                     if (projectileSpawner.pumpkins[i].getPhase() === 4) {
                         projectileSpawner.projectiles.push(projectileSpawner.pumpkins[i]);
@@ -123,8 +148,9 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
                 if (character.collided) {
                     setIsGameActive(false);
                     isGameActive = false;
-
                     setIsGameOver(true);
+                    deathSound.play();  // Play death sound
+                    gameAudio.pause();   // Stop game music
 
                     // Score posting
                     if (localGameScore !== null && doItOnce) {
@@ -134,19 +160,15 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
                             console.error('Error posting score: ', e);    
                         }); 
                         rewardGoldXp(userId, Math.floor(localGameGold), Math.floor(localGameXp)).catch(e => {
-    
                             console.error('Error rewarding gold and xp: ', e);
                         });
                     }
 
                     app.ticker.stop();
-
                     return;
                 }
 
-
                 projectileSpawner.projectiles.forEach((projectile) => projectile.update(deltaTime));
-
                 projectileSpawner.pumpkins.forEach((pumpkin) => pumpkin.update(deltaTime));
 
                 const remainingProjectiles = projectileSpawner.projectiles.filter(projectile => projectile.sprite.parent !== null);
@@ -154,6 +176,7 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
 
                 // Uz kiekviena despawn'inta projectile pridedam taskus, jei dar neivyko collision
                 if (!isGameOver && despawnedCount > 0) {
+                    dodgeSound.play();  // Play dodge sound
                     setScore(prevScore => {
                         const newScore = (prevScore === null) ? despawnedCount : prevScore + despawnedCount; // wtf is this
                         return Math.floor(newScore); // Kad score'as visada butu int'as (jei zinot geresni buda tam uztikrint pakeiskit)
@@ -162,7 +185,8 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
                     localGameScore += despawnedCount;
                     if(localGameScore % 5 == 0 && localGameScore !== 0){
                         localGameGold += 1;
-                        setGold(localGameGold);}
+                        setGold(localGameGold);
+                    }
                 }
 
                 projectileSpawner.projectiles = remainingProjectiles;
@@ -183,6 +207,7 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
             document.removeEventListener('visibilitychange', visibilityChange);
             document.body.removeEventListener("keydown", KeyboardKeys.onKeyDown);
             document.body.removeEventListener("keyup", KeyboardKeys.onKeyUp);
+            gameAudio.pause();
             app.destroy(true, { children: true });
         };
     }, [playAgain]);
@@ -194,6 +219,8 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
         setPlayAgain(playAgain + 1);
         setScore(null);
         setGold(0);
+        gameAudio.currentTime = 0;
+        gameAudio.play();
     };
 
     return (
