@@ -70,7 +70,7 @@ export class Character {
         const centerX = (width * 1.15) / 2;
         const centerY = height / 2;
     
-        this.sprite.hitArea = new PIXI.Ellipse(centerX, centerY, width + 30, height + 30);
+        this.sprite.hitArea = new PIXI.Ellipse(centerX, centerY, width / 3, height / 3);
     }
 
     checkForCollision(projectileArray: Projectile[]) {
