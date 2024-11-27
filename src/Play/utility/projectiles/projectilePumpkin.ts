@@ -34,8 +34,8 @@ export class Pumpkin extends Projectile {
             const textureHeight = this.sprite.texture.height;
     
             // Calculate the actual width and height based on the sprite's scale
-            const width = textureWidth * 2;
-            const height = textureHeight * 2;
+            const width = this.sprite.width;
+            const height = this.sprite.height;
     
     
             // Create a polygon for the hitbox with corners adjusted for anchor and scale
@@ -50,7 +50,7 @@ export class Pumpkin extends Projectile {
             this.sprite.hitArea = polygon;
     
             // Optional: visualize the hitArea for debugging
-            this.drawDebugHitbox(polygon);
+            // this.drawDebugHitbox(polygon);
         }
     }
     
