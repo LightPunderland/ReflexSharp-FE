@@ -1,11 +1,13 @@
+import Cookies from "js-cookie";
 import { useEffect, useState } from 'react';
-import { Route, Routes, Navigate } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import { AppRoutes } from './enums/enums';
 import Leaderboard from './Leaderboard/Leaderboard';
 import Login from './Login/Login';
+import Logout from "./Login/Logout";
 import Navbar from './Navbar/Navbar';
 import Play from './Play/Play';
 import Profile from './Profile/Profile';
-import { AppRoutes } from './enums/enums';
 
 // interface GoogleSignInResponse {
 //     credential: string;
@@ -13,9 +15,16 @@ import { AppRoutes } from './enums/enums';
 // }
 
 function App() {
-    const [isLoggedIn, setIsLoggedIn] = useState(false); // Not logged in by default, cookies go here later
-    const [userId, setUserId] = useState(''); // L: Maybe use cookies here later?
- 
+
+
+
+    const [isLoggedIn, setIsLoggedIn] = useState(!!Cookies.get('userId')); // check if userId is in cookies, if so, user is logged in
+    const [userId, setUserId] = useState(Cookies.get('userId')); // L: Maybe use cookies here later?
+
+    useEffect(() => {
+        console.log('effect?')
+        setUserId(Cookies.get('userId'));
+    }, []);
 
 
     const handleLogin = (username: string, userId: string) => {
@@ -23,8 +32,15 @@ function App() {
             console.log("Login Success", username, userId);
             setIsLoggedIn(true);
             setUserId(userId)
+
         }
     };
+
+    const handleLogout = () => {
+        Cookies.remove('userId');
+        setIsLoggedIn(false);
+        setUserId('');
+    }
 
     // const handleGoogleSignin = (response: GoogleSignInResponse) => {
     //     const token = response.credential;
@@ -33,9 +49,10 @@ function App() {
     //     handleLogin(token, token, userId);
     // }
 
-  
+
     // Login screen, keep it seperate from app for now as to not mess up game score before loading in
-    if (!isLoggedIn) {
+
+    if (!isLoggedIn || !userId) {
         return <Login onLogin={handleLogin} />;
     }
 
@@ -47,6 +64,7 @@ function App() {
                 <Route path={AppRoutes.Play} element={<Play userId={userId} />} />
                 <Route path={AppRoutes.Leaderboard} element={<Leaderboard />} />
                 <Route path={AppRoutes.Profile} element={<Profile userId={userId} />} />
+                <Route path={AppRoutes.Logout} element={<Logout onLogout={handleLogout} />} />
             </Routes >
         </>
     );
