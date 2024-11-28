@@ -5,7 +5,16 @@ import playImage from "../assets/play.png";
 import profileImage from "../assets/profile.png";
 import styles from "./Navbar.module.css";
 
+// You get what you deserve @Nojus
+//                          - Lukas
+import { useState } from "react";
+import logoutHover from "../assets/logout-hover.png";
+import logoutInactive from "../assets/logout-inactive.png";
+import logoutActive from "../assets/logout-active.png";
+
 function Navbar() {
+    const [logoutImage, setLogoutImage] = useState(logoutInactive);
+
     return (
         <header className={styles.header}>
             <nav className={styles['navbar-container']} id="main-bar">
@@ -33,7 +42,13 @@ function Navbar() {
                             Cookies.remove('userId')
 
                         }} to="/logout">
-                            <img alt="Logout" />
+                            <img src={logoutImage} alt="Logout"
+                                className={styles.logoutImage}
+                                onMouseEnter={() => setLogoutImage(logoutHover)}
+                                onMouseLeave={() => setLogoutImage(logoutInactive)}
+                                onMouseDown={() => setLogoutImage(logoutActive)}
+                                onMouseUp={() => setLogoutImage(logoutHover)}
+                             />
                         </NavLink>
                     </li>
 
