@@ -4,6 +4,7 @@ import { Projectile } from "./projectiles/projectile";
 import { Character } from "./character";
 import { Banana } from "./projectiles/projectileBanana";
 import { Pumpkin } from "./projectiles/projectilePumpkin";
+import { Coin } from "./projectiles/projectileCoin.ts";
 
 export class ProjectileSpawner{
     initialInterval = 2500; // Initial spawn interval in milliseconds
@@ -13,6 +14,7 @@ export class ProjectileSpawner{
     currentIntervalWatermelon = this.initialInterval * 0.9;
     currentIntervalBanana = this.initialInterval * 1.1;
     currentIntervalPumpkin = this.initialInterval * 1.3;
+    currentIntervalCoin = this.initialInterval * 1.7;
 
     isGameActive = true;
 
@@ -20,9 +22,11 @@ export class ProjectileSpawner{
     projectiles: Projectile[] = [];
     character: Character = new Character();
     pumpkins: Pumpkin[] = [];
+    coins: Coin[] = [];
     bananaInterval: number = 0;
     pumpkinInterval: number = 0;
     watermelonInterval: number = 0;
+    coinInterval: number = 0;
 
 
     constructor(app: PIXI.Application, character: Character){
@@ -32,6 +36,7 @@ export class ProjectileSpawner{
         this.bananaInterval = setInterval(this.spawnBanana, this.currentIntervalBanana);
         this.pumpkinInterval = setInterval(this.spawnPumpkin, this.currentIntervalPumpkin);
         this.watermelonInterval = setInterval(this.spawnWatermelon, this.currentIntervalWatermelon);
+        this.coinInterval = setInterval(this.spawnCoin, this.currentIntervalCoin);
     }
 
     spawnWatermelon = async () => {
@@ -80,6 +85,20 @@ export class ProjectileSpawner{
         }
     };
 
+    spawnCoin = async () => {
+        if(!this.app){
+            return;
+        }
+        console.log("Spawning coin wow!")
+        if (this.isGameActive) {
+            const newCoin = new Coin(this.character.getSprite());
+            this.app.stage.addChild(newCoin.getSprite());
+            newCoin.spawn();
+            this.coins.push(newCoin);
+
+            this.adjustInterval("coin");
+        }
+    };
 
 
     currentInterval: number = 0;
@@ -92,6 +111,8 @@ export class ProjectileSpawner{
             this.currentInterval = this.currentIntervalBanana;
         } else if (type === "pumpkin") {
             this.currentInterval = this.currentIntervalPumpkin;
+        }else if (type === "coin") {
+            this.currentInterval = this.currentIntervalCoin;
         }
 
         this.currentInterval = Math.max(this.minInterval, this.currentInterval * this.difficultyFactor);
@@ -107,6 +128,8 @@ export class ProjectileSpawner{
             this.currentIntervalBanana = adjustedInterval;
         } else if (type === "pumpkin") {
             this.currentIntervalPumpkin = adjustedInterval;
+        } else if (type === "coin") {
+            this.currentIntervalCoin = adjustedInterval;
         }
 
         // Clear and reset only the interval for the given type
@@ -120,11 +143,16 @@ export class ProjectileSpawner{
             clearInterval(this.pumpkinInterval);
             this.pumpkinInterval = setInterval(this.spawnPumpkin, adjustedInterval);
         }
+        else if (type === "coin") {
+            clearInterval(this.coinInterval);
+            this.coinInterval = setInterval(this.spawnCoin, adjustedInterval);
+        }
     };
 
     clearIntervals(){
         clearInterval(this.watermelonInterval);
         clearInterval(this.bananaInterval);
         clearInterval(this.pumpkinInterval);
+        clearInterval(this.coinInterval);
     }
 }

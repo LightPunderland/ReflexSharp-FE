@@ -10,7 +10,7 @@ import { PostScore } from "./PostScore";
 import { rewardGoldXp } from "./PostScore";
 import { SpriteCache } from "./utility/spriteCache";
 import { ProjectileSpawner } from "./utility/projectileSpawner";
-import { RankUpMessage } from './RankUpMessage/RankUpMessage';
+import RankUpMessage from './RankUpMessage/RankUpMessage';
 
 const characterBaseSpeed = 0.1; // error?
 
@@ -142,8 +142,14 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
                     }
                 }
                 
-                character.update(projectileSpawner.projectiles, deltaTime);
+                character.update(projectileSpawner.projectiles, projectileSpawner.coins, deltaTime);
                 
+                if (character.collected){
+                    localGameGold += 1;
+                    setGold(localGameGold);
+                    character.collected = false;
+                }
+
                 // Player dies
                 if (character.collided) {
                     setIsGameActive(false);
@@ -170,6 +176,7 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
 
                 projectileSpawner.projectiles.forEach((projectile) => projectile.update(deltaTime));
                 projectileSpawner.pumpkins.forEach((pumpkin) => pumpkin.update(deltaTime));
+                projectileSpawner.coins.forEach((coin) => coin.update(deltaTime));
 
                 const remainingProjectiles = projectileSpawner.projectiles.filter(projectile => projectile.sprite.parent !== null);
                 const despawnedCount = projectileSpawner.projectiles.length - remainingProjectiles.length;
@@ -183,10 +190,7 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
                     });
 
                     localGameScore += despawnedCount;
-                    if(localGameScore % 5 == 0 && localGameScore !== 0){
-                        localGameGold += 1;
-                        setGold(localGameGold);
-                    }
+                   
                 }
 
                 projectileSpawner.projectiles = remainingProjectiles;
