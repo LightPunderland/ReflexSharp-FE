@@ -54,22 +54,6 @@ export class Pumpkin extends Projectile {
         }
     }
     
-    // Optional method to draw the hitbox for visualization
-    private drawDebugHitbox(polygon: PIXI.Polygon): void {
-        const debugGraphics = new PIXI.Graphics();
-        debugGraphics.lineStyle(2, 0xff0000); // Red outline for visibility
-        debugGraphics.drawPolygon(polygon.points);
-        debugGraphics.endFill();
-    
-        // Attach the debug graphics to the same parent as the sprite for accurate positioning
-        if (this.sprite.parent) {
-            this.sprite.parent.addChild(debugGraphics);
-            debugGraphics.x = this.sprite.x;
-            debugGraphics.y = this.sprite.y;
-            debugGraphics.rotation = this.sprite.rotation;
-        }
-    }
-
     update(deltaTime: number): void {
         this.phaseTimer += deltaTime;
         

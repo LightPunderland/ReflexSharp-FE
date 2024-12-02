@@ -6,6 +6,7 @@ import * as PIXI from 'pixi.js';
 import { Projectile } from "./projectiles/projectile";
 import { SpriteCache } from "./spriteCache";
 import * as SAT from 'sat';
+import { Coin } from "./projectiles/projectileCoin";
 
 export class Character {
     static reduceDiagonalSpeed = 0.707;
@@ -13,6 +14,7 @@ export class Character {
     movementDirection: MovementDirection;
     movementMomentum: MovementMomentum;
     collided: boolean;
+    collected: boolean;
 
     constructor() {
         //klase kurioje saugoma i kuria puse juda characteris
@@ -25,6 +27,7 @@ export class Character {
 
         this.sprite.scale.set(1.15);
         this.collided = false;
+        this.collected = false;
 
         this.setHitArea();
     }
@@ -38,8 +41,9 @@ export class Character {
         this.sprite.y = canvasHeight / 2 - this.sprite.height;
     }
 
-    update(projectileArray: Projectile[], deltaTime: number) {
+    update(projectileArray: Projectile[], coinArray: Coin[], deltaTime: number) {
         this.checkForCollision(projectileArray);
+        this.checkForCoins(coinArray);
         this.setCharacterMovementDirection();
         this.updateCharacterMomentum(deltaTime);
         this.moveCharacter(deltaTime);
@@ -90,6 +94,29 @@ export class Character {
         }
     }
     
+    checkForCoins(coinArray: Coin[]) {
+
+        for (let i = 0; i < coinArray.length; i++) {
+            let coin = coinArray[i];
+            if(this.sprite && coin.markedForDeletion) {
+                this.sprite.parent.removeChild(coin.sprite);
+                coinArray.splice(i, 1);
+            }
+            // Ensure the character and projectile have valid hitArea before checking
+            if (this.sprite && this.sprite.hitArea && coin.sprite && coin.sprite.hitArea) {
+                if (this._hitAreaCollision(this.sprite, coin)) {
+                    this.collected = true;
+                    this.sprite.parent.removeChild(coin.sprite);
+                    coinArray.splice(i, 1);
+                    break; // Exit loop on first collision
+                }
+            } else {
+                // Log if either the character or the projectile does not have a hitArea
+                console.log('Missing hitArea for character or projectile!');
+            }
+        }
+
+    }
     
     _hitAreaCollision(character: PIXI.Sprite, projectile: Projectile): boolean {
         if (character.hitArea && projectile.sprite && projectile.sprite.hitArea) {
