@@ -1,6 +1,5 @@
 import { Projectile } from './projectile';
 import { SpriteCache } from '../spriteCache';
-import * as PIXI from 'pixi.js';
 
 export class Pumpkin extends Projectile {
     private phase: number = 0;               
@@ -14,12 +13,18 @@ export class Pumpkin extends Projectile {
         this.sprite.anchor.set(0.5, 0.5);
 
         this.updateSprite();
-        this.setHitArea();
+
+        this.addHitBoxesPoints();
     }
 
     spawn(): void {
         this.sprite.x = Math.random() * window.innerWidth;
         this.sprite.y = Math.random() * window.innerHeight;
+        
+        for(let i = 0; i < this.hitboxSpriteArray.length; i++){
+            this.hitboxSpriteArray[i].x = this.sprite.x + this.hitboxPoints[i][0];
+            this.hitboxSpriteArray[i].y = this.sprite.y + this.hitboxPoints[i][1];
+        }
     }
 
     private updateSprite(): void {
@@ -28,30 +33,26 @@ export class Pumpkin extends Projectile {
         }
     }
 
-    private setHitArea(): void {
-        if (this.sprite && this.sprite.texture) {
-            const textureWidth = this.sprite.texture.width;
-            const textureHeight = this.sprite.texture.height;
+    addHitBoxesPoints(){
+        // Atkomentuoti jei nori nupiesti hitbox pointus
+        // for(var i = 0;i<8;i++){
+        //     const hitboxSprite = PIXI.Sprite.from('src/assets/redhitboxpoint.png')
+        //     hitboxSprite.height = 4;
+        //     hitboxSprite.width = 4;
     
-            // Calculate the actual width and height based on the sprite's scale
-            const width = this.sprite.width;
-            const height = this.sprite.height;
-    
-    
-            // Create a polygon for the hitbox with corners adjusted for anchor and scale
-            const polygon = new PIXI.Polygon(
-                new PIXI.Point(-width / 2 - textureWidth, -height / 2 - textureHeight), // Top-left corner
-                new PIXI.Point(width / 2 , -height / 2 - textureHeight),  // Top-right corner
-                new PIXI.Point(width / 2 , height / 2 ),   // Bottom-right corner
-                new PIXI.Point(-width / 2 - textureWidth, height / 2 )   // Bottom-left corner
-            );
-    
-            // Set the polygon as the hitArea for collision detection
-            this.sprite.hitArea = polygon;
-    
-            // Optional: visualize the hitArea for debugging
-            // this.drawDebugHitbox(polygon);
-        }
+        //     this.hitboxSpriteArray.push(hitboxSprite);
+        // }
+
+        this.hitboxPoints.push([-this.sprite.width+14,-this.sprite.height+10]);
+        this.hitboxPoints.push([-this.sprite.width-2,0]);
+        this.hitboxPoints.push([-this.sprite.width+10,this.sprite.height-16]);
+        
+        this.hitboxPoints.push([this.sprite.width-14,-this.sprite.height+14]);
+        this.hitboxPoints.push([this.sprite.width,0]);
+        this.hitboxPoints.push([this.sprite.width-10,this.sprite.height-10]);
+
+        this.hitboxPoints.push([0,-this.sprite.height+14]);
+        this.hitboxPoints.push([0,this.sprite.height-8]);
     }
     
     update(deltaTime: number): void {

@@ -1,6 +1,5 @@
 import { Projectile } from './projectile';
 import { SpriteCache } from '../spriteCache';
-import * as PIXI from 'pixi.js';
 
 export class Coin extends Projectile {
 
@@ -13,26 +12,17 @@ export class Coin extends Projectile {
 
     constructor(player: { x: number; y: number }) {
         super(player, SpriteCache.instance.coinTexture, SpriteCache.instance.bananaTexture);
-        this.setHitArea();
         this.sprite.scale.set(0.69);
+        this.addHitBoxesPoints();
     }
 
     spawn(): void {
         this.sprite.x = Math.random() * window.innerWidth;
         this.sprite.y = Math.random() * window.innerHeight;
-    }
 
-    private setHitArea(): void {
-        if (this.sprite && this.sprite.texture) {
-            const width = this.sprite.width;
-            const height = this.sprite.height;
-            const polygon = new PIXI.Polygon(
-                new PIXI.Point(-width / 2, -height / 2),
-                new PIXI.Point(width / 2, -height / 2),
-                new PIXI.Point(width / 2, height / 2),
-                new PIXI.Point(-width / 2, height / 2)
-            );
-            this.sprite.hitArea = polygon;
+        for(let i = 0; i < this.hitboxSpriteArray.length; i++){
+            this.hitboxSpriteArray[i].x = this.sprite.x + this.hitboxPoints[i][0];
+            this.hitboxSpriteArray[i].y = this.sprite.y + this.hitboxPoints[i][1];
         }
     }
 
@@ -49,12 +39,28 @@ export class Coin extends Projectile {
             }
 
 
-        // Check if lifetime has expired
-        if (this.elapsedTime >= this.lifetime) {
-            if (this.sprite.parent) {
-                this.markedForDeletion = true;
+            // Check if lifetime has expired
+            if (this.elapsedTime >= this.lifetime) {
+                if (this.sprite.parent) {
+                    this.markedForDeletion = true;
+                }
             }
         }
     }
-}
+
+    addHitBoxesPoints(){
+        // Atkomentuoti jei nori nupiesti hitbox pointus
+        // for(var i = 0;i<4;i++){
+        //     const hitboxSprite = PIXI.Sprite.from('src/assets/redhitboxpoint.png')
+        //     hitboxSprite.height = 4;
+        //     hitboxSprite.width = 4;
+    
+        //     this.hitboxSpriteArray.push(hitboxSprite);
+        // }
+
+        this.hitboxPoints.push([4,4]);
+        this.hitboxPoints.push([this.sprite.width-8,4]);
+        this.hitboxPoints.push([4,this.sprite.height-6]);
+        this.hitboxPoints.push([this.sprite.width-6,this.sprite.height-6]);
+    }
 }

@@ -45,6 +45,12 @@ export class ProjectileSpawner{
         }
         if (this.isGameActive) {
             const newWatermelon = new Watermelon(this.character.getSprite());
+
+            // Cia kai debuginimui pamatyti hitboxo taskus
+            for(var hitboxSprite of newWatermelon.hitboxSpriteArray){
+                this.app.stage.addChild(hitboxSprite);
+            }
+            
             this.app.stage.addChild(newWatermelon.getSprite());
             this.app.stage.addChild(newWatermelon.getWarningSprite());
             newWatermelon.spawn(this.app.view.width, this.app.view.height);
@@ -61,6 +67,12 @@ export class ProjectileSpawner{
         console.log("Spawning banana wow!")
         if (this.isGameActive) {
             const newBanana = new Banana(this.character.getSprite());
+
+            // Cia kai debuginimui pamatyti hitboxo taskus
+            for(var hitboxSprite of newBanana.hitboxSpriteArray){
+                this.app.stage.addChild(hitboxSprite);
+            }
+
             this.app.stage.addChild(newBanana.getSprite());
             this.app.stage.addChild(newBanana.getWarningSprite());
             newBanana.spawn(this.app.view.width, this.app.view.height);
@@ -77,6 +89,12 @@ export class ProjectileSpawner{
         console.log("Spawning pumpkin wow!")
         if (this.isGameActive) {
             const newPumpkin = new Pumpkin(this.character.getSprite());
+
+            // Cia kai debuginimui pamatyti hitboxo taskus
+            for(var hitboxSprite of newPumpkin.hitboxSpriteArray){
+                this.app.stage.addChild(hitboxSprite);
+            }
+
             this.app.stage.addChild(newPumpkin.getSprite());
             newPumpkin.spawn();
             this.pumpkins.push(newPumpkin);
@@ -92,8 +110,15 @@ export class ProjectileSpawner{
         console.log("Spawning coin wow!")
         if (this.isGameActive) {
             const newCoin = new Coin(this.character.getSprite());
+
+            // Cia kai debuginimui pamatyti hitboxo taskus
+            for(var hitboxSprite of newCoin.hitboxSpriteArray){
+                this.app.stage.addChild(hitboxSprite);
+            }
+
             this.app.stage.addChild(newCoin.getSprite());
             newCoin.spawn();
+            
             this.coins.push(newCoin);
 
             this.adjustInterval("coin");
