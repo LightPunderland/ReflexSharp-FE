@@ -13,6 +13,34 @@ import { ProjectileSpawner } from "./utility/projectileSpawner";
 
 const characterBaseSpeed = 0.1; // error?
 
+function characterHitboxDebug(app: PIXI.Application, character: Character){
+    const hitboxSprite1 = PIXI.Sprite.from('src/assets/redhitboxpoint.png')
+    hitboxSprite1.height = 4;
+    hitboxSprite1.width = 4;
+    hitboxSprite1.x = character.getSprite().x+character.charHitboxOffset;
+    hitboxSprite1.y = character.getSprite().y+character.charHitboxOffset;
+    const hitboxSprite2 = PIXI.Sprite.from('src/assets/redhitboxpoint.png')
+    hitboxSprite2.height = 4;
+    hitboxSprite2.width = 4;
+    hitboxSprite2.x = character.getSprite().x+character.getSprite().width-character.charHitboxOffset;
+    hitboxSprite2.y = character.getSprite().y+character.charHitboxOffset;
+    const hitboxSprite3 = PIXI.Sprite.from('src/assets/redhitboxpoint.png')
+    hitboxSprite3.height = 4;
+    hitboxSprite3.width = 4;
+    hitboxSprite3.x = character.getSprite().x+character.charHitboxOffset;
+    hitboxSprite3.y = character.getSprite().y+character.getSprite().height-character.charHitboxOffset;
+    const hitboxSprite4 = PIXI.Sprite.from('src/assets/redhitboxpoint.png')
+    hitboxSprite4.height = 4;
+    hitboxSprite4.width = 4;
+    hitboxSprite4.x = character.getSprite().x+character.getSprite().width-character.charHitboxOffset;
+    hitboxSprite4.y = character.getSprite().y+character.getSprite().height-character.charHitboxOffset;
+
+    app.stage.addChild(hitboxSprite1);
+    app.stage.addChild(hitboxSprite2);
+    app.stage.addChild(hitboxSprite3);
+    app.stage.addChild(hitboxSprite4);
+}
+
 const Play: React.FC<{userId: string}> = ({ userId }) => {
     let doItOnce = true; // DO NOT MAKE REMOVE THIS, WILL BREAK POSTS, NEED TO FIX IN TESTING
 
@@ -124,6 +152,9 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
                 app.stage.addChild(loadingText);
             }
             else if (isGameActive) {
+                // CHARACTER HITBOX POINTAI
+                characterHitboxDebug(app, character);
+
                 timeElapsed += 0.01;  // Convert deltaTime from ms to seconds
                 localGameXp = 1.001 * Math.pow(timeElapsed, 1.3);
                 setXp(Math.floor(localGameXp));

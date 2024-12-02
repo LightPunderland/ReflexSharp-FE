@@ -15,7 +15,7 @@ export class Character {
     collided: boolean;
     collected: boolean;
 
-    charHitboxOffset = 10;
+    charHitboxOffset = 13;
 
     constructor() {
         //klase kurioje saugoma i kuria puse juda characteris
