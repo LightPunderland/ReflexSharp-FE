@@ -1,4 +1,5 @@
 import { GoogleLogin } from '@react-oauth/google';
+import Cookies from "js-cookie";
 import { useState } from 'react';
 import styles from './Login.module.css';
 import LoginService from './api/Login';
@@ -31,14 +32,10 @@ function Login({ onLogin }: LoginProps) {
     const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
     const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [userId, setUserId] = useState('');
     const [showGoogleSignIn, setShowGoogleSignIn] = useState(false);
 
-    // const handleLogin = () => {
-    //     onLogin(username, userId);
 
-    // };
+
 
     const handleNext = () => {
         if (!username.trim()) {
@@ -61,12 +58,12 @@ function Login({ onLogin }: LoginProps) {
 
             const user: UserDTO = await LoginService.googleSignIn(data);
             setUsername(user.displayName);
-            setUserId(user.id);
+            Cookies.set('userId', user.id, { expires: 10 / (24 * 60) });
 
             sessionStorage.setItem('user', JSON.stringify(user));
             onLogin(user.displayName, user.id);
 
-            // console.log("Backend Response:", backendResponse);
+
         } catch (error) {
             console.error("Google Sign-In failed:", error);
             throw error;

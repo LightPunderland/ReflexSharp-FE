@@ -59,3 +59,13 @@ a:hover {
     align-items: center;
     margin-left: auto;
 }
+
+.logoutImage {
+    width: 40px;
+    height: 40px;
+}
+
+.navbar-list li:last-child {
+    margin-left: auto;
+    flex-grow: 0;
+}

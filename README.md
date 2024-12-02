@@ -12,7 +12,7 @@ Dodge oncoming fruits in order to train your reflexs to be as sharp as a ***ninj
 
 ## Gameplay loop
 
-Dodge oncoming fruits, with each fruit you dodge the higher your score goes.
+aDodge oncoming fruits, with each fruit you dodge the higher your score goes.
 
 <p align="center">
   <img alt="Starting Screen" src="extra/starting_screen.png">
