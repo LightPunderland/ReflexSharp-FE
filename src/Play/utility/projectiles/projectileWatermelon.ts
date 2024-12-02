@@ -19,5 +19,24 @@ export class Watermelon extends Projectile {
 
         // Define an oval hit area
         this.sprite.hitArea = new PIXI.Ellipse(centerX, centerY, width / 2, height / 2);
+
+        // Hitboxu debuginimmas
+        this.addHitBoxesPoints()
+    }
+
+    addHitBoxesPoints(){
+        // Atkomentuoti jei nori nupiesti hitbox pointus
+        // for(var i = 0;i<4;i++){
+        //     const hitboxSprite = PIXI.Sprite.from('src/assets/redhitboxpoint.png')
+        //     hitboxSprite.height = 4;
+        //     hitboxSprite.width = 4;
+    
+        //     this.hitboxSpriteArray.push(hitboxSprite);
+        // }
+
+        this.hitboxPoints.push([8,8]);
+        this.hitboxPoints.push([this.sprite.width-8,12]);
+        this.hitboxPoints.push([8,this.sprite.height-12]);
+        this.hitboxPoints.push([this.sprite.width-8,this.sprite.height-14]);
     }
 }

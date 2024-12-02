@@ -15,9 +15,6 @@ import Profile from './Profile/Profile';
 // }
 
 function App() {
-
-
-
     const [isLoggedIn, setIsLoggedIn] = useState(!!Cookies.get('userId')); // check if userId is in cookies, if so, user is logged in
     const [userId, setUserId] = useState(Cookies.get('userId')); // L: Maybe use cookies here later?
 

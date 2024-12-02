@@ -10,7 +10,6 @@ import { PostScore } from "./PostScore";
 import { rewardGoldXp } from "./PostScore";
 import { SpriteCache } from "./utility/spriteCache";
 import { ProjectileSpawner } from "./utility/projectileSpawner";
-import RankUpMessage from './RankUpMessage/RankUpMessage';
 
 const characterBaseSpeed = 0.1; // error?
 

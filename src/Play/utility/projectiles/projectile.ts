@@ -11,10 +11,10 @@ export class Projectile {
     time: number; //Kiek laiko praejo nuo sviedinio sukurimo
     side: number;
     warnTime: number;
-
+    hitboxSpriteArray: PIXI.Sprite[] = [];
+    hitboxPoints: number[][] = []
 
     constructor(player: { x: number; y: number }, spriteTexture: PIXI.Texture, warningTexture: PIXI.Texture) {
-
         this.speed = 12;
         this.player = player;
         this.sprite = PIXI.Sprite.from(spriteTexture);
@@ -79,8 +79,6 @@ export class Projectile {
                 this.warningSprite.rotation = -Math.PI/2;
                 break;
         }
-
-        
     }
 
     getCollisionBox(): { x: number, y: number, width: number, height: number } {
@@ -97,52 +95,57 @@ export class Projectile {
     }
 
     update(deltaTime: number): void {
-        
         this.warnTime++;
+
         if(this.warnTime > 100) {
-        if(!this.direction) this.direction = this.calculateDirection(this.sprite.x, this.sprite.y, this.player.x, this.player.y);
+            if(!this.direction) this.direction = this.calculateDirection(this.sprite.x, this.sprite.y, this.player.x, this.player.y);
 
-        this.speed += this.speedIncrement * deltaTime;
+            this.speed += this.speedIncrement * deltaTime;
 
-        this.sprite.x += this.direction.x * this.speed * deltaTime;
-        this.sprite.y += this.direction.y * this.speed * deltaTime;
+            this.sprite.x += this.direction.x * this.speed * deltaTime;
+            this.sprite.y += this.direction.y * this.speed * deltaTime;
 
-        if (this.sprite.x < -Projectile._spawnOffset ||
-            this.sprite.x > window.innerWidth + Projectile._spawnOffset ||
-            this.sprite.y < -Projectile._spawnOffset ||
-            this.sprite.y > window.innerHeight + Projectile._spawnOffset) {
-            
-            if (this.sprite.parent) {
-                this.sprite.parent.removeChild(this.sprite);
+            for(let i = 0; i < this.hitboxSpriteArray.length; i++){
+                this.hitboxSpriteArray[i].x = this.sprite.x + this.hitboxPoints[i][0]
+                this.hitboxSpriteArray[i].y = this.sprite.y + this.hitboxPoints[i][1]
+            }
+
+            if (this.sprite.x < -Projectile._spawnOffset ||
+                this.sprite.x > window.innerWidth + Projectile._spawnOffset ||
+                this.sprite.y < -Projectile._spawnOffset ||
+                this.sprite.y > window.innerHeight + Projectile._spawnOffset) {
+                
+                if (this.sprite.parent) {
+                    this.sprite.parent.removeChild(this.sprite);
+                }
+            }
+            if(this.warningSprite.parent) {
+
+                this.warningSprite.parent.removeChild(this.warningSprite);
             }
         }
-        if(this.warningSprite.parent) {
-
-            this.warningSprite.parent.removeChild(this.warningSprite);
+        else {
+            switch (this.side) {
+                case 0:
+                    this.warningSprite.x = this.sprite.x;
+                    this.warningSprite.y = this.sprite.y + Projectile._spawnOffset*2;
+                    break;
+                case 1: 
+                    this.warningSprite.x = this.sprite.x;
+                    this.warningSprite.y = this.sprite.y - Projectile._spawnOffset*3;
+                    break;
+                case 2:
+                    this.warningSprite.x = this.sprite.x + Projectile._spawnOffset*2;
+                    this.warningSprite.y = this.sprite.y;
+                    break;
+                case 3:
+                    this.warningSprite.x = this.sprite.x - Projectile._spawnOffset*2;
+                    this.warningSprite.y = this.sprite.y;
+                    break;
+            }
+            
+            this.warningSprite.width = this.sprite.width;
+            this.warningSprite.height = this.sprite.height;
         }
-    }else {
-        switch (this.side) {
-            case 0:
-                this.warningSprite.x = this.sprite.x;
-                this.warningSprite.y = this.sprite.y + Projectile._spawnOffset*2;
-                break;
-            case 1: 
-                this.warningSprite.x = this.sprite.x;
-                this.warningSprite.y = this.sprite.y - Projectile._spawnOffset*3;
-                break;
-            case 2:
-                this.warningSprite.x = this.sprite.x + Projectile._spawnOffset*2;
-                this.warningSprite.y = this.sprite.y;
-                break;
-            case 3:
-                this.warningSprite.x = this.sprite.x - Projectile._spawnOffset*2;
-                this.warningSprite.y = this.sprite.y;
-                break;
-        }
-        
-        this.warningSprite.width = this.sprite.width;
-        this.warningSprite.height = this.sprite.height;
     }
-    
-}
 }

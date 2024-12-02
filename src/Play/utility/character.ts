@@ -5,7 +5,6 @@ import { MovementPhysics } from "./characterMovement/movementPhysics";
 import * as PIXI from 'pixi.js';
 import { Projectile } from "./projectiles/projectile";
 import { SpriteCache } from "./spriteCache";
-import * as SAT from 'sat';
 import { Coin } from "./projectiles/projectileCoin";
 
 export class Character {
@@ -15,6 +14,8 @@ export class Character {
     movementMomentum: MovementMomentum;
     collided: boolean;
     collected: boolean;
+
+    charHitboxOffset = 10;
 
     constructor() {
         //klase kurioje saugoma i kuria puse juda characteris
@@ -28,8 +29,6 @@ export class Character {
         this.sprite.scale.set(1.15);
         this.collided = false;
         this.collected = false;
-
-        this.setHitArea();
     }
 
     spawnCharacter(canvasWidth: number, canvasHeight: number) {
@@ -66,97 +65,50 @@ export class Character {
         }
     }
 
-    setHitArea() {
-        if (!this.sprite) return;
-        
-        const width = this.sprite.width;
-        const height = this.sprite.height; 
-        const centerX = (width * 1.15) / 2;
-        const centerY = height / 2;
-    
-        this.sprite.hitArea = new PIXI.Ellipse(centerX, centerY, width / 3, height / 3);
-    }
-
     checkForCollision(projectileArray: Projectile[]) {
+        if (!this.sprite) return;
+
         for (let i = 0; i < projectileArray.length; i++) {
             let projectile = projectileArray[i];
             
-            // Ensure the character and projectile have valid hitArea before checking
-            if (this.sprite && this.sprite.hitArea && projectile.sprite && projectile.sprite.hitArea) {
-                if (this._hitAreaCollision(this.sprite, projectile)) {
-                    this.collided = true;
-                    break; // Exit loop on first collision
+            for(var projectileHitboxPoint of projectile.hitboxPoints){
+                var hitboxX = projectile.sprite.x+projectileHitboxPoint[0]
+                var hitboxY = projectile.sprite.y+projectileHitboxPoint[1]
+                
+                if(hitboxX>this.sprite.x+this.charHitboxOffset && hitboxX<this.sprite.x+this.sprite.width-this.charHitboxOffset){
+                    if(hitboxY>this.sprite.y+this.charHitboxOffset && hitboxY<this.sprite.y+this.sprite.height-this.charHitboxOffset){
+                        this.collided = true;
+                    }
                 }
-            } else {
-                // Log if either the character or the projectile does not have a hitArea
-                console.log('Missing hitArea for character or projectile!');
             }
         }
     }
     
     checkForCoins(coinArray: Coin[]) {
+        if (!this.sprite) return;
 
         for (let i = 0; i < coinArray.length; i++) {
             let coin = coinArray[i];
+
             if(this.sprite && coin.markedForDeletion) {
                 this.sprite.parent.removeChild(coin.sprite);
                 coinArray.splice(i, 1);
             }
-            // Ensure the character and projectile have valid hitArea before checking
-            if (this.sprite && this.sprite.hitArea && coin.sprite && coin.sprite.hitArea) {
-                if (this._hitAreaCollision(this.sprite, coin)) {
-                    this.collected = true;
-                    this.sprite.parent.removeChild(coin.sprite);
-                    coinArray.splice(i, 1);
-                    break; // Exit loop on first collision
-                }
-            } else {
-                // Log if either the character or the projectile does not have a hitArea
-                console.log('Missing hitArea for character or projectile!');
-            }
-        }
 
-    }
-    
-    _hitAreaCollision(character: PIXI.Sprite, projectile: Projectile): boolean {
-        if (character.hitArea && projectile.sprite && projectile.sprite.hitArea) {
-            const characterHitArea = character.hitArea;
-            const projectileHitArea = projectile.sprite.hitArea;
-    
-            let characterShape: SAT.Circle | undefined, projectileShape: SAT.Circle | SAT.Polygon;
-    
-            // Convert the hitAreas to SAT shapes
-            if (characterHitArea instanceof PIXI.Ellipse) {
-                characterShape = new SAT.Circle(new SAT.Vector(character.x, character.y), characterHitArea.width);
-            }
-    
-            if (projectileHitArea instanceof PIXI.Ellipse) {
-                projectileShape = new SAT.Circle(new SAT.Vector(projectile.sprite.x, projectile.sprite.y), projectileHitArea.width / 2);
-            } else if (projectileHitArea instanceof PIXI.Polygon) {
-                projectileShape = new SAT.Polygon(
-                    new SAT.Vector(projectile.sprite.x, projectile.sprite.y), 
-                    projectileHitArea.points.map((_, i) => i % 2 === 0 ? new SAT.Vector(projectileHitArea.points[i], projectileHitArea.points[i + 1]) : null).filter(p => p !== null) as SAT.Vector[]);
-            } else {
-                console.error('Unexpected projectile hitArea type:', projectileHitArea);
-                return false;
-            }
-    
-            // Check for intersection using SAT.js
-            const response = new SAT.Response();
-            let collided = false;
-            if (characterShape instanceof SAT.Circle && projectileShape instanceof SAT.Circle) {
-                collided = SAT.testCircleCircle(characterShape, projectileShape, response);
-            } else if (characterShape instanceof SAT.Circle && projectileShape instanceof SAT.Polygon) {
-                collided = SAT.testCirclePolygon(characterShape, projectileShape, response);
-            }
-            
-            // Log if collision occurs
-            if (collided) {
-                console.log('Collision detected between character and projectile');
-                return true;
+            for(var projectileHitboxPoint of coin.hitboxPoints){
+                var hitboxX = coin.sprite.x+projectileHitboxPoint[0];
+                var hitboxY = coin.sprite.y+projectileHitboxPoint[1];
+                
+                if(hitboxX>this.sprite.x+this.charHitboxOffset && hitboxX<this.sprite.x+this.sprite.width-this.charHitboxOffset){
+                    if(hitboxY>this.sprite.y+this.charHitboxOffset && hitboxY<this.sprite.y+this.sprite.height-this.charHitboxOffset){
+                        this.collected = true;
+                        this.sprite.parent.removeChild(coin.sprite);
+                        coinArray.splice(i, 1);
+                        break; // Exit loop on first collision
+                    }
+                }
             }
         }
-        return false;
     }
     
     getSprite() {
