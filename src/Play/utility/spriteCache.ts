@@ -26,6 +26,7 @@ export class SpriteCache{
     public bananaTexture = PIXI.Texture.from('http://localhost:5050/api/sprite/by-name/banana');
     public watermelonTexture = PIXI.Texture.from('http://localhost:5050/api/sprite/by-name/watermelon');
     public coinTexture = PIXI.Texture.from('http://localhost:5050/api/sprite/by-name/coin');
+    public kunaiTexture = PIXI.Texture.from('http://localhost:5050/api/sprite/by-name/kunai');
     public backgroundTexture = PIXI.Texture.from('src/Play/background.png');
     
     public bananaWarningTexture = PIXI.Texture.from('http://localhost:5050/api/sprite/by-name/bananaWarning');
@@ -36,7 +37,9 @@ export class SpriteCache{
             this.ninjaTexture,
             this.bananaTexture,
             this.watermelonTexture,
-            this.backgroundTexture
+            this.backgroundTexture,
+            this.coinTexture,
+            this.kunaiTexture
         ];
 
         for(let i = 0;i<textures.length;i++){
