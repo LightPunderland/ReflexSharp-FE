@@ -88,8 +88,6 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
             gameContainer.current.appendChild(app.view as HTMLCanvasElement);
         }
 
-    
-
         const character = new Character();
         app.stage.addChild(character.getSprite());
 
@@ -124,10 +122,13 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
 
         window.addEventListener('click', (event) => {
             if (character.hasKunai && character.sprite) {
-                const newKunai = new Kunai(character.getSprite(), true)
+                const newKunai = new Kunai(character.getSprite(), true);
+
                 app.stage.addChild(newKunai.getSprite());
                 projectileSpawner.kunai.push(newKunai);
+
                 newKunai.throw(event.clientX, event.clientY, character.sprite.x, character.sprite.y);
+
                 character.hasKunai = false;
             }
         });
@@ -190,7 +191,9 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
                 projectileSpawner.projectiles.forEach((projectile) => projectile.update(deltaTime));
                 projectileSpawner.pumpkins.forEach((pumpkin) => pumpkin.update(deltaTime));
                 projectileSpawner.coins.forEach((coin) => coin.update(deltaTime));
+
                 projectileSpawner.kunai.forEach((kunai) => kunai.update(deltaTime));
+                projectileSpawner.kunai.forEach((kunai) => kunai.checkForCollision(projectileSpawner.projectiles));
 
                 const remainingProjectiles = projectileSpawner.projectiles.filter(projectile => projectile.sprite.parent !== null);
                 const despawnedCount = projectileSpawner.projectiles.length - remainingProjectiles.length;
