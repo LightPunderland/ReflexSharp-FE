@@ -39,8 +39,33 @@ export class Kunai extends Projectile {
         const dy = targetY - startY;
         const magnitude = Math.sqrt(dx * dx + dy * dy);
         this.direction = new PIXI.Point(dx / magnitude, dy / magnitude);
-        const angle = Math.atan2(dy, dx);
-        this.sprite.rotation = angle;
+
+        const angle = Math.tan(dy / dx);
+
+        const difX = Math.abs(targetX-startX);
+        const difY = Math.abs(targetY-startY);
+
+        console.log("ANGLE KUNAI: " + Math.abs(difX-difY));
+
+        // Kaip ir temporary fix'as jeigu nieko geriau nesugalvosim
+        if(difX > difY){
+            if(targetX > startX){
+                this.sprite.angle = 45;
+            }
+            else{
+                this.sprite.angle = 45+180;
+            }
+        }
+        else{
+            if(targetY > startY){
+                this.sprite.angle = -45+180;
+            }
+            else{
+                this.sprite.angle = -45+360;      
+            }
+        }
+
+        
     }
 
     checkForCollision(projectiles: Projectile[]){
