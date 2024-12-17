@@ -8,6 +8,7 @@ import Logout from "./Login/Logout";
 import Navbar from './Navbar/Navbar';
 import Play from './Play/Play';
 import Profile from './Profile/Profile';
+import Wardrobe from './Wardrobe/Wardrobe';
 
 // interface GoogleSignInResponse {
 //     credential: string;
@@ -59,6 +60,7 @@ function App() {
             <Routes>
                 <Route path="/" element={<Navigate to={AppRoutes.Profile} replace />} />
                 <Route path={AppRoutes.Play} element={<Play userId={userId} />} />
+                <Route path={AppRoutes.Wardrobe} element={<Wardrobe />} />
                 <Route path={AppRoutes.Leaderboard} element={<Leaderboard />} />
                 <Route path={AppRoutes.Profile} element={<Profile userId={userId} />} />
                 <Route path={AppRoutes.Logout} element={<Logout onLogout={handleLogout} />} />

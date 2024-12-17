@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 import leaderboardImage from "../assets/leaderboard.png";
 import playImage from "../assets/play.png";
 import profileImage from "../assets/profile.png";
+import wardrobeImage from "../assets/wardrobe.png";
 import styles from "./Navbar.module.css";
 
 // You get what you deserve @Nojus
@@ -23,6 +24,12 @@ function Navbar() {
                     <li>
                         <NavLink to="/play">
                             <img src={playImage} alt="Play" />
+                        </NavLink>
+                    </li>
+
+                    <li>
+                        <NavLink to="/wardrobe">
+                            <img src={wardrobeImage} alt="Wardrobe" />
                         </NavLink>
                     </li>
 
