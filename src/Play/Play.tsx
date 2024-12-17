@@ -10,6 +10,7 @@ import { PostScore } from "./PostScore";
 import { rewardGoldXp } from "./PostScore";
 import { SpriteCache } from "./utility/spriteCache";
 import { ProjectileSpawner } from "./utility/projectileSpawner";
+import { Kunai } from "./utility/projectiles/projectileKunai";
 
 const characterBaseSpeed = 0.1; // error?
 
@@ -118,6 +119,20 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
         loadingText.y = app.view.height/3;
         let gameLoaded = false;
 
+
+        window.addEventListener('click', (event) => {
+            if (character.hasKunai && character.sprite) {
+                const newKunai = new Kunai(character.getSprite(), true);
+
+                app.stage.addChild(newKunai.getSprite());
+                projectileSpawner.kunai.push(newKunai);
+
+                newKunai.throw(event.clientX, event.clientY, character.sprite.x, character.sprite.y);
+
+                character.hasKunai = false;
+            }
+        });
+
         // **Frame-independent movement using deltaTime**
         app.ticker.add((deltaTime) => {
             if (!SpriteCache.instance.texturesLoaded()){
@@ -141,7 +156,7 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
                     }
                 }
                 
-                character.update(projectileSpawner.projectiles, projectileSpawner.coins, deltaTime);
+                character.update(projectileSpawner.projectiles, projectileSpawner.coins, projectileSpawner.kunai, deltaTime);
                 
                 if (character.collected){
                     localGameGold += 1;
@@ -176,6 +191,9 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
                 projectileSpawner.projectiles.forEach((projectile) => projectile.update(deltaTime));
                 projectileSpawner.pumpkins.forEach((pumpkin) => pumpkin.update(deltaTime));
                 projectileSpawner.coins.forEach((coin) => coin.update(deltaTime));
+
+                projectileSpawner.kunai.forEach((kunai) => kunai.update(deltaTime));
+                projectileSpawner.kunai.forEach((kunai) => kunai.checkForCollision(projectileSpawner.projectiles));
 
                 const remainingProjectiles = projectileSpawner.projectiles.filter(projectile => projectile.sprite.parent !== null);
                 const despawnedCount = projectileSpawner.projectiles.length - remainingProjectiles.length;

@@ -6,6 +6,7 @@ import * as PIXI from 'pixi.js';
 import { Projectile } from "./projectiles/projectile";
 import { SpriteCache } from "./spriteCache";
 import { Coin } from "./projectiles/projectileCoin";
+import { Kunai } from "./projectiles/projectileKunai";
 
 export class Character {
     static reduceDiagonalSpeed = 0.707;
@@ -14,6 +15,7 @@ export class Character {
     movementMomentum: MovementMomentum;
     collided: boolean;
     collected: boolean;
+    hasKunai: boolean = false;
 
     charHitboxOffset = 10;
 
@@ -40,9 +42,10 @@ export class Character {
         this.sprite.y = canvasHeight / 2 - this.sprite.height;
     }
 
-    update(projectileArray: Projectile[], coinArray: Coin[], deltaTime: number) {
+    update(projectileArray: Projectile[], coinArray: Coin[], kunaiArray: Kunai[], deltaTime: number) {
         this.checkForCollision(projectileArray);
         this.checkForCoins(coinArray);
+        this.checkForKunai(kunaiArray);
         this.setCharacterMovementDirection();
         this.updateCharacterMomentum(deltaTime);
         this.moveCharacter(deltaTime);
@@ -110,6 +113,35 @@ export class Character {
             }
         }
     }
+
+    checkForKunai(kunaiArray: Kunai[]) {
+        if (!this.sprite) return;
+
+        for (let i = 0; i < kunaiArray.length; i++) {
+            if(!kunaiArray[i].toThrow){
+            let kunai = kunaiArray[i];
+            if(this.sprite && kunai.markedForDeletion) {
+                this.sprite.parent.removeChild(kunai.sprite);
+                kunaiArray.splice(i, 1);
+            }
+
+            for(var projectileHitboxPoint of kunai.hitboxPoints){
+                var hitboxX = kunai.sprite.x+projectileHitboxPoint[0];
+                var hitboxY = kunai.sprite.y+projectileHitboxPoint[1];
+                
+                if(hitboxX>this.sprite.x+this.charHitboxOffset && hitboxX<this.sprite.x+this.sprite.width-this.charHitboxOffset){
+                    if(hitboxY>this.sprite.y+this.charHitboxOffset && hitboxY<this.sprite.y+this.sprite.height-this.charHitboxOffset){
+                        this.hasKunai = true;
+                        this.sprite.parent.removeChild(kunai.sprite);
+                        kunaiArray.splice(i, 1);
+                        break; // Exit loop on first collision
+                    }
+                }
+            }
+        }
+    }
+    }
+
     
     getSprite() {
         if (!this.sprite) {

@@ -5,6 +5,7 @@ import { Character } from "./character";
 import { Banana } from "./projectiles/projectileBanana";
 import { Pumpkin } from "./projectiles/projectilePumpkin";
 import { Coin } from "./projectiles/projectileCoin.ts";
+import { Kunai } from "./projectiles/projectileKunai";
 
 export class ProjectileSpawner{
     initialInterval = 2500; // Initial spawn interval in milliseconds
@@ -15,6 +16,8 @@ export class ProjectileSpawner{
     currentIntervalBanana = this.initialInterval * 1.1;
     currentIntervalPumpkin = this.initialInterval * 1.3;
     currentIntervalCoin = this.initialInterval * 1.7;
+    currentIntervalKunai = this.initialInterval * 1.6;
+
 
     isGameActive = true;
 
@@ -23,10 +26,12 @@ export class ProjectileSpawner{
     character: Character = new Character();
     pumpkins: Pumpkin[] = [];
     coins: Coin[] = [];
+    kunai: Kunai[] = [];
     bananaInterval: number = 0;
     pumpkinInterval: number = 0;
     watermelonInterval: number = 0;
     coinInterval: number = 0;
+    kunaiInterval: number = 0;
 
 
     constructor(app: PIXI.Application, character: Character){
@@ -37,6 +42,7 @@ export class ProjectileSpawner{
         this.pumpkinInterval = setInterval(this.spawnPumpkin, this.currentIntervalPumpkin);
         this.watermelonInterval = setInterval(this.spawnWatermelon, this.currentIntervalWatermelon);
         this.coinInterval = setInterval(this.spawnCoin, this.currentIntervalCoin);
+        this.kunaiInterval = setInterval(this.spawnKunai, this.currentIntervalKunai);
     }
 
     spawnWatermelon = async () => {
@@ -125,6 +131,28 @@ export class ProjectileSpawner{
         }
     };
 
+    spawnKunai = async () => {
+        if(!this.app){
+            return;
+        }
+        console.log("Spawning kunai wow!")
+        if (this.isGameActive) {
+            const newKunai = new Kunai(this.character.getSprite(), false);
+
+            // Cia kai debuginimui pamatyti hitboxo taskus
+            for(var hitboxSprite of newKunai.hitboxSpriteArray){
+                this.app.stage.addChild(hitboxSprite);
+            }
+
+            this.app.stage.addChild(newKunai.getSprite());
+            newKunai.spawn();
+            
+            this.kunai.push(newKunai);
+
+            this.adjustInterval("kunai");
+        }
+    };
+
 
     currentInterval: number = 0;
     adjustInterval = (type: string) => {
@@ -138,6 +166,8 @@ export class ProjectileSpawner{
             this.currentInterval = this.currentIntervalPumpkin;
         }else if (type === "coin") {
             this.currentInterval = this.currentIntervalCoin;
+        }else if (type === "kunai") {
+            this.currentInterval = this.currentIntervalKunai;
         }
 
         this.currentInterval = Math.max(this.minInterval, this.currentInterval * this.difficultyFactor);
@@ -155,6 +185,8 @@ export class ProjectileSpawner{
             this.currentIntervalPumpkin = adjustedInterval;
         } else if (type === "coin") {
             this.currentIntervalCoin = adjustedInterval;
+        } else if (type === "kunai") {
+            this.currentIntervalKunai = adjustedInterval;
         }
 
         // Clear and reset only the interval for the given type
@@ -172,6 +204,10 @@ export class ProjectileSpawner{
             clearInterval(this.coinInterval);
             this.coinInterval = setInterval(this.spawnCoin, adjustedInterval);
         }
+        else if (type === "kunai") {
+            clearInterval(this.kunaiInterval);
+            this.kunaiInterval = setInterval(this.spawnKunai, adjustedInterval);
+        }
     };
 
     clearIntervals(){
@@ -179,5 +215,6 @@ export class ProjectileSpawner{
         clearInterval(this.bananaInterval);
         clearInterval(this.pumpkinInterval);
         clearInterval(this.coinInterval);
+        clearInterval(this.kunaiInterval);
     }
 }

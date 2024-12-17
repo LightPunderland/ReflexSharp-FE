@@ -1,6 +1,5 @@
 import { SpriteCache } from '../spriteCache';
 import { Projectile } from './projectile';
-
 export class Banana extends Projectile {
     private archDelay: number;  
     private archStrength: number; 
@@ -100,8 +99,8 @@ export class Banana extends Projectile {
     }
 
     addHitBoxesPoints(){
-        // Atkomentuoti jei nori nupiesti hitbox pointus
-        // for(var i = 0;i<4;i++){
+        //Atkomentuoti jei nori nupiesti hitbox pointus
+        // for(var i = 0;i<5;i++){
         //     const hitboxSprite = PIXI.Sprite.from('src/assets/redhitboxpoint.png')
         //     hitboxSprite.height = 4;
         //     hitboxSprite.width = 4;
@@ -113,5 +112,6 @@ export class Banana extends Projectile {
         this.hitboxPoints.push([this.sprite.width-8,12]);
         this.hitboxPoints.push([2,this.sprite.height-12]);
         this.hitboxPoints.push([this.sprite.width-16,this.sprite.height-16]);
+        this.hitboxPoints.push([36,34]);
     }
 }
