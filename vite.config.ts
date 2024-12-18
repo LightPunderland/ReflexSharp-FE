@@ -9,7 +9,7 @@ export default defineConfig({
 
     proxy: {
       '/host': {
-        target: 'https://lukasjasiulionis.lt',
+        target: 'http://localhost:5050',
         changeOrigin: true 
       }
     }
