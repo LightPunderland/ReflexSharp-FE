@@ -50,7 +50,7 @@ export class SpriteCache{
     public watermelonTexture = PIXI.Texture.from('api/sprite/by-name/watermelon');
     public coinTexture = PIXI.Texture.from('api/sprite/by-name/coin');
     public kunaiTexture = PIXI.Texture.from('api/sprite/by-name/kunai');
-    public backgroundTexture = PIXI.Texture.from('src/Play/background.png');
+    public backgroundTexture = PIXI.Texture.from('api/sprite/by-name/background');
     
     public bananaWarningTexture = PIXI.Texture.from('api/sprite/by-name/bananaWarning');
     public watermelonWarningTexture = PIXI.Texture.from('api/sprite/by-name/watermelonWarning');

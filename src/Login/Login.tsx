@@ -3,6 +3,8 @@ import Cookies from "js-cookie";
 import { useState } from 'react';
 import styles from './Login.module.css';
 import LoginService from './api/Login';
+import { useEffect } from 'react';
+import { SpriteCache } from '../Play/utility/spriteCache';
 
 interface LoginProps {
     onLogin: (username: string, userId: string) => void;
@@ -30,6 +32,8 @@ interface UserDTO {
 }
 function Login({ onLogin }: LoginProps) {
     const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
+    SpriteCache.skin = "ninja";
 
     const [username, setUsername] = useState('');
     const [showGoogleSignIn, setShowGoogleSignIn] = useState(false);
@@ -81,9 +85,11 @@ function Login({ onLogin }: LoginProps) {
         const guestUsername = 'IamAGuest';
         const userId = 'b6fbd4d9-55f5-481a-a9cf-b274269cbe82'; // MOCK TEST USER ID
         // const guestPassword = "password";
+        
         onLogin(guestUsername, userId);
     };
 
+    
 
 
     return (

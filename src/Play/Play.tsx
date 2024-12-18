@@ -19,6 +19,28 @@ const characterBaseSpeed = 0.1; // error?
 const Play: React.FC<{userId: string}> = ({ userId }) => {
 
     
+    useEffect(() => {
+            const fetchUserData = async () => {
+                try {
+                    
+                    const userData = await GetUser(userId);
+                    console.log("come on user data", userData);
+                    console.log("This is the gold", userData.equippedSkin.charAt(0).toUpperCase() + userData.equippedSkin.slice(1));
+                    if(userData.equippedSkin === "ninja"){
+                        SpriteCache.skin = userData.equippedSkin;
+                    }
+                    else{
+                        const skin = userData.equippedSkin.charAt(0).toUpperCase() + userData.equippedSkin.slice(1);
+                        SpriteCache.skin = skin;
+                    }
+                    
+                } catch (err) {
+                    console.error(err);
+                }
+            };
+        
+            fetchUserData();
+        }, [userId]);
 
     let doItOnce = true; // DO NOT MAKE REMOVE THIS, WILL BREAK POSTS, NEED TO FIX IN TESTING
 
