@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vitest --coverage"
+    "test": "vitest --coverage",
+    "build-force": "tsc --noEmit false --noEmitOnError false && vite build"
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",

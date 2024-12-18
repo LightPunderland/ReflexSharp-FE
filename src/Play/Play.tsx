@@ -29,20 +29,20 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
 
     // Audio setup
     const [gameAudio] = useState(() => {
-        const audio = new Audio('/host/Audio/67');
+        const audio = new Audio('api/Audio/67');
         audio.volume = 0.1;
         audio.loop = true;
         return audio;
     });
 
     const [deathSound] = useState(() => {
-        const audio = new Audio('/host/Audio/68');
+        const audio = new Audio('api/Audio/68');
         audio.volume = 0.1;
         return audio;
     });
 
     const [dodgeSound] = useState(() => {
-        const audio = new Audio('/host/Audio/69');
+        const audio = new Audio('api/Audio/69');
         audio.volume = 0.1;
         return audio;
     });

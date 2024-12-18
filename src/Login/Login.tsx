@@ -34,9 +34,6 @@ function Login({ onLogin }: LoginProps) {
     const [username, setUsername] = useState('');
     const [showGoogleSignIn, setShowGoogleSignIn] = useState(false);
 
-
-
-
     const handleNext = () => {
         if (!username.trim()) {
             alert('Please enter a username');

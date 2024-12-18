@@ -9,9 +9,8 @@ export default defineConfig({
 
     proxy: {
       '/host': {
-        target: 'http://localhost:5050/api/',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/host/, '')
+        target: 'https://lukasjasiulionis.lt',
+        changeOrigin: true 
       }
     }
   }

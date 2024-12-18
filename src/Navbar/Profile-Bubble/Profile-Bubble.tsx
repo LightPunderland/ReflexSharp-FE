@@ -20,7 +20,7 @@ function ProfileBubble({ProfileId} : ProfileProps) {
     // comment this out if not working
     const loadProfileInfo = async () => {
         try {
-            const response = await axios.get(`/host/users/${userId}`);
+            const response = await axios.get(`api/users/${userId}`);
             const userData = response.data;
 
             setUserXp(userData.xp || 0);
