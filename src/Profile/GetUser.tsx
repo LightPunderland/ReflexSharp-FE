@@ -6,6 +6,8 @@ interface UserData {
     publicRank: number;
     xp: number;
     gold: number;
+    ownedSkins: string[];
+    equippedSkin: string;
 }
 
 export async function GetUser(userId: string): Promise<UserData> {

@@ -18,7 +18,7 @@ export const PostScore = async (userId: string, score: number): Promise<void> =>
 
     console.log('I am alive');
     try {
-        await axios.post('/host/leaderboard/create', scoreData);
+        await axios.post('api/leaderboard/create', scoreData);
         console.log('Score posted successfully!');
     } catch (error) {
         console.error('Error wen making post', error);
@@ -27,7 +27,7 @@ export const PostScore = async (userId: string, score: number): Promise<void> =>
 
 
 export const rewardGoldXp = async (userId: string, gold: number, xp: number): Promise<void> => {
-    const url = `/host/users/${userId}/rewardGoldXp?addGold=${gold}&addXp=${xp}`;
+    const url = `api/users/${userId}/rewardGoldXp?addGold=${gold}&addXp=${xp}`;
 
     console.log('Sending reward data...');
     try {
@@ -41,7 +41,7 @@ export const rewardGoldXp = async (userId: string, gold: number, xp: number): Pr
 
 export const checkRankUp = async (userId: string): Promise<RankUpResponse | null> => {
     try {
-        const response = await axios.post(`/host/users/${userId}/check-rankup`);
+        const response = await axios.post(`/api/users/${userId}/check-rankup`);
         console.log('Rank check completed successfully');
         return response.data;
     } catch (error) {

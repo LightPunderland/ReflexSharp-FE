@@ -3,9 +3,21 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: flex-start; /* Prevent content from overflowing */
     padding: 1rem;
-    background-color: #f4f4f4;
+    background-color: #121212;
     min-height: 100vh;
+    box-sizing: border-box;
+    color: #ffffff;
+}
+
+
+
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow-y: auto; /* Add this to ensure body can scroll */
 }
 
 .title {
@@ -14,9 +26,10 @@
 }
 
 .userStats {
-    font-size: 1.2rem;
-    margin-bottom: 1.5rem;
-    color: #555;
+    font-size: 1.2em;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #00bcd4;
 }
 
 /* Grid Layout */
@@ -30,18 +43,18 @@
 }
 
 .skinBox {
-    position: relative;
-    border: 2px solid #ccc;
+    background-color: #2c2c2c; /* Dark gray */
+    color: #fff;
+    border: 1px solid #444;
     border-radius: 8px;
-    padding: 1rem;
-    text-align: center;
-    background-color: #fff;
-    transition: border 0.2s ease;
+    padding: 10px;
+    margin: 5px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
     cursor: pointer;
 }
 
-.skinBox:hover {
-    border-color: #007bff;
+.selected {
+    border: 2px solid #00bcd4; /* Cyan highlight for selected skin */
 }
 
 .selected {
@@ -67,32 +80,42 @@
 
 .equippedIndicator {
     position: absolute;
-    top: 8px;
-    right: 8px;
-    color: green;
-    font-size: 1.2rem;
+    top: 5px;
+    right: 5px;
+    background-color: #00bcd4;
+    color: #121212;
+    padding: 2px 5px;
+    border-radius: 5px;
+    font-size: 0.8em;
     font-weight: bold;
 }
-
 /* Buttons */
 .actions {
     display: flex;
     gap: 1rem;
+    margin-top: 1rem;
+    justify-content: center; /* Center the buttons */
+    align-items: center;
+    width: 100%; /* Ensure it spans the container width */
 }
+
 
 .buyButton,
 .equipButton {
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
+    background-color: #00bcd4; /* Cyan for action buttons */
+    color: #121212; /* Dark text for contrast */
     border: none;
-    border-radius: 4px;
-    color: #fff;
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin: 5px;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    font-size: 1em;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
 }
 
 .buyButton {
-    background-color: #28a745;
+    background-color: #008c9e;
 }
 
 .buyButton:hover {
@@ -100,12 +123,13 @@
 }
 
 .buyButtonDisabled {
-    background-color: #ccc;
+    background-color: #555;
+    color: #888;
     cursor: not-allowed;
 }
 
 .equipButton {
-    background-color: #007bff;
+    background-color: #008c9e;
 }
 
 .equipButton:hover {
@@ -113,6 +137,41 @@
 }
 
 .equipButtonDisabled {
-    background-color: #ccc;
+    background-color: #555;
+    color: #888;
     cursor: not-allowed;
 }
+
+.scrollableGrid {
+    width: 80%; /* Keep it proportional to container width */
+    max-height: calc(100vh - 200px); /* Adjust based on available space */
+    overflow-y: auto; /* Enable vertical scrolling */
+    margin: 0 auto; /* Center horizontally */
+    padding: 10px;
+    box-sizing: border-box;
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 10px; /* Optional for aesthetics */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Optional for aesthetics */
+}
+
+.content::-webkit-scrollbar {
+    width: 12px;
+}
+
+.content::-webkit-scrollbar-track {
+    background: #2a4222;
+    border-radius: 10px;
+}
+
+.content::-webkit-scrollbar-thumb {
+    background-color: #6b8f4d;
+    border-radius: 10px;
+    border: 3px solid #2a4222;
+}
+
+.content::-webkit-scrollbar-thumb:hover {
+    background-color: #7fa16a;
+}
+
+

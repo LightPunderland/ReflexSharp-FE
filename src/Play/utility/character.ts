@@ -7,6 +7,8 @@ import { Projectile } from "./projectiles/projectile";
 import { SpriteCache } from "./spriteCache";
 import { Coin } from "./projectiles/projectileCoin";
 import { Kunai } from "./projectiles/projectileKunai";
+import { useEffect } from "react";
+import { GetUser } from "../../Profile/GetUser";
 
 export class Character {
     static reduceDiagonalSpeed = 0.707;
@@ -26,9 +28,24 @@ export class Character {
         //klase kurioje saugoma 4 krypciu inercijos jegos veikiancio characteri
         this.movementMomentum = new MovementMomentum();
 
-        this.sprite = new PIXI.Sprite(SpriteCache.instance.ninjaTexture);
+        // useEffect(() => {
+        //     const fetchUserData = async () => {
+        //         try {
+        //             const userData = await GetUser(userId);
+        //             const skin = userData.equipedSkin;
+        //             const texture = PIXI.Texture.from(`api/sprite/by-name/${skin}`);
+                    
+        //         } catch (err) {
+        //             console.error(err);
+        //         }
+        //     };
+        
+        //     fetchUserData();
+        // }, [userId]);
 
-        this.sprite.scale.set(1.15);
+        this.sprite = new PIXI.Sprite(SpriteCache.skin);
+                    this.sprite.scale.set(1.15);
+
         this.collided = false;
         this.collected = false;
     }

@@ -11,10 +11,15 @@ import { rewardGoldXp } from "./PostScore";
 import { SpriteCache } from "./utility/spriteCache";
 import { ProjectileSpawner } from "./utility/projectileSpawner";
 import { Kunai } from "./utility/projectiles/projectileKunai";
+import { GetUser } from '../Profile/GetUser';
+
 
 const characterBaseSpeed = 0.1; // error?
 
 const Play: React.FC<{userId: string}> = ({ userId }) => {
+
+    
+
     let doItOnce = true; // DO NOT MAKE REMOVE THIS, WILL BREAK POSTS, NEED TO FIX IN TESTING
 
     const gameContainer = useRef<HTMLDivElement>(null);
@@ -55,16 +60,23 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
         };
     }, [playAgain]);
 
+   
+
+
     useEffect(() => {
         // Singletonas, SpriteCache.instance po sito bus uzloadinta visur
         // Davai chebra tik nepanaikinkit sitos eilutes, nors kintamasis nenaudojamas vistiek uzloadina cia viska i memory
-        const spriteCache: SpriteCache = SpriteCache.instance; 
+        
+        
+        const spriteCache: SpriteCache = SpriteCache.instance;
+        
+
 
         const app = new PIXI.Application({ antialias: true, backgroundColor: 0x1099bb, resizeTo: window });
         appRef.current = app;
         
         const backgroundSprite = new PIXI.Sprite(SpriteCache.instance.backgroundTexture);
-
+            
         //useState scoras returnina rezultatus tiktai kitam renderi, o mes canvas nenorim rerenderinti
         let localGameScore = 0
         let localGameGold = 0
@@ -84,9 +96,13 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
             backgroundSprite.height = app.screen.height;
         });
 
+
+
         if (gameContainer.current) {
             gameContainer.current.appendChild(app.view as HTMLCanvasElement);
         }
+
+        
 
         const character = new Character();
         app.stage.addChild(character.getSprite());
@@ -135,6 +151,7 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
 
         // **Frame-independent movement using deltaTime**
         app.ticker.add((deltaTime) => {
+
             if (!SpriteCache.instance.texturesLoaded()){
                 app.stage.addChild(loadingText);
             }
@@ -231,7 +248,10 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
             gameAudio.pause();
             app.destroy(true, { children: true });
         };
+
+        
     }, [playAgain]);
+
 
     //Rodo Score
     const handlePlayAgain = () => {
@@ -247,11 +267,14 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
     return (
         <div ref={gameContainer} style={{ width: '100%', height: '100%' }}>
             <Score score={score} />
+            
             <Xp xp={xp} />
             <Gold gold={gold} />
             {!isGameActive && <Replay score={score} onPlayAgain={handlePlayAgain} />}
         </div>
     );
+
+    
 };
 
 export default Play;

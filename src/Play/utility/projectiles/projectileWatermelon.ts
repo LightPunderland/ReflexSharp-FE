@@ -3,7 +3,7 @@ import { Projectile } from './projectile';
 import * as PIXI from 'pixi.js';
 
 export class Watermelon extends Projectile {
-    static WatermelonPNG= '/host/sprite/by-name/watermelon';
+    static WatermelonPNG= 'api/sprite/by-name/watermelon';
 
     constructor(player: { x: number; y: number }) {
 

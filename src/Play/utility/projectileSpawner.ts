@@ -23,7 +23,7 @@ export class ProjectileSpawner{
 
     app: undefined | PIXI.Application = undefined;
     projectiles: Projectile[] = [];
-    character: Character = new Character();
+    character: Character ;
     pumpkins: Pumpkin[] = [];
     coins: Coin[] = [];
     kunai: Kunai[] = [];
