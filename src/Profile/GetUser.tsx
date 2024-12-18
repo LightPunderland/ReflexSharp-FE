@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { BASE_API_URL } from '../constants/constants';
 
 interface UserData {
     email: string;
@@ -10,7 +11,7 @@ interface UserData {
 
 export async function GetUser(userId: string): Promise<UserData> {
     try {
-        const response = await axios.get(`api/users/${userId}`);
+        const response = await axios.get(`${BASE_API_URL}/api/users/${userId}`);
         return response.data;
     } catch (error) {
         console.error('Error fetching user data:', error);

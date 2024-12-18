@@ -1,6 +1,5 @@
 import axios from "axios";
-
-const API_URL = "/host";
+import { BASE_API_URL } from "../../constants/constants";
 
 interface GoogleSignInData {
     clientId: string;
@@ -23,7 +22,7 @@ const LoginService = {
     googleSignIn: async (data: GoogleSignInData): Promise<UserDTO> => {
         return axios
             .post<{ message: string; user: UserDTO }>(
-                `${API_URL}/auth/google-signin`,
+                `${BASE_API_URL}/api/auth/google-signin`,
                 data,
                 {
                     headers: {

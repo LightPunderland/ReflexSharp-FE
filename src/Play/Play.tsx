@@ -1,25 +1,25 @@
-import { useEffect, useRef, useState } from "react";
 import * as PIXI from "pixi.js";
-import { KeyboardKeys } from "./utility/keyboardKeys";
-import { Character } from "./utility/character";
-import Score from './utility/Score';
-import Xp from './utility/Xp';
-import Gold from './utility/Gold';
+import { useEffect, useRef, useState } from "react";
+import { BASE_API_URL } from "../constants/constants";
+import { PostScore, rewardGoldXp } from "./PostScore";
 import Replay from './Replay/Replay';
-import { PostScore } from "./PostScore";
-import { rewardGoldXp } from "./PostScore";
-import { SpriteCache } from "./utility/spriteCache";
-import { ProjectileSpawner } from "./utility/projectileSpawner";
+import { Character } from "./utility/character";
+import Gold from './utility/Gold';
+import { KeyboardKeys } from "./utility/keyboardKeys";
 import { Kunai } from "./utility/projectiles/projectileKunai";
+import { ProjectileSpawner } from "./utility/projectileSpawner";
+import Score from './utility/Score';
+import { SpriteCache } from "./utility/spriteCache";
+import Xp from './utility/Xp';
 
 const characterBaseSpeed = 0.1; // error?
 
-const Play: React.FC<{userId: string}> = ({ userId }) => {
+const Play: React.FC<{ userId: string }> = ({ userId }) => {
     let doItOnce = true; // DO NOT MAKE REMOVE THIS, WILL BREAK POSTS, NEED TO FIX IN TESTING
 
     const gameContainer = useRef<HTMLDivElement>(null);
     const appRef = useRef<PIXI.Application | null>(null);
-    
+
     const [isGameActive, setIsGameActive] = useState(true);
     const [isGameOver, setIsGameOver] = useState(false);
     const [score, setScore] = useState<number | null>(null);
@@ -29,20 +29,20 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
 
     // Audio setup
     const [gameAudio] = useState(() => {
-        const audio = new Audio('api/Audio/67');
+        const audio = new Audio(`${BASE_API_URL}/api/Audio/67`);
         audio.volume = 0.1;
         audio.loop = true;
         return audio;
     });
 
     const [deathSound] = useState(() => {
-        const audio = new Audio('api/Audio/68');
+        const audio = new Audio(`${BASE_API_URL}/api/Audio/68`);
         audio.volume = 0.1;
         return audio;
     });
 
     const [dodgeSound] = useState(() => {
-        const audio = new Audio('api/Audio/69');
+        const audio = new Audio(`${BASE_API_URL}/api/Audio/69`);
         audio.volume = 0.1;
         return audio;
     });
@@ -58,11 +58,11 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
     useEffect(() => {
         // Singletonas, SpriteCache.instance po sito bus uzloadinta visur
         // Davai chebra tik nepanaikinkit sitos eilutes, nors kintamasis nenaudojamas vistiek uzloadina cia viska i memory
-        const spriteCache: SpriteCache = SpriteCache.instance; 
+        const spriteCache: SpriteCache = SpriteCache.instance;
 
         const app = new PIXI.Application({ antialias: true, backgroundColor: 0x1099bb, resizeTo: window });
         appRef.current = app;
-        
+
         const backgroundSprite = new PIXI.Sprite(SpriteCache.instance.backgroundTexture);
 
         //useState scoras returnina rezultatus tiktai kitam renderi, o mes canvas nenorim rerenderinti
@@ -113,10 +113,10 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
         document.addEventListener('visibilitychange', visibilityChange);
 
         let timeElapsed = 0;
-  
+
         const loadingText = new PIXI.Text("Loading game...");
-        loadingText.x = app.view.width/2 - loadingText.width/2;
-        loadingText.y = app.view.height/3;
+        loadingText.x = app.view.width / 2 - loadingText.width / 2;
+        loadingText.y = app.view.height / 3;
         let gameLoaded = false;
 
 
@@ -135,7 +135,7 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
 
         // **Frame-independent movement using deltaTime**
         app.ticker.add((deltaTime) => {
-            if (!SpriteCache.instance.texturesLoaded()){
+            if (!SpriteCache.instance.texturesLoaded()) {
                 app.stage.addChild(loadingText);
             }
             else if (isGameActive) {
@@ -143,7 +143,7 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
                 localGameXp = 1.001 * Math.pow(timeElapsed, 1.3);
                 setXp(Math.floor(localGameXp));
                 const deltaSpeedChar = characterBaseSpeed * Math.min(app.view.width, app.view.height) * deltaTime;
-                if(!gameLoaded){
+                if (!gameLoaded) {
                     gameLoaded = true
                     app.stage.removeChild(loadingText);
                     character.spawnCharacter(app.view.width, app.view.height);
@@ -155,10 +155,10 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
                         projectileSpawner.pumpkins.splice(i, 1); // Remove the pumpkin from the pumpkins array
                     }
                 }
-                
+
                 character.update(projectileSpawner.projectiles, projectileSpawner.coins, projectileSpawner.kunai, deltaTime);
-                
-                if (character.collected){
+
+                if (character.collected) {
                     localGameGold += 1;
                     setGold(localGameGold);
                     character.collected = false;
@@ -169,16 +169,16 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
                     setIsGameActive(false);
                     isGameActive = false;
                     setIsGameOver(true);
-                    deathSound.play();  
-                    gameAudio.pause(); 
+                    deathSound.play();
+                    gameAudio.pause();
 
                     // Score posting
                     if (localGameScore !== null && doItOnce) {
                         doItOnce = false;
                         console.log('Posting score: ', localGameXp);
                         PostScore(userId, localGameScore).catch(e => {
-                            console.error('Error posting score: ', e);    
-                        }); 
+                            console.error('Error posting score: ', e);
+                        });
                         rewardGoldXp(userId, Math.floor(localGameGold), Math.floor(localGameXp)).catch(e => {
                             console.error('Error rewarding gold and xp: ', e);
                         });
@@ -207,7 +207,7 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
                     });
 
                     localGameScore += despawnedCount;
-                   
+
                 }
 
                 projectileSpawner.projectiles = remainingProjectiles;
@@ -216,7 +216,7 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
 
         window.addEventListener('resize', () => {
             const scale = Math.min(window.innerWidth / app.view.width, window.innerHeight / app.view.height);
-            
+
             character.getSprite().scale.set(scale);
             projectileSpawner.projectiles.forEach(projectile => {
                 projectile.getSprite().scale.set(scale);

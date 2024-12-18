@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { BASE_API_URL } from '../constants/constants';
 
 export interface LeaderboardEntry {
     user: string | null;
@@ -10,7 +11,7 @@ export interface LeaderboardEntry {
 // Use this workaround till leaderboard username gets fixed :)
 export async function fetchUsername(userId: string): Promise<string | null> {
     try {
-        const response = await axios.get(`api/users/${userId}`);
+        const response = await axios.get(`${BASE_API_URL}/api/users/${userId}`);
         return response.data.displayName || null;
     } catch (error) {
         console.error(`Error fetching username for userId: ${userId}`, error);
@@ -20,7 +21,9 @@ export async function fetchUsername(userId: string): Promise<string | null> {
 
 export async function GetLeaderboard(count: number = 10): Promise<LeaderboardEntry[]> {
     try {
-        const response = await axios.get(`api/leaderboard?count=${count}`);
+        console.log(`${BASE_API_URL}/api/users/${count}`);
+        console.log("lol")
+        const response = await axios.get(`${BASE_API_URL}/api/leaderboard?count=${count}`);
         const leaderboard: LeaderboardEntry[] = response.data;
 
         const leaderboardWithUsernames = await Promise.all(
