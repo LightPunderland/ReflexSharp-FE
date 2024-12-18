@@ -94,7 +94,8 @@ export class Character {
             let coin = coinArray[i];
 
             if(this.sprite && coin.markedForDeletion) {
-                this.sprite.parent.removeChild(coin.sprite);
+
+                if(this.sprite.parent)this.sprite.parent.removeChild(coin.sprite);
                 coinArray.splice(i, 1);
             }
 
@@ -121,7 +122,7 @@ export class Character {
             if(!kunaiArray[i].toThrow){
             let kunai = kunaiArray[i];
             if(this.sprite && kunai.markedForDeletion) {
-                this.sprite.parent.removeChild(kunai.sprite);
+                if(this.sprite.parent)this.sprite.parent.removeChild(kunai.sprite);
                 kunaiArray.splice(i, 1);
             }
 

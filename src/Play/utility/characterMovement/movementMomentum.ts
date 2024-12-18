@@ -9,10 +9,10 @@ export class MovementMomentum {
     leftMomentum: number;
     downMomentum: number;
 
-    private _upMomentumTime: number;
-    private _rightMomentumTime: number;
-    private _leftMomentumTime: number;
-    private _downMomentumTime: number;
+    _upMomentumTime: number;
+    _rightMomentumTime: number;
+    _leftMomentumTime: number;
+    _downMomentumTime: number;
 
     constructor() {
         this.upMomentum = 0;

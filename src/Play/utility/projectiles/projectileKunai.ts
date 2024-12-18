@@ -14,7 +14,7 @@ export class Kunai extends Projectile {
     public markedForDeletion: boolean = false;
 
     constructor(player: { x: number; y: number }, toThrow: boolean) {
-        super(player, SpriteCache.instance.kunaiTexture, PIXI.Texture.EMPTY);
+        super(player, SpriteCache.instance.kunaiTexture, SpriteCache.instance.bananaTexture);
         this.speed = 30;
         this.toThrow = toThrow;
         this.addHitBoxesPoints();
@@ -129,13 +129,13 @@ export class Kunai extends Projectile {
 
     addHitBoxesPoints(){
         // Atkomentuoti jei nori nupiesti hitbox pointus
-        for(var i = 0;i<4;i++){
-            const hitboxSprite = PIXI.Sprite.from('src/assets/redhitboxpoint.png')
-            hitboxSprite.height = 4;
-            hitboxSprite.width = 4;
+        // for(var i = 0;i<4;i++){
+        //     const hitboxSprite = PIXI.Sprite.from('src/assets/redhitboxpoint.png')
+        //     hitboxSprite.height = 4;
+        //     hitboxSprite.width = 4;
     
-            this.hitboxSpriteArray.push(hitboxSprite);
-        }
+        //     this.hitboxSpriteArray.push(hitboxSprite);
+        // }
 
         this.hitboxPoints.push([this.sprite.width-18,10]);
         this.hitboxPoints.push([this.sprite.width-8,12]);

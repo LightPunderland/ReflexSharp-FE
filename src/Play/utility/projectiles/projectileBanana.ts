@@ -1,9 +1,9 @@
 import { SpriteCache } from '../spriteCache';
 import { Projectile } from './projectile';
 export class Banana extends Projectile {
-    private archDelay: number;  
-    private archStrength: number; 
-    private archDirection: { x: number; y: number }; 
+    public archDelay: number;  
+    public archStrength: number; 
+    public archDirection: { x: number; y: number }; 
 
     constructor(player: { x: number; y: number }) {
 
@@ -24,6 +24,8 @@ export class Banana extends Projectile {
         
         this.addHitBoxesPoints()
     }
+
+
 
     update(deltaTime: number): void {
 

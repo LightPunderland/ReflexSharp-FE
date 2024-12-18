@@ -1,5 +1,6 @@
-import { expect, test, vi, beforeEach } from 'vitest';
+import { expect, test, vi, beforeEach, describe } from 'vitest';
 import { MovementDirection } from '../src/Play/utility/characterMovement/movementDirection'
+import { MovementPhysics } from '../src/Play/utility/characterMovement/movementPhysics';
 
 test('Not moving', async () => {
     const movementDirection = new MovementDirection();
@@ -33,3 +34,14 @@ test('Only one direction movement', async () => {
     expect(movementDirection.upleft).toBe(false);
     expect(movementDirection.upright).toBe(false);
 });
+
+describe('MovementPhysics', () => {
+    test('should have a maxSpeed property set to 17', () => {
+      expect(MovementPhysics.maxSpeed).toBe(17);
+    });
+  
+    test('should calculate speed correctly', () => {
+      const speed = MovementPhysics.calculateSpeed();
+      expect(speed).toBe(MovementPhysics.maxSpeed);
+    });
+  });

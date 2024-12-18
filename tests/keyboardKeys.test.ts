@@ -10,6 +10,7 @@ test('Keyboard key pressed', () => {
     expect(KeyboardKeys.numberOfKeysPressed()).toBe(1);
 })
 
+
 test('Any key pressed', () => {
     KeyboardKeys.keyboardState["keyA"] = true;
     KeyboardKeys.keyboardState["keyW"] = true;
@@ -18,3 +19,9 @@ test('Any key pressed', () => {
 
     expect(KeyboardKeys.anyKeyPressed()).toBe(true);
 })
+
+
+
+
+
+

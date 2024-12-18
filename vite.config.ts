@@ -9,7 +9,7 @@ export default defineConfig({
 
     proxy: {
       '/host': {
-        target: 'http://localhost:5050',
+        target: 'https://localhost:5050',
         changeOrigin: true 
       }
     }
