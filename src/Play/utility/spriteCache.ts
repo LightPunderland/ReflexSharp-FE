@@ -32,6 +32,7 @@ export class SpriteCache{
     public bananaWarningTexture = PIXI.Texture.from('api/sprite/by-name/bananaWarning');
     public watermelonWarningTexture = PIXI.Texture.from('api/sprite/by-name/watermelonWarning');
 
+
     public texturesLoaded(){
         const textures = [
             this.ninjaTexture,
