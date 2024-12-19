@@ -4,7 +4,9 @@
 
 <h1 align="center"> Dodge Ninja - a back to basics web game for improving your reflexes </h1>
 
-# Alpha Version 0.0.1
+# MVP
+
+[The end](https://docs.google.com/presentation/d/1hXVx3zculMKu3kBHMqAHcvsxFP45x_PB/edit?usp=sharing&ouid=102098508887788281444&rtpof=true&sd=true)
 
 ## Dodge Ninja
 
