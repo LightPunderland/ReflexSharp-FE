@@ -52,7 +52,6 @@ const getSpecialSkinName = (skinName: string, defaultName: string) => {
             <p 
                 className={styles.skinName} 
                 data-skin={skinName.toLowerCase()}
-                data-content={defaultName} // Added for camo effect
             >
                 {defaultName}
             </p>

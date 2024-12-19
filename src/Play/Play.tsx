@@ -53,6 +53,7 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
     const [xp, setXp] = useState<number>(0);
     const [gold, setGold] = useState<number>(0);
     const [playAgain, setPlayAgain] = useState<number>(0);
+    
 
     // Audio setup
     const [gameAudio] = useState(() => {
@@ -113,9 +114,49 @@ const Play: React.FC<{userId: string}> = ({ userId }) => {
 
         app.stage.addChild(backgroundSprite);
 
+        /*
         window.addEventListener('resize', () => {
             backgroundSprite.width = app.screen.width;
             backgroundSprite.height = app.screen.height;
+        });
+        */
+
+
+        // old resizer
+        window.addEventListener('resize', () => {
+            const scale = Math.min(window.innerWidth / app.view.width, window.innerHeight / app.view.height);
+            
+            backgroundSprite.width = window.innerWidth;
+            backgroundSprite.height = window.innerHeight;
+            backgroundSprite.position.set(window.innerWidth / 2, window.innerHeight / 2);
+        
+            if (character.sprite) {
+                character.getSprite().scale.set(scale);
+                character.sprite.x = Math.min(Math.max(character.sprite.x, 0), window.innerWidth);
+                character.sprite.y = Math.min(Math.max(character.sprite.y, 0), window.innerHeight);
+            }
+        
+            projectileSpawner.projectiles.forEach(projectile => {
+                const sprite = projectile.getSprite();
+                sprite.scale.set(scale);
+            });
+        
+            projectileSpawner.pumpkins.forEach(pumpkin => {
+                const sprite = pumpkin.getSprite();
+                sprite.scale.set(scale);
+            });
+        
+            projectileSpawner.coins.forEach(coin => {
+                const sprite = coin.getSprite();
+                sprite.scale.set(scale);
+            });
+        
+            projectileSpawner.kunai.forEach(kunai => {
+                const sprite = kunai.getSprite();
+                sprite.scale.set(scale);
+            });
+        
+            app.renderer.resize(window.innerWidth, window.innerHeight);
         });
 
 
