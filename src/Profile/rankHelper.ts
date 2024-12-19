@@ -15,16 +15,34 @@ interface RankStyle {
 export function getRankStyle(rank: Rank): RankStyle {
     switch (rank) {
         case Rank.Noob:
-            return { text: 'Noob', color: '#8B4513' };
+            return { 
+                text: 'Noob', 
+                color: '#B8860B'
+            };
         case Rank.Pro:
-            return { text: 'Pro', color: '#C0C0C0' };
+            return { 
+                text: 'Pro', 
+                color: '#1E90FF'
+            };
         case Rank.Master:
-            return { text: 'Master', color: '#FFD700' };
+            return { 
+                text: 'Master', 
+                color: '#9400D3'
+            };
         case Rank.God:
-            return { text: 'God', color: '#663399' };
+            return { 
+                text: 'God', 
+                color: '#3e3e79'
+            };
         case Rank.Admin:
-            return { text: 'Admin', color: '#DC143C' };
+            return { 
+                text: 'Admin', 
+                color: '#DC143C'
+            };
         default:
-            return { text: 'None', color: '#ffffff' };
+            return { 
+                text: 'None', 
+                color: '#ffffff' 
+            };
     }
 }

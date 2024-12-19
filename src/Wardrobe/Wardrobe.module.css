@@ -1,14 +1,210 @@
+
+
+
+/* Special skin name styles */
+@keyframes goldShimmer {
+    0% { color: #FFD700; }
+    50% { color: #FFA500; }
+    100% { color: #FFD700; }
+}
+
+.skinName {
+    font-size: 1rem;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+/* Angry skin */
+.skinName[data-skin="angry"] {
+    color: #FF3333;
+    text-shadow: 0 0 3px rgba(255, 0, 0, 0.5);
+}
+
+/* Camo skin */
+.skinName[data-skin="camo"] {
+    background: -webkit-linear-gradient(#4A5F1A, #718C32, #8DA84C);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: bold;
+}
+
+/* Not skin */
+.skinName[data-skin="not"] {
+    font-style: italic;
+    font-weight: 900;
+    text-decoration: line-through;
+    text-decoration-color: red;
+    text-decoration-thickness: 2px;
+}
+
+/* Underwater skin */
+.skinName[data-skin="underwater"] {
+    color: #4FB4FF;
+    text-shadow: 0 0 5px #4FB4FF;
+    animation: waterWave 2s ease-in-out infinite;
+}
+
+@keyframes waterWave {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-2px); }
+}
+
+.skinName[data-skin="flipped"] {
+    transform: rotate(180deg);
+    display: inline-block;
+}
+
+/* Rich skin */
+.skinName[data-skin="rich"] {
+    background: linear-gradient(
+        to right,
+        #BF953F,
+        #FCF6BA,
+        #B38728,
+        #FBF5B7,
+        #AA771C
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: goldShimmer 3s linear infinite;
+}
+
+
+.skinBox.equipped {
+    border: 2px solid #FF69B4;
+    box-shadow: 0 0 10px rgba(255, 105, 180, 0.3);
+}
+
+
+
+/* Ensure rarity borders override equipped on hover */
+.skinBox.equipped[data-price="cheap"]:hover {
+    border-color: #ffffff;
+}
+
+.skinBox.equipped[data-price="common"]:hover {
+    border-color: #4CAF50;
+}
+
+.skinBox.equipped[data-price="rare"]:hover {
+    border-color: #2196F3;
+}
+
+.skinBox.equipped[data-price="epic"]:hover {
+    border-color: #9C27B0;
+}
+
+.skinBox.equipped[data-price="legendary"]:hover {
+    border-color: #FF9800;
+}
+
+
+.skinBox[data-price="cheap"]:hover {
+    border-color: #ffffff;
+}
+
+.skinBox[data-price="common"]:hover {
+    border-color: #4CAF50;
+}
+
+.skinBox[data-price="rare"]:hover {
+    border-color: #2196F3;
+}
+
+.skinBox[data-price="epic"]:hover {
+    border-color: #9C27B0;
+}
+
+.skinBox[data-price="legendary"]:hover {
+    border-color: #FF9800;
+}
+
+.skinBox {
+    position: relative;
+    background-color: #2c2c2c;
+    color: #fff;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    padding: 15px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.skinBox.rankLocked {
+    filter: grayscale(100%);
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.skinBox.goldLocked {
+    position: relative;
+}
+
+.skinBox.goldLocked::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 0, 0, 0.15);
+    border-radius: 6px;
+    pointer-events: none;
+}
+
+.skinBox.rankLocked::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(128, 128, 128, 0.3);
+    border-radius: 6px;
+    pointer-events: none;
+}
+
+.skinBox.rankLocked *,
+.skinBox.goldLocked * {
+    position: relative;
+    z-index: 1;
+}
+
+.skinBox.rankLocked {
+    position: relative;
+}
+
+.skinBox.owned {
+}
+
+.userStats {
+    font-size: 1.4em;
+    margin-bottom: 30px;
+    text-align: center;
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    background-color: #2c2c2c;
+    padding: 1rem 2rem;
+    border-radius: 10px;
+}
+
+
 /* Container and Title */
 .container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start; /* Prevent content from overflowing */
-    padding: 1rem;
+    justify-content: center;
+    padding: 2rem;
     background-color: #121212;
     min-height: 100vh;
     box-sizing: border-box;
     color: #ffffff;
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body, html {
@@ -24,32 +220,31 @@ body, html {
 }
 
 .userStats {
-    font-size: 1.2em;
+    font-size: 1.4em;
     margin-bottom: 20px;
     text-align: center;
-    color: #00bcd4;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.goldText {
+    color: #FFD700;
+    font-weight: bold;
+}
+
+.rankText {
+    font-weight: bold;
 }
 
 /* Grid Layout */
 .grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1rem;
-    width: 80%;
-    max-width: 1200px;
-    margin-bottom: 2rem;
+    gap: 1.5rem;
+    padding: 1rem;
 }
 
-.skinBox {
-    background-color: #2c2c2c; /* Dark gray */
-    color: #fff;
-    border: 1px solid #444;
-    border-radius: 8px;
-    padding: 10px;
-    margin: 5px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    cursor: pointer;
-}
 
 .selected {
     border: 2px solid #00bcd4; /* Cyan highlight for selected skin */
@@ -73,7 +268,10 @@ body, html {
 
 .skinDetails {
     font-size: 0.9rem;
-    color: #777;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
 }
 
 .equippedIndicator {
@@ -141,16 +339,16 @@ body, html {
 }
 
 .scrollableGrid {
-    width: 80%; /* Keep it proportional to container width */
-    max-height: calc(100vh - 200px); /* Adjust based on available space */
-    overflow-y: auto; /* Enable vertical scrolling */
-    margin: 0 auto; /* Center horizontally */
-    padding: 10px;
+    width: 90%;
+    max-width: 1200px;
+    max-height: calc(100vh - 250px);
+    overflow-y: auto;
+    margin: 0 auto;
+    padding: 20px;
     box-sizing: border-box;
     background-color: #1e1e1e;
     border: 1px solid #333;
-    border-radius: 10px; /* Optional for aesthetics */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Optional for aesthetics */
+    border-radius: 10px;
 }
 
 .content::-webkit-scrollbar {
