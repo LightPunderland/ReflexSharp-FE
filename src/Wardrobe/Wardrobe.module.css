@@ -1,7 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Creepster&family=Black+Ops+One&family=Permanent+Marker&family=Rubik+Bubbles&family=UnifrakturMaguntia&display=swap');
 
-
-
-/* Special skin name styles */
 @keyframes goldShimmer {
     0% { color: #FFD700; }
     50% { color: #FFA500; }
@@ -16,20 +14,25 @@
 
 /* Angry skin */
 .skinName[data-skin="angry"] {
+    font-family: 'Creepster', cursive;
     color: #FF3333;
     text-shadow: 0 0 3px rgba(255, 0, 0, 0.5);
+    font-size: 1.2rem;
 }
 
 /* Camo skin */
 .skinName[data-skin="camo"] {
+    font-family: 'Black Ops One', cursive;
     background: -webkit-linear-gradient(#4A5F1A, #718C32, #8DA84C);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     font-weight: bold;
+    letter-spacing: 1px;
 }
 
 /* Not skin */
 .skinName[data-skin="not"] {
+    font-family: 'Permanent Marker', cursive;
     font-style: italic;
     font-weight: 900;
     text-decoration: line-through;
@@ -39,9 +42,11 @@
 
 /* Underwater skin */
 .skinName[data-skin="underwater"] {
+    font-family: 'Rubik Bubbles', cursive;
     color: #4FB4FF;
     text-shadow: 0 0 5px #4FB4FF;
     animation: waterWave 2s ease-in-out infinite;
+    font-size: 1.1rem;
 }
 
 @keyframes waterWave {
@@ -49,6 +54,7 @@
     50% { transform: translateY(-2px); }
 }
 
+/* Flipped skin */
 .skinName[data-skin="flipped"] {
     transform: rotate(180deg);
     display: inline-block;
@@ -56,6 +62,7 @@
 
 /* Rich skin */
 .skinName[data-skin="rich"] {
+    font-family: 'UnifrakturMaguntia', cursive;
     background: linear-gradient(
         to right,
         #BF953F,
@@ -67,6 +74,7 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: goldShimmer 3s linear infinite;
+    font-size: 1.2rem;
 }
 
 
@@ -76,8 +84,6 @@
 }
 
 
-
-/* Ensure rarity borders override equipped on hover */
 .skinBox.equipped[data-price="cheap"]:hover {
     border-color: #ffffff;
 }
